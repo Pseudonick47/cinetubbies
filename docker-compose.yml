@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db:
+    container_name: mariadb
+    image: mariadb
+    ports:
+        - 3306:3306
+    environment:
+        # create database on startup
+        MYSQL_DATABASE: cinetubbies
+        # MYSQL_USER will create user on startup and grant all on database
+        MYSQL_USER: tubbie
+        # set user password
+        MYSQL_PASSWORD: purple
+        # set user password
+        MYSQL_ROOT_PASSWORD: password
+    volumes:
+      # where to store data
+      - mysql:/var/lib/mysql
+
+  web:
+    build: .
+    container_name: django_app
+    command: bash -c "cd backend; ./manage.py migrate; ./manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    links:
+      - db
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  mysql:
+
+networks:
+  cinenet:
