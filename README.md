@@ -3,6 +3,13 @@
 
 ## Build Setup
 
+### Docker
+> django + mariadb
+``` bash
+# in the project root
+docker-compose up
+```
+
 ### Frontend - Vue.js
 ``` bash
 # install dependencies
