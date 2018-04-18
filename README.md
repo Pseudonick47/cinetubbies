@@ -43,6 +43,9 @@ pip install -r requirements
 # run migrations
 python manage.py migrate
 
+# create superuser
+python manage.py createsuperuser 
+
 # run development server with hot reload at localhost:8000
 python manage.py runserver
 ```
