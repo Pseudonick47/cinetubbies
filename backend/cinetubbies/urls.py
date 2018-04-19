@@ -5,7 +5,7 @@ from authentication import urls
 
 urlpatterns = [
   path('api/', include([
-    path('auth/', include('authentication.urls')),
+    path('', include('authentication.urls')),
   ])),
   path('admin/', admin.site.urls),
 ]

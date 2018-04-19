@@ -1,11 +1,15 @@
 from .views import UserViewSet
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 
 current_user = UserViewSet.as_view({
-  'get': 'current_user',
+    'get': 'current_user',
+})
+
+user_register = UserViewSet.as_view({
+    'post': 'create',
 })
 
 user_detail = UserViewSet.as_view({
@@ -22,8 +26,7 @@ user_list = UserViewSet.as_view({
 urlpatterns = format_suffix_patterns([
     path('users/<int:pk>/', user_detail, name='user-detail'),
     path('users/', user_list, name='user-list'),
-    path('me/', current_user, name='user-current'),
-    path('login/', obtain_jwt_token, name='login'),
-    # path('register/', nesto, name='register'),
-    # path('logout/', nesto, name='logout'),
+    path('auth/me/', current_user, name='user-current'),
+    path('auth/login/', obtain_jwt_token, name='login'),
+    path('auth/register/', user_register, name='register'),
 ])
