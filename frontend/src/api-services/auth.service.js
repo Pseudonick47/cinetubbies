@@ -1,11 +1,11 @@
 import Axios from 'axios';
 
-const PREFIX = '/auth';
+const PREFIX = 'auth/';
 const ENDPOINTS = {
-  LOGIN: '/login',
-  REGISTER: '/register',
-  CHANGE_PASSWORD: '/change-password',
-  LOGOUT: '/logout'
+  LOGIN: 'login/',
+  REGISTER: 'register/',
+  CHANGE_PASSWORD: 'change-password/',
+  LOGOUT: 'logout/'
 };
 
 export default {

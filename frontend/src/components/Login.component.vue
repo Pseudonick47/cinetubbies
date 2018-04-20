@@ -35,7 +35,7 @@
           <v-spacer/>
           <v-btn
             color="primary"
-            @click.prevent="submit">Login</v-btn>
+            @click="login">Login</v-btn>
         </v-card-actions>
       </v-card>
     </v-flex>
@@ -54,7 +54,7 @@ export default {
     };
   },
   methods: {
-    submit(event) {
+    login() {
       AuthController.login({
         username: this.username,
         password: this.password
