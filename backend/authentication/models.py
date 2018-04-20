@@ -14,6 +14,5 @@ class User(AbstractUser):
   password = models.CharField(max_length=255)
   first_name = models.CharField(max_length=30, blank=True)
   last_name = models.CharField(max_length=30, blank=True)
-  bio = models.TextField(max_length=500, blank=True)
   birth_date = models.DateField(null=True, blank=True)
   role = models.CharField(max_length=20, choices=ROLES, default='user')

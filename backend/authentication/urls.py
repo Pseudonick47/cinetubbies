@@ -9,7 +9,7 @@ current_user = UserViewSet.as_view({
 })
 
 user_register = UserViewSet.as_view({
-    'post': 'create',
+    'post': 'register',
 })
 
 user_detail = UserViewSet.as_view({
