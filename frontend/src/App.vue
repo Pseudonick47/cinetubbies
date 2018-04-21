@@ -40,7 +40,7 @@
     </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"/>
-      <v-toolbar-title>Tahi</v-toolbar-title>
+      <v-toolbar-title>Cinetubbies</v-toolbar-title>
       <v-spacer/>
       <v-toolbar-items class="hidden-sm-and-down"/>
     </v-toolbar>
@@ -75,7 +75,8 @@ export default {
           { icon: 'person_add', text: 'Home', path: '/home' }
         ],
         'user': [
-          { icon: 'person_add', text: 'Home', path: '/home' }
+          { icon: 'person_add', text: 'Home', path: '/home' },
+          { icon: '', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [
           { icon: 'person_add', text: 'Login', path: '/login' },
@@ -104,8 +105,8 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  /* text-align: center; */
+  /* color: #2c3e50; */
   margin-top: 60px;
 }
 </style>
