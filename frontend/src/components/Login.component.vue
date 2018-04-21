@@ -58,6 +58,8 @@ export default {
       AuthController.login({
         username: this.username,
         password: this.password
+      }).catch(() => {
+        this.$alert.error('Error! Check your credentials.');
       });
     }
   }

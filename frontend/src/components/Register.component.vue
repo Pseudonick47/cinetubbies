@@ -72,6 +72,8 @@ export default {
       AuthController.register({
         username: this.username,
         password: this.password
+      }).catch(() => {
+        this.$alert.error('Username already taken');
       });
     }
   }
