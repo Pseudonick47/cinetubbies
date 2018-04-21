@@ -71,13 +71,11 @@ export default {
   },
 
   logout() {
-    AuthApiService.logout().then(() => {
-      this.setLocalStorageAuthData({
-        token: null,
-        user: null
-      });
-      this.setAuthHeader(true);
+    this.setLocalStorageAuthData({
+      token: null,
+      user: null
     });
+    this.setAuthHeader(true);
     store.commit('deauth');
     Vue.prototype.router.push({ name: 'login' });
   },

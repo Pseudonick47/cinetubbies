@@ -27,24 +27,24 @@ yarn run build
 Note: Please keep virtualenvs outside of project directory.
 
 ``` bash
-# create virtualenv folder outside of project
-mkdir ~/.virtualenvs
-cd ~/.virtualenvs
-virtualenv isa
-
-# and new virtualenv
-source ~/.virtualenvs/isa/bin/activate
+# install pipenv (with your package manager or pip)
+yaourt -S python-pipenv
+# or
+sudo pip install pipenv
 
 cd backend
 
 # install all python dependencies
-pip install -r requirements
+pipenv install
+
+# to activate venv
+pipenv shell
 
 # run migrations
 python manage.py migrate
 
 # create superuser
-python manage.py createsuperuser 
+python manage.py createsuperuser
 
 # run development server with hot reload at localhost:8000
 python manage.py runserver

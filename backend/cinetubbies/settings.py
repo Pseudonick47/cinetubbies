@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'authentication'
 ]
 
 MIDDLEWARE = [
@@ -96,7 +97,7 @@ DATABASES = {
         'NAME': 'cinetubbies',
         'USER': 'root',
         'PASSWORD': 'password',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
@@ -132,7 +133,7 @@ JWT_AUTH = {
     'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
 
     'JWT_RESPONSE_PAYLOAD_HANDLER':
-    'cinetubbies.utils.auth.jwt_response_payload_handler',
+    'authentication.utils.auth.jwt_response_payload_handler',
 
     'JWT_SECRET_KEY': SECRET_KEY,
     'JWT_GET_USER_SECRET_KEY': None,
@@ -142,7 +143,7 @@ JWT_AUTH = {
     'JWT_VERIFY': True,
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=150),
     'JWT_AUDIENCE': None,
     'JWT_ISSUER': None,
 
@@ -153,6 +154,11 @@ JWT_AUTH = {
     'JWT_AUTH_COOKIE': None,
 }
 
+AUTH_USER_MODEL = 'authentication.User'
+
+REST_USE_JWT = True
+
+APPEND_SLASH = False
 
 
 # Password validation
