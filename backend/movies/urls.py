@@ -11,15 +11,11 @@ movie_detail = MovieViewSet.as_view({
 })
 
 movie_list = MovieViewSet.as_view({
-    'get': 'list'
-})
-
-movie_register = MovieViewSet.as_view({
-    'post': 'register',
+    'get': 'list',
+    'post': 'create'
 })
 
 urlpatterns = format_suffix_patterns([
-    path('movies/<int:pk>/', movie_detail, name='movie-detail'),
-    path('movies/', movie_list, name='movie-list'),
-    path('movies/new/', movie_register, name='movie-register'),
+    path('<int:pk>/', movie_detail, name='movie-detail'),
+    path('', movie_list, name='movie-list')
 ])

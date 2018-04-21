@@ -7,7 +7,5 @@ class Movie(models.Model):
 
     def create_movie(data):
         movie = Movie(**data)
-        movie.set_title(movie.title)
-        movie.set_genre(movie.genre)
         movie.save()
         return movie

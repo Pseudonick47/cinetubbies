@@ -13,6 +13,6 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     # creating new movie
     @action(detail=False)
-    def register(self, request, * args, ** kwargs):
+    def create(self, request, * args, ** kwargs):
         movie = Movie.create_movie(request.data)
         return Response(MovieSerializer(movie).data)

@@ -6,10 +6,8 @@ from movies import urls
 
 urlpatterns = [
   path('api/', include([
-    path('', include('authentication.urls'))
+    path('', include('authentication.urls')),
+    path('movies/', include('movies.urls'))
   ])),
   path('admin/', admin.site.urls),
-  path('api/', include([
-    path('', include('movies.urls'))
-  ])),
 ]
