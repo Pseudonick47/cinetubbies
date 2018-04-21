@@ -1,7 +1,7 @@
 {
-  "name": "vue-boilerplate",
+  "name": "cinetubbies",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "An app for managing cinemas.",
   "author": "Milos Miljanic <milosmilos96@gmail.com>",
   "private": true,
   "scripts": {
