@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'login' });
   }
   // not admin but should be
-  if (to.meta.admin && !store.getters.isAdmin) {
+  if (to.meta.admin && !store.getters.isAnyAdmin) {
     return next({ name: 'home' });
   }
 
