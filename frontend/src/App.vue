@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <alert-box v-if="showAlert"/>
     <v-navigation-drawer
       v-model="drawer"
       fixed
@@ -56,11 +57,16 @@
 </template>
 
 <script>
+import AlertBox from 'Components/helpers/AlertHelper.component';
+
 import AuthController from 'Controllers/auth.controller';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'App',
+  components: {
+    'alert-box': AlertBox
+  },
   data() {
     return {
       drawer: false,
@@ -90,7 +96,8 @@ export default {
       'activeUser',
       'isAdmin',
       'isLogged',
-      'activeUserRole'
+      'activeUserRole',
+      'showAlert'
     ])
   },
   methods: {

@@ -54,11 +54,10 @@ export default {
   methods: {
     submit() {
       let data = { first_name: this.first_name, last_name: this.last_name, birth_date: this.birth_date };
-      console.log('submit', data);
       UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {
-        console.log(response);
-      }).catch((error) => {
-        console.log(error);
+        this.$alert.success('Settings successfully saved');
+      }).catch(() => {
+        this.$alert.error('Error while saving settings');
       });
     }
   }
