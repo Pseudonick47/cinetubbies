@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from.permissions import IsSelfOrReadOnly
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from .middlewares.arst import SimpleMiddleware
 from django.utils.decorators import decorator_from_middleware
 from rest_framework_jwt.settings import api_settings
 from.utils import auth
