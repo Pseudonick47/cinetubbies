@@ -13,6 +13,22 @@
         v-model="last_name"
         label="Last Name"
       />
+      <v-text-field
+        v-validate="'email'"
+        v-model="email"
+        data-vv-name="email"
+        label="Email"
+      />
+      <v-text-field
+        v-model="password"
+        label="New Password"
+        type="password"
+      />
+      <v-text-field
+        v-model="password_confirmation"
+        type="password"
+        label="Confirm New Password"
+      />
       <v-flex
         xs12
         sm6>
@@ -23,7 +39,6 @@
           next-icon="mdi-skip-next"
         />
       </v-flex>
-      <!-- password = models.CharField(max_length=255) -->
       <v-btn @click="submit">submit</v-btn>
     </form>
   </v-flex>
@@ -39,7 +54,10 @@ export default {
   data: () => ({
     birth_date: null,
     first_name: '',
-    last_name: ''
+    last_name: '',
+    password: '',
+    password_confirmation: '',
+    email: ''
   }),
   computed: {
     ...mapGetters([
@@ -50,13 +68,32 @@ export default {
     this.birth_date = this.activeUser.birth_date;
     this.first_name = this.activeUser.first_name;
     this.last_name = this.activeUser.last_name;
+    this.email = this.activeUser.last_name;
   },
   methods: {
     submit() {
-      let data = { first_name: this.first_name, last_name: this.last_name, birth_date: this.birth_date };
-      UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {
-        this.$alert.success('Settings successfully saved');
-      }).catch(() => {
+      let data = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        birth_date: this.birth_date,
+        email: this.email,
+        password: this.password
+      };
+      data = _.reduce(data, (result, value, key) => {
+        if (!_.isEmpty(value)) {
+          result[key] = value;
+        }
+        return result;
+      }, {});
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {
+            this.$alert.success('Settings successfully saved');
+          }).catch(() => {
+            this.$alert.error('Error while saving settings');
+          });
+          return;
+        }
         this.$alert.error('Error while saving settings');
       });
     }
