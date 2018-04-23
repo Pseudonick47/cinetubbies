@@ -14,5 +14,4 @@ class IsSystemAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        print('here')
         return request.user.role == 'admin'

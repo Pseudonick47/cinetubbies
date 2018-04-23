@@ -24,7 +24,7 @@ update_admin = TheaterAPI.as_view({
 
 
 urlpatterns = format_suffix_patterns([
-    path('theaters', theaters, name='theaters'),
-    path('theaters/<int:pk>', theater, name='theater'),
-    path('theater/<int:pk>/admin', update_admin, name='update_admin')
+    path('', theaters, name='theaters'),
+    path('<int:pk>', theater, name='theater'),
+    path('<int:pk>/admin', update_admin, name='update_admin')
 ])
