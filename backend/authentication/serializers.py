@@ -4,12 +4,12 @@ from .models import User, ROLES
 
 class UserSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
-  username = serializers.CharField(required=False, allow_blank=False, max_length=30, read_only=True)
+  username = serializers.CharField(required=False, allow_blank=False, max_length=30)
   email = serializers.CharField(required=False, allow_blank=True)
   first_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
   last_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
   role = serializers.ChoiceField(choices=ROLES, default='user')
-  password = serializers.CharField(write_only=True)
+  password = serializers.CharField(write_only=True, min_length=5)
 
   def create(self, validated_data):
     user = User(
