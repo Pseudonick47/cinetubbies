@@ -6,26 +6,35 @@
     <h1>User settings</h1>
     <form>
       <v-text-field
-        v-model="first_name"
+        v-model="user.first_name"
         label="First Name"
       />
       <v-text-field
-        v-model="last_name"
+        v-model="user.last_name"
         label="Last Name"
       />
       <v-text-field
         v-validate="'email'"
-        v-model="email"
+        :error-messages="errors.collect('email')"
+        v-model="user.email"
         data-vv-name="email"
         label="Email"
       />
       <v-text-field
-        v-model="password"
+        v-model="user.city"
+        label="City"
+      />
+      <v-text-field
+        v-model="user.phone"
+        label="Phone"
+      />
+      <v-text-field
+        v-model="user.password"
         label="New Password"
         type="password"
       />
       <v-text-field
-        v-model="password_confirmation"
+        v-model="user.password_confirmation"
         type="password"
         label="Confirm New Password"
       />
@@ -33,7 +42,7 @@
         xs12
         sm6>
         <v-date-picker
-          v-model="birth_date"
+          v-model="user.birth_date"
           year-icon="mdi-calendar-blank"
           prev-icon="mdi-skip-previous"
           next-icon="mdi-skip-next"
@@ -48,16 +57,13 @@
 import UsersController from 'Controllers/users.controller';
 import { mapGetters } from 'vuex';
 
+var moment = require('moment');
+
 export default {
   name: 'UserSettings',
 
   data: () => ({
-    birth_date: null,
-    first_name: '',
-    last_name: '',
-    password: '',
-    password_confirmation: '',
-    email: ''
+    user: {}
   }),
   computed: {
     ...mapGetters([
@@ -65,26 +71,19 @@ export default {
     ])
   },
   mounted() {
-    this.birth_date = this.activeUser.birth_date;
-    this.first_name = this.activeUser.first_name;
-    this.last_name = this.activeUser.last_name;
-    this.email = this.activeUser.last_name;
+    this.user = _.cloneDeep(this.activeUser);
   },
   methods: {
     submit() {
-      let data = {
-        first_name: this.first_name,
-        last_name: this.last_name,
-        birth_date: this.birth_date,
-        email: this.email,
-        password: this.password
-      };
-      data = _.reduce(data, (result, value, key) => {
+      let data = _.reduce(this.user, (result, value, key) => {
         if (!_.isEmpty(value)) {
           result[key] = value;
         }
         return result;
       }, {});
+      if (data.birth_date) {
+        data.birth_date = moment(data.birth_date, 'YYYY-MM-DD').format('YYYY-MM-DDThh:mm');
+      }
       this.$validator.validateAll().then((result) => {
         if (result) {
           UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {

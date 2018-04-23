@@ -22,7 +22,7 @@ class UserViewSet(viewsets.ModelViewSet):
     return Response(UserSerializer(user).data)
 
   def create(self, request):
-    serializer = UserSerializer(data=request.data,partial=True)
+    serializer = UserSerializer(data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
     user = serializer.save()

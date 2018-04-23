@@ -11,11 +11,11 @@ class UserSerializer(serializers.Serializer):
   role = serializers.ChoiceField(choices=ROLES, default='user')
   password = serializers.CharField(write_only=True, min_length=5)
   birth_date = serializers.DateTimeField(required=False)
+  phone = serializers.CharField(max_length=30, allow_blank=False)
+  city = serializers.CharField(max_length=30, allow_blank=False)
 
   def create(self, validated_data):
-    user = User(
-        username=validated_data['username'],
-    )
+    user = User( ** validated_data)
     user.set_password(validated_data['password'])
     user.save()
     return user

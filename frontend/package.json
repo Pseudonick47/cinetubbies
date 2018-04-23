@@ -14,6 +14,7 @@
     "axios": "^0.18.0",
     "eslint-plugin-html": "^4.0.2",
     "lodash": "^4.17.5",
+    "moment": "^2.22.1",
     "vee-validate": "^2.0.6",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

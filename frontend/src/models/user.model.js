@@ -10,6 +10,7 @@ const USER_ROLES = {
 export class User {
   constructor(data) {
     _.assignWith(this, data);
+    this.birth_date = this.birth_date.slice(0, 10);
   }
 
   static get USER_ROLES() {
