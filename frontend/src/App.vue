@@ -78,7 +78,10 @@ export default {
       },
       drawerItems: {
         'admin': [
-          { icon: 'domain', text: 'Home', path: '/home' }
+          { icon: 'domain', text: 'Home', path: '/home' },
+          { icon: 'theaters', text: 'Theaters', path: '/admin/theaters' },
+          { icon: 'group', text: 'Cinema Admins', path: '/admin/cinema' },
+          { icon: 'group', text: 'Fan Zone Admins', path: '/admin/fan-zone' }
         ],
         'cinema_admin': [
           { icon: 'person_add', text: 'Home', path: '/home' },
