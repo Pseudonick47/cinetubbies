@@ -10,7 +10,7 @@ ROLES = (
 
 class User(AbstractUser):
   id = models.AutoField(primary_key=True)
-  username = models.CharField(max_length=30, unique=True)
+  username = models.CharField(max_length=30, unique=True, editable=False)
   password = models.CharField(max_length=255)
   first_name = models.CharField(max_length=30, blank=True)
   last_name = models.CharField(max_length=30, blank=True)
