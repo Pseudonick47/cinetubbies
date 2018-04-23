@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'authentication',
+    'theaters',
     'movies'
 ]
 
@@ -100,7 +101,7 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
-    }
+    },
 }
 
 
@@ -179,6 +180,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# Email settings
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 
 
 # Internationalization

@@ -4,6 +4,7 @@ import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/Movies/Movies.component';
+import Settings from 'Components/User/Settings.component';
 
 export const routes = [
   {
@@ -41,6 +42,17 @@ export const routes = [
   {
     path: '/movies',
     name: 'movies',
-    component: Movies
+    component: Movies,
+    meta: {
+      cinemaAdmin: true
+    }
+  },
+  {
+    path: '/user/settings',
+    name: 'user-settings',
+    component: Settings,
+    meta: {
+      logged: true
+    }
   }
 ];

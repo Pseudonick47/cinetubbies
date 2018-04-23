@@ -21,28 +21,28 @@ class UserViewSet(viewsets.ModelViewSet):
     user = User.objects.get(id=user.id)
     return Response(UserSerializer(user).data)
 
-  @action(detail=False, permission_classes=[AllowAny])
-  def register(self, request, * args, ** kwargs):
-    user = User.create_user(request.data)
+  def create(self, request):
+    serializer = UserSerializer(data=request.data, partial=True)
+    if not serializer.is_valid():
+      return Response(serializer.errors, status=400)
+    user = serializer.save()
+
     jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
     jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
     payload = jwt_payload_handler(user)
     token = jwt_encode_handler(payload)
+    auth.send_verification_mail(user, 'token')
     return Response(auth.jwt_response_payload_handler(token, user))
-
-  def update(self, request, pk=None):
-    user = User.objects.get(id=pk)
-    self.check_object_permissions(request, user)
-    user.__dict__.update( ** request.data)
-    user.save()
-    return Response(UserSerializer(user).data)
 
   def partial_update(self, request, pk=None):
     user = User.objects.get(id=pk)
     self.check_object_permissions(request, user)
-    user.__dict__.update( ** request.data)
-    user.save()
-    return Response(UserSerializer(user).data)
+    serializer = UserSerializer(user, data=request.data, partial=True)
+    if not serializer.is_valid():
+      return Response(serializer.errors, status=400)
+
+    serializer.save()
+    return Response(serializer.data)
 
   def destroy(self, request, pk=None):
     user = User.objects.get(id=pk)

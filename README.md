@@ -48,4 +48,8 @@ python manage.py createsuperuser
 
 # run development server with hot reload at localhost:8000
 python manage.py runserver
+
+# run development mail server
+python -m smtpd -n -c DebuggingServer localhost:1025
+# or use mailcatcher or similar service
 ```

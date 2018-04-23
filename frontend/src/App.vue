@@ -82,14 +82,15 @@ export default {
         'cinema_admin': [
           { icon: 'home', text: 'Home', path: '/home' },
           { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
-          { icon: 'person', text: 'Account settings', path: '/account' },
+          { icon: 'person', text: 'Account settings', path: '/user/settings' },
           { icon: 'list', text: 'Reports', path: '/reports' }
         ],
         'fan_zone_admin': [
           { icon: 'home', text: 'Home', path: '/home' }
         ],
         'user': [
-          { icon: 'home', text: 'Home', path: '/home' }
+          { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'settings', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [
           { icon: 'person_add', text: 'Login', path: '/login' },
@@ -122,8 +123,8 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  /* text-align: center; */
+  /* color: #2c3e50; */
   margin-top: 60px;
 }
 </style>
