@@ -24,6 +24,9 @@ const mutations = {
   auth(state, activeUser) {
     const user = new User(activeUser);
     state.activeUser = user;
+  },
+  updateActiveUser(state, data) {
+    state.activeUser.updateUser(data);
   }
 };
 

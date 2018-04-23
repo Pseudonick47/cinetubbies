@@ -10,16 +10,11 @@ ROLES = (
 
 class User(AbstractUser):
   id = models.AutoField(primary_key=True)
-  username = models.CharField(max_length=30, unique=True)
+  username = models.CharField(max_length=30, unique=True, editable=False)
   password = models.CharField(max_length=255)
   first_name = models.CharField(max_length=30, blank=True)
   last_name = models.CharField(max_length=30, blank=True)
   birth_date = models.DateField(null=True, blank=True)
   role = models.CharField(max_length=20, choices=ROLES, default='user')
-
-  @staticmethod
-  def create_user(data):
-    user = User(**data)
-    user.set_password(user.password)
-    user.save()
-    return user
+  phone = models.CharField(max_length=30, blank=True)
+  city = models.CharField(max_length=30, blank=True)

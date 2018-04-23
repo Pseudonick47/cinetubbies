@@ -10,6 +10,7 @@ const USER_ROLES = {
 export class User {
   constructor(data) {
     _.assignWith(this, data);
+    this.birth_date = this.birth_date ? this.birth_date.slice(0, 10) : null;
   }
 
   static get USER_ROLES() {
@@ -30,5 +31,9 @@ export class User {
 
   isFanZoneAdmin() {
     return this.role === USER_ROLES.FAN_ZONE_ADMIN;
+  }
+
+  updateUser(data) {
+    _.assignWith(this, data);
   }
 }
