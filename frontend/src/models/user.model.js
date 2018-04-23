@@ -31,4 +31,8 @@ export class User {
   isFanZoneAdmin() {
     return this.role === USER_ROLES.FAN_ZONE_ADMIN;
   }
+
+  updateUser(data) {
+    _.assignWith(this, data);
+  }
 }
