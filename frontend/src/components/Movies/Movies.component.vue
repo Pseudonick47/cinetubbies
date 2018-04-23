@@ -9,9 +9,6 @@
       <v-form
         v-model="valid"
       >
-        <v-title>
-          New movie/play
-        </v-title>
         <v-text-field
           v-model="title"
           :rules="titleRules"
@@ -76,7 +73,7 @@
         </v-list-tile>
         <v-list-tile
           v-for="movie in filteredMovies"
-          :key="movie.title" >
+          :key="movie.id" >
           <v-list-tile-content>
             <v-list-tile-title>{{ movie.title }}</v-list-tile-title>
             <v-list-tile-sub-title>{{ movie.genre }}</v-list-tile-sub-title>
@@ -123,9 +120,9 @@ export default {
   }),
   computed: {
     filteredMovies() {
-      if (this.search !== '') {
+      if (!_.isEmpty(this.search)) {
         return this.movies.filter((i) => {
-          return i.title.toLowerCase().includes(this.search.toLowerCase());
+          return i.title.toLowerCase().includes(_.trim(this.search.toLowerCase()));
         });
       }
       return this.movies;
@@ -161,14 +158,14 @@ export default {
     },
     getMovies() {
       this.loading = true;
-      MoviesController.getMovies()
+      MoviesController.list()
         .then((response) => {
           this.movies = response.data;
           this.loading = false;
         })
-        .catch((err) => {
+        .catch((response) => {
           this.loading = false;
-          console.log(err);
+          this.$alert.error('Error occurred.');
         });
     },
     remove(id) {
@@ -178,9 +175,9 @@ export default {
           this.loading = false;
           this.getMovies();
         })
-        .catch((err) => {
+        .catch((response) => {
           this.loading = false;
-          console.log(err);
+          this.$alert.error('Error occurred.');
         });
     }
   }

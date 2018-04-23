@@ -9,11 +9,5 @@ class Movie(models.Model):
     duration = models.CharField(max_length=255, blank=True)
     description = models.CharField(max_length=255, blank=True)
 
-
-    def create_movie(data):
-        movie = Movie(**data)
-        movie.save()
-        return movie
-
     class Meta:
         db_table = 'movies'

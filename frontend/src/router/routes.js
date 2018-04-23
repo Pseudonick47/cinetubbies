@@ -41,9 +41,6 @@ export const routes = [
   {
     path: '/movies',
     name: 'movies',
-    component: Movies,
-    meta: {
-      logged: true
-    }
+    component: Movies
   }
 ];

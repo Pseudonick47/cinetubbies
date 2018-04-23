@@ -4,8 +4,8 @@ export default {
   create(data) {
     return MoviesApiService.create(data);
   },
-  getMovies() {
-    return MoviesApiService.getMovies();
+  list() {
+    return MoviesApiService.list();
   },
   destroy(data) {
     return MoviesApiService.destroy(data);

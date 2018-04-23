@@ -1,5 +1,5 @@
 from rest_framework import serializers
-#from .models import User, ROLES
+from .models import Movie
 
 class MovieSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -11,4 +11,5 @@ class MovieSerializer(serializers.Serializer):
   description = serializers.CharField(max_length=255, allow_blank=True)
 
   def create(self, validated_data):
-    return Movie.objects.create(**validated_data)
+    movie = Movie.objects.create(**validated_data)
+    return movie

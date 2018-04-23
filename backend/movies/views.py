@@ -12,17 +12,13 @@ class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
-    # creating new movie
-    @action(detail=False)
-    def create(self, request, * args, ** kwargs):
-        movie = Movie.create_movie(request.data)
-        return Response(MovieSerializer(movie).data)
-
-    # get all movies
-    @action(detail=False)
-    def getMovies(self, request, * args, ** kwargs):
-        movies = Movie.objects.get()
-        return Response(MovieSerializer(movies).data)
+    # create new movie
+    def create(self, request):
+        serializer = MovieSerializer(data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+        serializer.save()
+        return Response(serializer.data)
 
     # delete movie
     def destroy(self, request, pk=None):
