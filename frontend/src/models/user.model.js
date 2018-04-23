@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 
 const USER_ROLES = {
-  ADMIN1: 'admin1',
-  ADMIN2: 'admin2',
-  ADMIN3: 'admin3',
+  ADMIN: 'admin',
+  CINEMA_ADMIN: 'cinema_admin',
+  FAN_ZONE_ADMIN: 'fan_zone_admin',
   USER: 'user'
 };
 
@@ -16,7 +16,19 @@ export class User {
     return USER_ROLES;
   }
 
+  isAnyAdmin() {
+    return this.role === USER_ROLES.ADMIN || this.role === USER_ROLES.CINEMA_ADMIN || this.role === USER_ROLES.FAN_ZONE_ADMIN;
+  }
+
   isAdmin() {
-    return this.role === USER_ROLES.ADMIN1 || this.role === USER_ROLES.ADMIN2 || this.role === USER_ROLES.ADMIN3;
+    return this.role === USER_ROLES.ADMIN;
+  }
+
+  isCinemaAdmin() {
+    return this.role === USER_ROLES.CINEMA_ADMIN;
+  }
+
+  isFanZoneAdmin() {
+    return this.role === USER_ROLES.FAN_ZONE_ADMIN;
   }
 }

@@ -16,7 +16,7 @@
           <v-list-tile-content>{{ item.text }}</v-list-tile-content>
         </v-list-tile>
 
-        <template v-if="isAdmin">
+        <template v-if="isAnyAdmin">
           <v-list-tile
             v-for="item in toolbarItems['admin']"
             :key="item.text"
@@ -71,13 +71,20 @@ export default {
     return {
       drawer: false,
       toolbarItems: {
-        'admin3': [ { icon: 'lock', text: 'Home', path: '/home' } ]
+        'cinema_admin': [
+          { icon: 'lock', text: 'Home', path: '/home' },
+          { icon: 'add', text: 'New movie', path: '/movies/new' }
+        ]
       },
       drawerItems: {
-        'admin1': [
+        'admin': [
           { icon: 'domain', text: 'Home', path: '/home' }
         ],
-        'admin2': [
+        'cinema_admin': [
+          { icon: 'person_add', text: 'Home', path: '/home' },
+          { icon: 'add', text: 'New movie', path: '/movies/new' }
+        ],
+        'fan_zone_admin': [
           { icon: 'person_add', text: 'Home', path: '/home' }
         ],
         'user': [
@@ -93,7 +100,10 @@ export default {
   computed: {
     ...mapGetters([
       'activeUser',
+      'isAnyAdmin',
       'isAdmin',
+      'isCinemaAdmin',
+      'isFanZoneAdmin',
       'isLogged',
       'activeUserRole',
       'showAlert'
