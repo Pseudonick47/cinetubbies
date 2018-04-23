@@ -1,4 +1,5 @@
 from django.db import models
+from authentication.models import User
 
 class Movie(models.Model):
     id = models.AutoField(primary_key=True)
@@ -8,6 +9,7 @@ class Movie(models.Model):
     actors = models.CharField(max_length=255, blank=True)
     duration = models.CharField(max_length=255, blank=True)
     description = models.CharField(max_length=255, blank=True)
+    admin_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'movies'

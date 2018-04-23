@@ -12,4 +12,5 @@ class MovieSerializer(serializers.Serializer):
 
   def create(self, validated_data):
     movie = Movie.objects.create(**validated_data)
+    movie.save()
     return movie

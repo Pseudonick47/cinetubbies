@@ -8,7 +8,7 @@ export default {
   create(data) {
     return Axios.post(ENDPOINTS.MOVIES, data);
   },
-  list() {
+  getMovies() {
     return Axios.get(ENDPOINTS.MOVIES);
   },
   destroy(data) {

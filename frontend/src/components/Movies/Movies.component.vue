@@ -158,9 +158,10 @@ export default {
     },
     getMovies() {
       this.loading = true;
-      MoviesController.list()
+      MoviesController.getMovies()
         .then((response) => {
           this.movies = response.data;
+          console.log('aaa', JSON.stringify(this.movies));
           this.loading = false;
         })
         .catch((response) => {
