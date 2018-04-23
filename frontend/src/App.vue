@@ -41,7 +41,7 @@
     </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"/>
-      <v-toolbar-title>Tahi</v-toolbar-title>
+      <v-toolbar-title>Cinetubbies</v-toolbar-title>
       <v-spacer/>
       <v-toolbar-items class="hidden-sm-and-down"/>
     </v-toolbar>
@@ -72,8 +72,7 @@ export default {
       drawer: false,
       toolbarItems: {
         'cinema_admin': [
-          { icon: 'lock', text: 'Home', path: '/home' },
-          { icon: 'add', text: 'New movie', path: '/movies/new' }
+          { icon: 'lock', text: 'Home', path: '/home' }
         ]
       },
       drawerItems: {
@@ -81,14 +80,16 @@ export default {
           { icon: 'domain', text: 'Home', path: '/home' }
         ],
         'cinema_admin': [
-          { icon: 'person_add', text: 'Home', path: '/home' },
-          { icon: 'add', text: 'New movie', path: '/movies/new' }
+          { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
+          { icon: 'person', text: 'Account settings', path: '/account' },
+          { icon: 'list', text: 'Reports', path: '/reports' }
         ],
         'fan_zone_admin': [
-          { icon: 'person_add', text: 'Home', path: '/home' }
+          { icon: 'home', text: 'Home', path: '/home' }
         ],
         'user': [
-          { icon: 'person_add', text: 'Home', path: '/home' }
+          { icon: 'home', text: 'Home', path: '/home' }
         ],
         'guest': [
           { icon: 'person_add', text: 'Login', path: '/login' },
