@@ -49,12 +49,34 @@
             />
             <v-text-field
               v-validate="'required|confirmed:password'"
-              v-model="formData.passwordConfirm"
+              v-model="formData.password_confirm"
               :error-messages="errors.collect('password confirm')"
               prepend-icon="lock_outline"
               label="Confirm Password"
               type="password"
               data-vv-name="password confirm"
+              required
+            />
+            <v-text-field
+              v-validate="'required'"
+              v-model="formData.first_name"
+              :error-messages="errors.collect('first name')"
+              prepend-icon="person"
+              name="firstname"
+              label="First Name"
+              type="text"
+              data-vv-name="first name"
+              required
+            />
+            <v-text-field
+              v-validate="'required'"
+              v-model="formData.last_name"
+              :error-messages="errors.collect('last name')"
+              prepend-icon="person"
+              name="lastname"
+              label="Last Name"
+              type="text"
+              data-vv-name="last name"
               required
             />
             <v-text-field
@@ -112,7 +134,9 @@ export default {
       formData: {
         username: '',
         password: '',
-        passwordConfirm: '',
+        last_name: '',
+        first_name: '',
+        password_confirm: '',
         email: '',
         city: '',
         phone: '',
@@ -122,8 +146,14 @@ export default {
   },
   methods: {
     submit() {
-      AuthController.register(this.formData).catch(() => {
-        this.$alert.error('Username already taken');
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          AuthController.register(this.formData).catch(() => {
+            this.$alert.error('Username already taken');
+          });
+          return;
+        }
+        this.$alert.error('Check fields!');
       });
     }
   }
