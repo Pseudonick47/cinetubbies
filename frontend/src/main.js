@@ -7,11 +7,13 @@ import Axios from 'axios';
 import 'vuetify/dist/vuetify.min.css';
 import Config from './config';
 import AlertHelper from './helpers/alert-helper';
+import VeeValidate from 'vee-validate';
 
 import AuthController from 'Controllers/auth.controller';
 
 Vue.config.productionTip = false;
 
+Vue.use(VeeValidate);
 Vue.use(Vuetify);
 Vue.prototype.router = router;
 Vue.prototype.$alert = AlertHelper;
