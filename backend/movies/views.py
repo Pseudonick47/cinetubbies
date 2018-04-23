@@ -19,14 +19,13 @@ class MovieViewSet(viewsets.ModelViewSet):
         serializer = MovieSerializer(data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status=400)
-        serializer.validated_data['admin_id'] = request.user
+        serializer.validated_data['admin'] = request.user
         serializer.save()
         return Response(serializer.data)
 
-    @action(detail=False)
-    def getMovies(self, request):
-        movies = Movie.objects.get()
-        return Response(MovieSerializer(movies).data)
+    def list(self, request):
+        movies = Movie.objects.filter(admin_id=request.user.id).all()
+        return Response(MovieSerializer(movies, many=True).data)
 
     # delete movie
     def destroy(self, request, pk=None):

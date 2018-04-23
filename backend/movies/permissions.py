@@ -8,4 +8,4 @@ class IsSelfOrReadOnly(permissions.BasePermission):
             return True
     
     def has_object_permission(self, request, view, obj):
-        return request.user.id == obj.admin_id.id
+        return request.user.id == obj.admin_id
