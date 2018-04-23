@@ -24,7 +24,7 @@ class UserViewSet(viewsets.ModelViewSet):
   def create(self, request):
     serializer = UserSerializer(data=request.data,partial=True)
     if not serializer.is_valid():
-      return Response({'message': 'data not valid'}, status=400)
+      return Response(serializer.errors, status=400)
     user = serializer.save()
 
     jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -38,7 +38,7 @@ class UserViewSet(viewsets.ModelViewSet):
     self.check_object_permissions(request, user)
     serializer = UserSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
-      return Response({'message': 'data not valid'}, status=400)
+      return Response(serializer.errors, status=400)
 
     serializer.save()
     return Response(serializer.data)

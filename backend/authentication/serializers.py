@@ -10,6 +10,7 @@ class UserSerializer(serializers.Serializer):
   last_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
   role = serializers.ChoiceField(choices=ROLES, default='user')
   password = serializers.CharField(write_only=True, min_length=5)
+  birth_date = serializers.DateTimeField(required=False)
 
   def create(self, validated_data):
     user = User(
@@ -23,4 +24,5 @@ class UserSerializer(serializers.Serializer):
     user.__dict__.update( ** validated_data)
     if 'password' in validated_data:
       user.set_password(validated_data['password'])
+    user.save()
     return user
