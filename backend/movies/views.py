@@ -4,7 +4,7 @@ from movies.models import Movie
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-from .permissions import IsSelfOrReadOnly
+from .permissions import IsCreatorOrReadOnly
 
 class MovieViewSet(viewsets.ModelViewSet):
     """
@@ -12,7 +12,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     """
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    permission_classes = [IsSelfOrReadOnly]
+    permission_classes = [IsCreatorOrReadOnly]
 
     # create new movie
     def create(self, request):

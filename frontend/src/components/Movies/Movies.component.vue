@@ -10,37 +10,41 @@
         v-model="valid"
       >
         <v-text-field
-          v-model="title"
-          :rules="titleRules"
+          v-validate="'required'"
+          v-model="movie.title"
+          :error-messages="errors.collect('title')"
           :counter="255"
           label="Title"
+          data-vv-name="title"
           required
         />
         <v-text-field
+          v-validate="'required'"
           :counter="255"
-          :rules="genreRules"
-          v-model="genre"
+          v-model="movie.genre"
+          :error-messages="errors.collect('genre')"
           label="Genre"
+          data-vv-name="genre"
           required
         />
         <v-text-field
           :counter="255"
-          v-model="director"
+          v-model="movie.director"
           label="Director"
         />
         <v-text-field
           :counter="255"
-          v-model="actors"
+          v-model="movie.actors"
           label="Actors"
         />
         <v-text-field
           :counter="255"
-          v-model="duration"
+          v-model="movie.duration"
           label="Duration"
         />
         <v-text-field
           :counter="255"
-          v-model="description"
+          v-model="movie.description"
           label="Description"
         />
         <v-btn
@@ -96,6 +100,7 @@
 
 <script>
 import MoviesController from 'Controllers/movies.controller';
+import { Movie } from 'Models/movie.model';
 
 export default {
   data: () => ({
@@ -103,20 +108,7 @@ export default {
     loading: false,
     search: '',
     movies: [],
-    title: '',
-    genre: '',
-    director: '',
-    actors: '',
-    duration: '',
-    description: '',
-    titleRules: [
-      v => !!v || 'Title is required',
-      v => (v && v.length <= 255) || 'Name must be less than 255 characters'
-    ],
-    genreRules: [
-      v => !!v || 'Genre is required',
-      v => (v && v.length <= 255) || 'Genre must be less than 255 characters'
-    ]
+    movie: new Movie()
   }),
   computed: {
     filteredMovies() {
@@ -133,14 +125,8 @@ export default {
   },
   methods: {
     submit() {
-      MoviesController.create({
-        title: this.title,
-        genre: this.genre,
-        director: this.director,
-        actors: this.actors,
-        duration: this.duration,
-        description: this.description
-      }).then((response) => {
+      MoviesController.create(this.movie
+      ).then((response) => {
         this.clear();
         this.getMovies();
         this.$alert.success('Successfully added!');
@@ -149,19 +135,13 @@ export default {
       });
     },
     clear() {
-      this.title = '';
-      this.genre = '';
-      this.director = '';
-      this.actors = '';
-      this.duration = '';
-      this.description = '';
+      this.movie = new Movie();
     },
     getMovies() {
       this.loading = true;
       MoviesController.getMovies()
         .then((response) => {
           this.movies = response.data;
-          console.log('aaa', JSON.stringify(this.movies));
           this.loading = false;
         })
         .catch((response) => {
