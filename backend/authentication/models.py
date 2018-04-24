@@ -1,12 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-ROLES = (
-    ('admin', 'Admin'),
-    ('cinema_admin', 'Cinema Admin'),
-    ('fan_zone_admin', 'FanZone Admin'),
-    ('user', 'User')
-  )
+
+ADMIN_ROLES = (
+  ('admin', 'Admin'),
+  ('cinema_admin', 'Cinema Admin'),
+  ('fan_zone_admin', 'FanZone Admin'),
+  ('user', 'User')
+)
+
+ROLES = ADMIN_ROLES + (('user', 'User'),)
+
 
 class User(AbstractUser):
   id = models.AutoField(primary_key=True)
@@ -18,3 +22,4 @@ class User(AbstractUser):
   role = models.CharField(max_length=20, choices=ROLES, default='user')
   phone = models.CharField(max_length=30, blank=True)
   city = models.CharField(max_length=30, blank=True)
+  first_login = models.BooleanField(default=True)

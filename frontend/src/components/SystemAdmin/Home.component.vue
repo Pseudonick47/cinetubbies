@@ -50,18 +50,13 @@
           </v-layout>
         </v-card>
       </v-layout>
-      <!-- <v-layout
-        v-for="(row, i) in theaterGrid"
-        :key="i"
-        row
-      > -->
       <v-layout
         class="theaters-container"
         row
       >
         <v-flex
-          v-for="theater in theaters"
-          :key="theater.id"
+          v-for="entry in entries"
+          :key="entry.id"
           xs12
           sm6
           md4
@@ -70,10 +65,16 @@
           pa-3
         >
           <theater
-            :info="theater"
-            class="theater-placeholder"
+            v-if="kind === 'theaters'"
+            :info="entry"
             @editTheater="editTheater"
             @removeTheater="removeTheater"
+          />
+          <admin
+            v-else
+            :info="entry"
+            @editAdmin="editTheater"
+            @removeAdmin="removeTheater"
           />
         </v-flex>
       </v-layout>
@@ -156,9 +157,10 @@
 <script>
 import * as _ from 'lodash';
 import { mapGetters } from 'vuex';
-import TheatersContorller from 'Controllers/theaters.controller';
 
-import Theater from 'Components/Admin/Theater.component';
+import Admin from 'Components/SystemAdmin/Admin.component';
+import Theater from 'Components/SystemAdmin/Theater.component';
+import SystemAdminContorller from 'Controllers/system-admin.controller';
 
 const MAP_KIND = {
   'Cinema': 'm',
@@ -166,8 +168,9 @@ const MAP_KIND = {
 };
 
 export default {
-  name: 'AdminTheaters',
+  name: 'SystemAdminHome',
   components: {
+    Admin,
     Theater
   },
   data() {
@@ -176,42 +179,50 @@ export default {
       new_theater_name: '',
       new_theater_address: '',
       new_theater_kind: 'Cinema',
-      show: false,
       gradient: 'to top, #1565C0, #42A5F5'
     };
   },
   computed: {
-    ...mapGetters([
-      'theaters',
-      'theatersCount'
-    ]),
+    ...mapGetters('systemAdmin', {
+      entries: 'data',
+      count: 'count'
+    }),
+    kind() {
+      return this.$route.params.kind;
+    },
     entriesPerPage: {
       get() {
-        return this.$store.getters.entriesPerPage;
+        return this.$store.getters['systemAdmin/entriesPerPage'];
       },
       set(val) {
-        TheatersContorller.setEntriesPerPage(val);
+        SystemAdminContorller.setEntriesPerPage(val);
       }
     },
     page: {
       get() {
-        return this.$store.getters.page;
+        return this.$store.getters['systemAdmin/page'];
       },
       set(val) {
-        TheatersContorller.requestPage(val);
-        this.$store.commit('setPage', val);
+        SystemAdminContorller.requestPage(val, this.kind);
+        this.$store.commit('systemAdmin/setPage', val);
       }
     },
     pageCount() {
-      return _.ceil(_.divide(this.theatersCount + 1, this.entriesPerPage));
+      return _.ceil(_.divide(this.count + 1, this.entriesPerPage));
     },
     theaterGrid() {
-      return _.chunk(this.theaters, 4);
+      return _.chunk(this.data, 4);
+    }
+  },
+  watch: {
+    $route(to, from) {
+      SystemAdminContorller.requestCount(this.$route.params.kind);
+      SystemAdminContorller.requestPage(1, this.$route.params.kind);
     }
   },
   beforeMount() {
-    TheatersContorller.requestTheaterCount();
-    TheatersContorller.requestPage(1);
+    SystemAdminContorller.requestCount(this.$route.params.kind);
+    SystemAdminContorller.requestPage(1, this.$route.params.kind);
   },
   methods: {
     editTheater(id) {
@@ -236,7 +247,7 @@ export default {
         admin_id: 2,
         kind: MAP_KIND[this.new_theater_kind]
       };
-      TheatersContorller.registerNewTheater(newTheater);
+      SystemAdminContorller.registerNewTheater(newTheater);
       this.resetDialog();
     }
   }

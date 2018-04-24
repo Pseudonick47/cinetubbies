@@ -1,21 +1,22 @@
+const namespaced = true;
 
 const state = {
-  theaters: [],
+  data: [],
   page: 1,
   entriesPerPage: 8,
   count: 0
 };
 
 const getters = {
-  theaters: (state) => state.theaters,
+  data: (state) => state.data,
   page: (state) => state.page,
   entriesPerPage: (state) => state.entriesPerPage,
-  theatersCount: (state) => state.count
+  count: (state) => state.count
 };
 
 const mutations = {
-  setTheaters(state, theaters) {
-    state.theaters = theaters;
+  setData(state, data) {
+    state.data = data;
   },
   setEntriesPerPage(state, num) {
     state.num = num;
@@ -29,6 +30,7 @@ const mutations = {
 };
 
 export {
+  namespaced,
   state,
   getters,
   mutations

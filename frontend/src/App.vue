@@ -78,10 +78,9 @@ export default {
       },
       drawerItems: {
         'admin': [
-          { icon: 'domain', text: 'Home', path: '/home' },
-          { icon: 'theaters', text: 'Theaters/Cinemas', path: '/admin/theaters' },
-          { icon: 'group', text: 'Theater/Cinema Admins', path: '/admin/cinema' },
-          { icon: 'group', text: 'Fan Zone Admins', path: '/admin/fan-zone' }
+          { icon: 'theaters', text: 'Theaters/Cinemas', path: '/admin/system/theaters' },
+          { icon: 'group', text: 'Theater/Cinema Admins', path: '/admin/system/theater-admins' },
+          { icon: 'group', text: 'Fan Zone Admins', path: '/admin/system/fan-zone-admins' }
         ],
         'cinema_admin': [
           { icon: 'person_add', text: 'Home', path: '/home' },

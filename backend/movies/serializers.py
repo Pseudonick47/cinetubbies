@@ -1,5 +1,5 @@
 from rest_framework import serializers
-#from .models import User, ROLES
+from .models import Movie
 
 class MovieSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)

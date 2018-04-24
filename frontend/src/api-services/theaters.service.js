@@ -4,11 +4,11 @@ const PREFIX = 'theaters/';
 
 export default {
   fetchTheaters(num, page) {
-    return Axios.get(PREFIX + '?num=' + num + '&page=' + page);
+    return Axios.get(`${PREFIX}?num=${num}&page=${page}`);
   },
 
   fetchCount() {
-    return Axios.get(PREFIX + 'count');
+    return Axios.get(`${PREFIX}count`);
   },
 
   postTheater(data) {
