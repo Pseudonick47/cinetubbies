@@ -18,3 +18,10 @@ class User(AbstractUser):
   role = models.CharField(max_length=20, choices=ROLES, default='user')
   phone = models.CharField(max_length=30, blank=True)
   city = models.CharField(max_length=30, blank=True)
+  friends = models.ManyToManyField('self', through='Friendship', symmetrical=False)
+
+
+class Friendship(models.Model):
+    me = models.ForeignKey(User, on_delete=models.PROTECT, related_name='me')
+    friend = models.ForeignKey(User, on_delete=models.PROTECT, related_name='friend')
+    accepted = models.BooleanField(default=False)

@@ -4,6 +4,7 @@ import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Settings from 'Components/User/Settings.component';
+import Profile from 'Components/User/Profile.component';
 
 export const routes = [
   {
@@ -45,5 +46,10 @@ export const routes = [
     meta: {
       logged: true
     }
+  },
+  {
+    path: '/user/:id/profile',
+    name: 'user-profile',
+    component: Profile
   }
 ];
