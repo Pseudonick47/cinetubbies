@@ -2,7 +2,7 @@
 const state = {
   theaters: [],
   page: 1,
-  entriesPerPage: 10,
+  entriesPerPage: 8,
   count: 0
 };
 

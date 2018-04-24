@@ -1,45 +1,80 @@
 <template>
   <div>
-    <v-btn
-      color="primary"
-      @click.native.stop="dialog=true"
-    >New</v-btn>
     <v-container>
       <v-layout
-        v-for="theater in theaters"
-        :key="theater.id"
         row
-        my-3
+        pa-2
       >
-        <v-flex xs12>
-          <v-card
-            color="cyan darken-2"
-            class="white--text"
+        <v-jumbotron
+          :gradient="gradient"
+          dark
+        >
+          <v-container
+            fill-height
+            pa-4
           >
-            <v-container
-              fluid
-              grid-list-lg
-            >
-              <v-layout row>
-                <v-flex
-                  xs7
-                  pa-3
-                >
-                  <div>
-                    <div class="headline mb-1">{{ theater.name }}</div>
-                    <div>{{ theater.address }}</div>
-                  </div>
-                </v-flex>
-                <v-flex xs5>
-                  <v-card-media
-                    src="http://arab-culture.info/wp-content/uploads/2018/02/1-68.jpg"
-                    height="250px"
-                    contain
-                  />
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card>
+            <v-layout align-center>
+              <v-flex>
+                <h3 class="display-3">Theaters</h3>
+                <span class="subheading">Lorem ipsum dolor sit amet, pri veniam forensibus id. Vis maluisset molestiae id, ad semper lobortis cum. At impetus detraxit incorrupte usu, repudiare assueverit ex eum, ne nam essent vocent admodum.</span>
+                <v-divider
+                  color="white"
+                  class="my-3"
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-jumbotron>
+      </v-layout>
+      <v-layout
+        row
+        pa-2
+      >
+        <v-card class="theaters-toolbar">
+          <v-layout
+            row
+            pa-2
+            justify-space-between
+          >
+            <v-text-field
+              prepend-icon="search"
+              label="Search"
+              solo-inverted
+              class="mx-3"
+              flat
+            />
+            <v-btn
+              color="primary"
+              @click.native.stop="dialog=true"
+            >New</v-btn>
+          </v-layout>
+        </v-card>
+      </v-layout>
+      <!-- <v-layout
+        v-for="(row, i) in theaterGrid"
+        :key="i"
+        row
+      > -->
+      <v-layout
+        class="theaters-container"
+        row
+      >
+        <v-flex
+          v-for="theater in theaters"
+          :key="theater.id"
+          xs12
+          sm6
+          md4
+          lg4
+          xl4
+          pa-3
+        >
+          <theater
+            :info="theater"
+            class="theater-placeholder"
+            @editTheater="editTheater"
+            @removeTheater="removeTheater"
+          />
         </v-flex>
       </v-layout>
     </v-container>
@@ -123,6 +158,8 @@ import * as _ from 'lodash';
 import { mapGetters } from 'vuex';
 import TheatersContorller from 'Controllers/theaters.controller';
 
+import Theater from 'Components/Admin/Theater.component';
+
 const MAP_KIND = {
   'Cinema': 'm',
   'Theater': 'p'
@@ -130,12 +167,17 @@ const MAP_KIND = {
 
 export default {
   name: 'AdminTheaters',
+  components: {
+    Theater
+  },
   data() {
     return {
       dialog: false,
       new_theater_name: '',
       new_theater_address: '',
-      new_theater_kind: 'Cinema'
+      new_theater_kind: 'Cinema',
+      show: false,
+      gradient: 'to top, #1565C0, #42A5F5'
     };
   },
   computed: {
@@ -162,6 +204,9 @@ export default {
     },
     pageCount() {
       return _.ceil(_.divide(this.theatersCount + 1, this.entriesPerPage));
+    },
+    theaterGrid() {
+      return _.chunk(this.theaters, 4);
     }
   },
   beforeMount() {
@@ -169,6 +214,12 @@ export default {
     TheatersContorller.requestPage(1);
   },
   methods: {
+    editTheater(id) {
+      console.log('Edit theater', id);
+    },
+    removeTheater(id) {
+      console.log('Remove theater', id);
+    },
     resetDialog() {
       this.new_theater_name = '';
       this.new_theater_address = '';
@@ -193,12 +244,22 @@ export default {
 </script>
 
 <style>
-/* .theater-container {
-} */
-
 #pagination {
-  /* position: fixed;
-  bottom: 5%; */
   max-width: none;
+}
+.theaters-toolbar {
+  width: 100%;
+}
+.theaters-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 </style>
