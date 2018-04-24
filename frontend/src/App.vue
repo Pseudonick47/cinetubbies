@@ -72,8 +72,7 @@ export default {
       drawer: false,
       toolbarItems: {
         'cinema_admin': [
-          { icon: 'lock', text: 'Home', path: '/home' },
-          { icon: 'add', text: 'New movie', path: '/movies/new' }
+          { icon: 'lock', text: 'Home', path: '/home' }
         ]
       },
       drawerItems: {
@@ -81,14 +80,16 @@ export default {
           { icon: 'domain', text: 'Home', path: '/home' }
         ],
         'cinema_admin': [
-          { icon: 'person_add', text: 'Home', path: '/home' },
-          { icon: 'add', text: 'New movie', path: '/movies/new' }
+          { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
+          { icon: 'person', text: 'Account settings', path: '/user/settings' },
+          { icon: 'list', text: 'Reports', path: '/reports' }
         ],
         'fan_zone_admin': [
-          { icon: 'person_add', text: 'Home', path: '/home' }
+          { icon: 'home', text: 'Home', path: '/home' }
         ],
         'user': [
-          { icon: 'person_add', text: 'Home', path: '/home' },
+          { icon: 'home', text: 'Home', path: '/home' },
           { icon: 'settings', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [

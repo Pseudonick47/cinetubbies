@@ -2,7 +2,9 @@ from django.shortcuts import render
 from movies.serializers import MovieSerializer
 from movies.models import Movie
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
+from rest_framework.response import Response
+from .permissions import IsCreatorOrReadOnly
 
 class MovieViewSet(viewsets.ModelViewSet):
     """
@@ -10,9 +12,24 @@ class MovieViewSet(viewsets.ModelViewSet):
     """
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    permission_classes = [IsCreatorOrReadOnly]
 
-    # creating new movie
-    @action(detail=False)
-    def create(self, request, * args, ** kwargs):
-        movie = Movie.create_movie(request.data)
-        return Response(MovieSerializer(movie).data)
+    # create new movie
+    def create(self, request):
+        serializer = MovieSerializer(data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+        serializer.validated_data['admin'] = request.user
+        serializer.save()
+        return Response(serializer.data)
+
+    def list(self, request):
+        movies = Movie.objects.filter(admin_id=request.user.id).all()
+        return Response(MovieSerializer(movies, many=True).data)
+
+    # delete movie
+    def destroy(self, request, pk=None):
+        movie = Movie.objects.get(id=pk)
+        self.check_object_permissions(request, movie)
+        movie.delete()
+        return Response({'message': 'Movie successfully deleted'})

@@ -1,3 +1,9 @@
 from django.test import TestCase
 
-# Create your tests here.
+class MovieViewSetTests(TestCase):
+    def test_no_movies(self):
+        """
+        If no movies exist,...
+        """
+        response = self.client.get('/api/movies/')
+        self.assertEqual(response.status_code, 200)
