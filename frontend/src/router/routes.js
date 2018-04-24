@@ -5,6 +5,9 @@ import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/Movies/Movies.component';
 import Settings from 'Components/User/Settings.component';
+import AdminTheaters from 'Components/Admin/Theaters.component';
+import CinemaAdmin from 'Components/Admin/CinemaAdmin.component';
+import FanZoneAdmin from 'Components/Admin/FanZoneAdmin.component';
 
 export const routes = [
   {
@@ -51,6 +54,30 @@ export const routes = [
     path: '/user/settings',
     name: 'user-settings',
     component: Settings,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/admin/theaters',
+    name: 'admin-theaters',
+    component: AdminTheaters,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/admin/cinema',
+    name: 'cinema-admin',
+    component: CinemaAdmin,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/admin/fan-zone',
+    name: 'fan-zone-admin',
+    component: FanZoneAdmin,
     meta: {
       logged: true
     }

@@ -1,14 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { auth, alert } from './modules';
+import { auth, alert, theaters } from './modules';
 
 Vue.use(Vuex);
 
 const storeData = {
   modules: {
     auth,
-    alert
+    alert,
+    theaters
   }
 };
 

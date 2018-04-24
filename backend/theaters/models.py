@@ -17,3 +17,6 @@ class Theater(models.Model):
     kind = models.CharField(
         max_length=1, choices=THEATER_KIND
     )
+
+    def __str__(self):
+        return '{0} {1}, {2} theater'.format(self.id, self.name, self.kind)

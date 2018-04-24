@@ -22,9 +22,14 @@ update_admin = TheaterAPI.as_view({
     'patch': 'update_admin'
 })
 
+get_count = TheaterAPI.as_view({
+    'get': 'count',
+})
+
 
 urlpatterns = format_suffix_patterns([
     path('', theaters, name='theaters'),
+    path('count', get_count, name="get_count"),
     path('<int:pk>', theater, name='theater'),
     path('<int:pk>/admin', update_admin, name='update_admin')
 ])

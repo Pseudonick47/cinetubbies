@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, action
 from rest_framework.response import Response
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,9 +18,9 @@ class TheaterAPI(viewsets.ModelViewSet):
     serializer_class = TheaterSerializer
 
     def list(self, request):
-        num = request.data.get('num')
+        num = request.GET.get('num')
         paginator = Paginator(self.queryset, num if num else 10)
-        page = request.data.get('page')
+        page = request.GET.get('page')
         theaters = paginator.get_page(page if page else 1)
         return Response(data=TheaterSerializer(theaters, many=True).data)
 
@@ -39,7 +39,8 @@ class TheaterAPI(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         theater = get_object_or_404(Theater, pk=pk)
         self.check_object_permissions(request, theater)
-        serializer = TheaterSerializer(theater, data=request.data, partial=True)
+        serializer = TheaterSerializer(
+            theater, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data)
@@ -59,3 +60,7 @@ class TheaterAPI(viewsets.ModelViewSet):
         return Response(
             data={'message': 'Theater {0} successfully deleted.'.format(pk)}
         )
+
+    @action(detail=False)
+    def count(self, request):
+        return Response(data=Theater.objects.count())
