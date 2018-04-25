@@ -13,5 +13,14 @@ export default {
 
   postTheater(data) {
     Axios.post(PREFIX, data);
+  },
+
+  getTheaters() {
+    return Axios.get(PREFIX + 'justTheaters/');
+  },
+
+  updateRating(data) {
+    return Axios.post(PREFIX + 'rating/', data);
   }
+
 };

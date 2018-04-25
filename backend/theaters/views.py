@@ -8,9 +8,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 
-from .models import Theater
+from .models import Theater, THEATER_KIND, Voting
 from .serializers import TheaterSerializer
 from .permissions import IsAdminOrReadOnly, IsSystemAdmin
+from django.db.models import Avg, Count, Max
 
 
 class TheaterAPI(viewsets.ModelViewSet):
@@ -64,3 +65,19 @@ class TheaterAPI(viewsets.ModelViewSet):
     @action(detail=False)
     def count(self, request):
         return Response(data=Theater.objects.count())
+
+    # get all theaters and all cinemas
+    @action(detail=False)
+    def getTheaters(self, request):
+        theaters = Theater.objects.all()
+        return Response(TheaterSerializer(theaters, many=True).data)
+
+    @action(detail=False)
+    def updateRating(self, request):
+        vote, _ = Voting.objects.get_or_create(user_id=request.user.id, theater_id=request.data['id'])
+        vote.rating = request.data['rating']
+        vote.save()
+        rating = Voting.objects.filter(theater_id=request.data['id']).aggregate(rating=Avg('rating'))
+        voters = len(Voting.objects.filter(theater_id=request.data['id']).all())
+        data = {'rating':rating,'voters':voters}
+        return Response(data)

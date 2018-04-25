@@ -26,5 +26,14 @@ export default {
     TheatersService.postTheater(theater).then((response) => {
       this.requestPage(store.getters.page);
     });
+  },
+
+  getTheaters() {
+    return TheatersService.getTheaters();
+  },
+
+  updateRating(data) {
+    return TheatersService.updateRating(data);
   }
+
 };

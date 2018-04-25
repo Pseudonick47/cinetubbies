@@ -86,11 +86,27 @@
             <v-btn
               icon
               ripple
-              @click="remove(movie.id)"
+              @click.stop="confirmDelete = true"
             >
               <v-icon color="grey lighten-1">delete</v-icon>
             </v-btn>
           </v-list-tile-action>
+          <v-dialog
+            v-model="confirmDelete"
+            persistent
+            max-width="300px"
+          >
+            <v-card>
+              <v-card-text>
+                Delete this movie?
+              </v-card-text>
+            </v-card>
+            <v-card-actions>
+              <v-btn @click="remove(movie.id)">yes</v-btn>
+              <v-spacer/>
+              <v-btn @click="confirmDelete = false">no</v-btn>
+            </v-card-actions>
+          </v-dialog>
         </v-list-tile>
       </v-list>
     </v-flex>
@@ -108,7 +124,8 @@ export default {
     loading: false,
     search: '',
     movies: [],
-    movie: new Movie()
+    movie: new Movie(),
+    confirmDelete: false
   }),
   computed: {
     filteredMovies() {
@@ -151,6 +168,7 @@ export default {
     },
     remove(id) {
       this.loading = true;
+      this.confirmDelete = false;
       MoviesController.destroy(id)
         .then((response) => {
           this.loading = false;
