@@ -248,7 +248,7 @@ export default {
         'duration': duration,
         'description': description
       };
-      MoviesController.updateInfo(data).then((response) => {
+      MoviesController.update_info(data).then((response) => {
         this.movie = response.data;
         this.clear();
         this.$alert.success('Changes successfully saved');

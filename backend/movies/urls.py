@@ -13,7 +13,7 @@ movie_detail = MovieViewSet.as_view({
 movie_list = MovieViewSet.as_view({
   'get': 'list',
   'post': 'create',
-  'patch': 'updateInfo'
+  'patch': 'update_info'
 })
 
 urlpatterns = format_suffix_patterns([

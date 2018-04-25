@@ -35,7 +35,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     return Response({'message': 'Movie successfully deleted'})
 
   @action(detail=False)
-  def updateInfo(self, request):
+  def update_info(self, request):
     movie = Movie.objects.get(id=request.data['movie_id'], admin_id=request.data['admin_id'])
     movie.title = request.data['title']
     movie.genre = request.data['genre']

@@ -14,7 +14,7 @@ export default {
   destroy(data) {
     return Axios.delete(`${ENDPOINTS.MOVIES}${data}/`);
   },
-  updateInfo(data) {
+  update_info(data) {
     return Axios.patch(ENDPOINTS.MOVIES, data);
   }
 };

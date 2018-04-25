@@ -10,7 +10,7 @@ export default {
   destroy(data) {
     return MoviesApiService.destroy(data);
   },
-  updateInfo(data) {
-    return MoviesApiService.updateInfo(data);
+  update_info(data) {
+    return MoviesApiService.update_info(data);
   }
 };
