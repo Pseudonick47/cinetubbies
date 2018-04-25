@@ -9,5 +9,8 @@ export default {
   },
   destroy(data) {
     return MoviesApiService.destroy(data);
+  },
+  updateInfo(data) {
+    return MoviesApiService.updateInfo(data);
   }
 };

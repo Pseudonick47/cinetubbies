@@ -86,11 +86,79 @@
             <v-btn
               icon
               ripple
-              @click.stop="confirmDelete = true"
+              @click="editButton(movie.id)"
+            >
+              <v-icon color="grey lighten-1">edit</v-icon>
+            </v-btn>
+          </v-list-tile-action>
+          <v-list-tile-action >
+            <v-btn
+              icon
+              ripple
+              @click.stop="deleteButton(movie.id)"
             >
               <v-icon color="grey lighten-1">delete</v-icon>
             </v-btn>
           </v-list-tile-action>
+          <v-dialog
+            v-model="editDialog"
+            max-width="500px"
+            persistent>
+            <v-card>
+              <v-card-title>
+                Change information
+              </v-card-title>
+              <v-card-text>
+                <v-form
+                  v-model="valid"
+                >
+                  <v-text-field
+                    v-model="movie.title"
+                    :error-messages="errors.collect('title')"
+                    :counter="255"
+                    label="Title"
+                    data-vv-name="title"
+                    required
+                  />
+                  <v-text-field
+                    :counter="255"
+                    v-model="movie.genre"
+                    :error-messages="errors.collect('genre')"
+                    label="Genre"
+                    data-vv-name="genre"
+                    required
+                  />
+                  <v-text-field
+                    :counter="255"
+                    v-model="movie.director"
+                    label="Director"
+                  />
+                  <v-text-field
+                    :counter="255"
+                    v-model="movie.actors"
+                    label="Actors"
+                  />
+                  <v-text-field
+                    :counter="255"
+                    v-model="movie.duration"
+                    label="Duration"
+                  />
+                  <v-text-field
+                    :counter="255"
+                    v-model="movie.description"
+                    label="Description"
+                  />
+                  <v-btn
+                    :disabled="!valid"
+                    @click="edit(movie.title, movie.genre, movie.director, movie.actors, movie.duration, movie.description)"
+                  >
+                    save
+                  </v-btn>
+                  <v-btn @click="editDialog=false">close</v-btn>
+                </v-form>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
           <v-dialog
             v-model="confirmDelete"
             persistent
@@ -100,12 +168,13 @@
               <v-card-text>
                 Delete this movie?
               </v-card-text>
+              <v-card-actions>
+                <v-btn @click="remove(movie.id)">yes</v-btn>
+                <v-spacer/>
+                <v-btn @click="confirmDelete = false">no</v-btn>
+              </v-card-actions>
+
             </v-card>
-            <v-card-actions>
-              <v-btn @click="remove(movie.id)">yes</v-btn>
-              <v-spacer/>
-              <v-btn @click="confirmDelete = false">no</v-btn>
-            </v-card-actions>
           </v-dialog>
         </v-list-tile>
       </v-list>
@@ -117,6 +186,7 @@
 <script>
 import MoviesController from 'Controllers/movies.controller';
 import { Movie } from 'Models/movie.model';
+import { mapGetters } from 'vuex';
 
 export default {
   data: () => ({
@@ -125,7 +195,10 @@ export default {
     search: '',
     movies: [],
     movie: new Movie(),
-    confirmDelete: false
+    confirmDelete: false,
+    editDialog: false,
+    editingMovie: 0,
+    deletingMovie: 0
   }),
   computed: {
     filteredMovies() {
@@ -135,7 +208,10 @@ export default {
         });
       }
       return this.movies;
-    }
+    },
+    ...mapGetters([
+      'activeUser'
+    ])
   },
   mounted() {
     this.getMovies();
@@ -149,6 +225,34 @@ export default {
         this.$alert.success('Successfully added!');
       }).catch((response) => {
         this.$alert.error('Error while saving.');
+      });
+    },
+    editButton(movieId) {
+      this.editDialog = true;
+      this.editingMovie = movieId;
+    },
+    deleteButton(id) {
+      this.confirmDelete = true;
+      this.deletingMovie = id;
+    },
+    edit(title, genre, director, actors, duration, description) {
+      this.editDialog = false;
+      let data = {
+        'movie_id': this.editingMovie,
+        'admin_id': this.activeUser.id,
+        'title': title,
+        'genre': genre,
+        'director': director,
+        'actors': actors,
+        'duration': duration,
+        'description': description
+      };
+      MoviesController.updateInfo(data).then((response) => {
+        this.movie = response.data;
+        this.clear();
+        this.$alert.success('Changes successfully saved');
+      }).catch(() => {
+        this.$alert.error('Error while saving changes');
       });
     },
     clear() {
@@ -166,10 +270,10 @@ export default {
           this.$alert.error('Error occurred.');
         });
     },
-    remove(id) {
+    remove() {
       this.loading = true;
       this.confirmDelete = false;
-      MoviesController.destroy(id)
+      MoviesController.destroy(this.deletingMovie)
         .then((response) => {
           this.loading = false;
           this.getMovies();
