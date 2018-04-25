@@ -88,7 +88,7 @@
 
 <script>
 import StarRating from 'vue-star-rating';
-import TheatersController from 'Controllers/theaters.controller';
+import TheatersController from 'Controllers/system-admin.controller';
 import { mapGetters } from 'vuex';
 
 export default {

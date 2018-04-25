@@ -113,6 +113,7 @@
                   v-model="valid"
                 >
                   <v-text-field
+                    v-validate="'required'"
                     v-model="movie.title"
                     :error-messages="errors.collect('title')"
                     :counter="255"

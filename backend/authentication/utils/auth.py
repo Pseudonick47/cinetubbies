@@ -1,5 +1,10 @@
+import random
+import string
+
 from authentication.serializers import UserSerializer
 from django.core.mail import send_mail
+
+CHAR_SET = string.digits + string.ascii_letters
 
 def jwt_response_payload_handler(token, user=None, request=None):
   return {
@@ -31,3 +36,32 @@ def send_verification_mail(user, token):
     user.email,
     message
   )
+
+def send_mail_to_admin(user, password, token):
+  message = f"""
+    Hello, welcome to Cinetubbies
+    You are now able to login to our services. We have generated for you a
+    single use password and it will become invalid on you first login. You will
+    be prompted to enter a new one, please don't leave the page before you
+    confirm your new password.
+
+    These are your credentials:
+    Username: {user.username}
+    Password: {password}
+
+    To verify your email and login for the first time, visit:
+    ovo.je/neki/link/{token}
+
+    Sincerely,
+    Cinetubbies Team
+  """
+
+  send_email(
+    'Account information',
+    'tinkivinki@cinetubbies.com',
+    user.email,
+    message
+  )
+
+def generate_password(num_of_chars=12):
+  return ''.join([random.choice(CHAR_SET) for _ in range(12)])
