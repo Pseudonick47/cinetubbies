@@ -3,6 +3,7 @@ import Home from 'Components/Home.component';
 import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
+import Movies from 'Components/Movies/Movies.component';
 import Settings from 'Components/User/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 
@@ -37,6 +38,14 @@ export const routes = [
     component: Home,
     meta: {
       logged: true
+    }
+  },
+  {
+    path: '/movies',
+    name: 'movies',
+    component: Movies,
+    meta: {
+      cinemaAdmin: true
     }
   },
   {
