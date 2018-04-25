@@ -11,6 +11,7 @@
       <v-card-text>
         <v-form ref="form">
           <v-text-field
+            v-validate="'required'"
             v-model="theater.name"
             :error-messages="errors.collect('name')"
             prepend-icon="person"
@@ -20,6 +21,7 @@
             required
           />
           <v-text-field
+            v-validate="'required'"
             v-model="theater.address"
             :error-messages="errors.collect('address')"
             prepend-icon="person"
@@ -29,9 +31,20 @@
             required
           />
           <v-select
+            v-validate="'required'"
             v-model="theater.kind"
             :items="['Cinema', 'Theater']"
             label="Kind"
+            required
+          />
+          <v-select
+            v-validate="'required'"
+            :items="admins"
+            v-model="admin"
+            label="Admin"
+            item-text="username"
+            autocomplete
+            return-object
             required
           />
         </v-form>
@@ -55,6 +68,7 @@
 </template>
 <script>
 import SystemAdminController from 'Controllers/system-admin.controller';
+import { mapGetters } from 'vuex';
 
 const MAP_KIND = {
   'Cinema': 'm',
@@ -70,8 +84,14 @@ export default {
         name: '',
         address: '',
         kind: 'Cinema'
-      }
+      },
+      admin: null
     };
+  },
+  computed: {
+    ...mapGetters('systemAdmin', {
+      admins: 'theaterAdmins'
+    })
   },
   methods: {
     close() {
@@ -87,8 +107,7 @@ export default {
         if (result) {
           const theater = this.theater;
           theater.kind = MAP_KIND[theater.kind];
-          // TODO: select an admin
-          theater.admin_id = 2;
+          theater.admin_id = this.admin.id;
           SystemAdminController.registerTheater(theater);
           this.close();
           return;

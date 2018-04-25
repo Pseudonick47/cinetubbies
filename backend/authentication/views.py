@@ -68,6 +68,14 @@ class AdminViewSet(viewsets.ModelViewSet):
     else:
       admins = User.objects.all().exclude(role='user')
 
+    all_admins = request.GET.get('all')
+
+    if all_admins:
+      # user requested all admins of the same role
+      admins = User.objects.filter(role=role)
+      return Response(data=AdminSerializer(admins, many=True).data)
+
+    # return paginated results
     num = request.GET.get('num')
     paginator = Paginator(admins, num if num else 10)
     page = request.GET.get('page')
@@ -76,7 +84,6 @@ class AdminViewSet(viewsets.ModelViewSet):
     return Response(data=AdminSerializer(admins, many=True).data)
 
   def create(self, request):
-    # TODO: check permissions
     pwd = auth.generate_password()
     request.data['password'] = pwd
 

@@ -188,6 +188,7 @@ export default {
     }
   },
   beforeMount() {
+    SystemAdminContorller.requestTheaterAdmins();
     SystemAdminContorller.requestCount(this.$route.params.kind);
     SystemAdminContorller.requestPage(1, this.$route.params.kind);
   },

@@ -1,10 +1,16 @@
+import * as _ from 'lodash';
 import Axios from 'axios';
 
 const PREFIX = 'admins/';
 
 export default {
-  fetchAdmins(num, page, role) {
-    return Axios.get(`${PREFIX}?role=${role}&num=${num}&page=${page}`);
+  fetchAdmins(params) {
+    let urlParams = '?';
+
+    _.forOwn(params, (value, key) => {
+      urlParams += `&${key}=${value}`;
+    });
+    return Axios.get(`${PREFIX}${urlParams}`);
   },
 
   fetchCount(role) {

@@ -1,17 +1,22 @@
+import * as _ from 'lodash';
+
 const namespaced = true;
 
 const state = {
   data: [],
   page: 1,
   entriesPerPage: 8,
-  count: 0
+  count: 0,
+  theaterAdmins: []
 };
 
 const getters = {
   data: (state) => state.data,
   page: (state) => state.page,
   entriesPerPage: (state) => state.entriesPerPage,
-  count: (state) => state.count
+  count: (state) => state.count,
+  theaterAdmins: (state) => state.theaterAdmins,
+  theaterAdmin: (state) => (id) => _.find(state.theaterAdmins, [ 'id', id ])
 };
 
 const mutations = {
@@ -26,6 +31,9 @@ const mutations = {
   },
   setCount(state, count) {
     state.count = count;
+  },
+  setTheaterAdmins(state, admins) {
+    state.theaterAdmins = admins;
   }
 };
 
