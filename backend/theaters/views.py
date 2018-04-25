@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from .models import Theater, THEATER_KIND, Voting
 from .serializers import TheaterSerializer
 from .permissions import IsAdminOrReadOnly, IsSystemAdmin
-from django.db.models import Avg, Count, Max
+from django.db.models import Avg
 
 
 class TheaterAPI(viewsets.ModelViewSet):

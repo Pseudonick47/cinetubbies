@@ -21,9 +21,9 @@ class TheaterSerializer(serializers.Serializer):
         allow_blank=False,
         choices=THEATER_KIND
     )
-    voters_count = serializers.IntegerField(source='getVotersCount')
-    rating = serializers.DecimalField(source='getAvgRating', max_digits=2, decimal_places=1)
-    all_votes = serializers.DictField(source='getAllVotings', child=serializers.IntegerField())
+    voters_count = serializers.IntegerField(source='get_voters_count')
+    rating = serializers.DecimalField(source='get_avg_rating', max_digits=2, decimal_places=1)
+    all_votes = serializers.DictField(source='get_all_votings', child=serializers.IntegerField())
 
     def create(self, validated_data):
         return Theater.objects.create(**validated_data)

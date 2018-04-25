@@ -20,17 +20,17 @@ class Theater(models.Model):
     )
     voters = models.ManyToManyField(User, through='Voting', related_name='voters')
 
-    def getAllVotings(self):
+    def get_all_votings(self):
         all_votes = {}
         for voter in self.voters.all():
             rating = Voting.objects.filter(user_id=voter.id, theater_id=self.id).get()
             all_votes[voter.id] = rating.rating
         return all_votes
     
-    def getVotersCount(self):
+    def get_voters_count(self):
         return self.voters.count()
 
-    def getAvgRating(self):
+    def get_avg_rating(self):
         rating = Voting.objects.filter(theater_id=self.id).aggregate(Avg('rating'))
         return rating['rating__avg']
 
