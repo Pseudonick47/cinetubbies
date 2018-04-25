@@ -12,7 +12,7 @@ active = UserViewSet.as_view({
 })
 
 register = UserViewSet.as_view({
-  'post': 'register',
+  'post': 'create',
 })
 
 user = UserViewSet.as_view({
