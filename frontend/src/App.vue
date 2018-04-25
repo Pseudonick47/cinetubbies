@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <alert-box v-if="showAlert"/>
     <v-navigation-drawer
       v-model="drawer"
