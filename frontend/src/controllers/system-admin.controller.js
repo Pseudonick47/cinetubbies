@@ -35,7 +35,7 @@ export default {
       TheatersService.fetchCount().then((response) => {
         store.commit('systemAdmin/setCount', response.data);
       });
-    } else if (kind === 'theaters-admin') {
+    } else if (kind === 'theater-admins') {
       AdminsService.fetchCount('cinema_admin').then((response) => {
         store.commit('systemAdmin/setCount', response.data);
       });
@@ -50,15 +50,17 @@ export default {
     store.commit('systemAdmin/setEntriesPerPage', num);
   },
 
-  registerNewTheater(theater) {
+  registerTheater(theater) {
     TheatersService.postTheater(theater).then((response) => {
-      this.requestPage(store.getters['systemAdmin/page']);
+      this.requestCount('theaters');
+      this.requestPage(store.getters['systemAdmin/page'], 'theaters');
     });
   },
 
-  registerNewAdmin(admin) {
+  registerAdmin(admin, kind) {
     AdminsService.postAdmin(admin).then((response) => {
-      this.requestPage(store.getters['systemAdmin/page']);
+      this.requestCount(kind);
+      this.requestPage(store.getters['systemAdmin/page'], kind);
     });
   }
 };

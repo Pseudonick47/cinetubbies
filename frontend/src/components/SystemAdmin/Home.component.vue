@@ -88,69 +88,22 @@
         />
       </v-layout>
     </v-container>
-    <v-dialog
-      v-model="dialog"
-      persistent
-      max-width="500px"
-    >
-      <v-card>
-        <v-card-title>
-          <span class="headline">Register new theater/cinema</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex
-                xs12
-                sm12
-                md12
-              >
-                <v-text-field
-                  v-model="new_theater_name"
-                  label="Name"
-                  required
-                />
-              </v-flex>
-              <v-flex
-                xs12
-                sm12
-                md12
-              >
-                <v-text-field
-                  v-model="new_theater_address"
-                  label="Address"
-                />
-              </v-flex>
-              <v-flex
-                xs12
-                sm6
-              >
-                <v-select
-                  v-model="new_theater_kind"
-                  :items="['Cinema', 'Theater']"
-                  label="Kind"
-                  required
-                />
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <small>*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="blue darken-1"
-            flat
-            @click.native="resetDialog"
-          >Close</v-btn>
-          <v-btn
-            color="blue darken-1"
-            flat
-            @click.native="registerNewTheater"
-          >Confirm</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <theater-dialog
+      v-if="dialog && kind === 'theaters'"
+      @close="dialog = false"
+    />
+    <admin-dialog
+      v-else-if="dialog && kind === 'theater-admins'"
+      kind="theater-admins"
+      role="cinema_admin"
+      @close="dialog = false"
+    />
+    <admin-dialog
+      v-else-if="dialog && kind === 'fan-zone-admins'"
+      kind="fan-zone-admins"
+      role="fan_zone_admin"
+      @close="dialog = false"
+    />
   </div>
 </template>
 
@@ -159,26 +112,23 @@ import * as _ from 'lodash';
 import { mapGetters } from 'vuex';
 
 import Admin from 'Components/SystemAdmin/Admin.component';
+import AdminDialog from 'Components/SystemAdmin/AdminDialog.component';
 import Theater from 'Components/SystemAdmin/Theater.component';
-import SystemAdminContorller from 'Controllers/system-admin.controller';
+import TheaterDialog from 'Components/SystemAdmin/TheaterDialog.component';
 
-const MAP_KIND = {
-  'Cinema': 'm',
-  'Theater': 'p'
-};
+import SystemAdminContorller from 'Controllers/system-admin.controller';
 
 export default {
   name: 'SystemAdminHome',
   components: {
     Admin,
-    Theater
+    AdminDialog,
+    Theater,
+    TheaterDialog
   },
   data() {
     return {
       dialog: false,
-      new_theater_name: '',
-      new_theater_address: '',
-      new_theater_kind: 'Cinema',
       gradient: 'to top, #1565C0, #42A5F5'
     };
   },
@@ -208,7 +158,7 @@ export default {
       }
     },
     pageCount() {
-      return _.ceil(_.divide(this.count + 1, this.entriesPerPage));
+      return _.ceil(_.divide(this.count, this.entriesPerPage));
     },
     theaterGrid() {
       return _.chunk(this.data, 4);
@@ -228,27 +178,9 @@ export default {
     editTheater(id) {
       console.log('Edit theater', id);
     },
+
     removeTheater(id) {
       console.log('Remove theater', id);
-    },
-    resetDialog() {
-      this.new_theater_name = '';
-      this.new_theater_address = '';
-      this.new_theater_kind = 'Cinema';
-
-      this.dialog = false;
-    },
-
-    registerNewTheater() {
-      // TODO: select real admin
-      const newTheater = {
-        name: this.new_theater_name,
-        address: this.new_theater_address,
-        admin_id: 2,
-        kind: MAP_KIND[this.new_theater_kind]
-      };
-      SystemAdminContorller.registerNewTheater(newTheater);
-      this.resetDialog();
     }
   }
 };
@@ -272,5 +204,9 @@ export default {
   -webkit-flex-flow: row wrap;
   justify-content: flex-start;
   align-items: stretch;
+}
+
+.register-errors {
+  color: red;
 }
 </style>

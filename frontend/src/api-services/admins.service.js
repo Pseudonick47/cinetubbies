@@ -15,7 +15,7 @@ export default {
     }
   },
 
-  postTheater(data) {
-    Axios.post(PREFIX, data);
+  postAdmin(data) {
+    return Axios.post(PREFIX, data);
   }
 };
