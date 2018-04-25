@@ -89,7 +89,8 @@ export default {
   },
   computed: {
     admin() {
-      return this.$store.getters['systemAdmin/theaterAdmin'](this.info.admin_id);
+      const a = this.$store.getters['systemAdmin/theaterAdmin'](this.info.admin_id);
+      return a || { username: '', email: '' };
     }
   },
   methods: {
