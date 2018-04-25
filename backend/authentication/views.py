@@ -1,14 +1,19 @@
-from authentication.models import User
-from authentication.serializers import UserSerializer
-from rest_framework.response import Response
-from.permissions import IsSelfOrReadOnly
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
 from django.utils.decorators import decorator_from_middleware
+
+from rest_framework import viewsets
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import AllowAny, DjangoModelPermissionsOrAnonReadOnly, IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.response import Response
+
 from rest_framework_jwt.settings import api_settings
-from.utils import auth
-from rest_framework.permissions import AllowAny, DjangoModelPermissionsOrAnonReadOnly, IsAuthenticatedOrReadOnly
-from rest_framework.decorators import api_view, permission_classes
+
+
+from .models import User
+from .permissions import IsSelfOrReadOnly, IsSystemAdmin
+from .serializers import AdminSerializer, UserSerializer
+from .utils import auth
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
@@ -16,7 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
   permission_classes = [IsSelfOrReadOnly]
 
   @action(detail=False)
-  def current_user(self, request, *args, **kwargs):
+  def active_user(self, request, *args, **kwargs):
     user = request.user
     user = User.objects.get(id=user.id)
     return Response(UserSerializer(user).data)
@@ -50,3 +55,55 @@ class UserViewSet(viewsets.ModelViewSet):
     user.delete()
     return Response({'message': 'User successfully deleted'})
 
+
+class AdminViewSet(viewsets.ModelViewSet):
+  queryset = User.objects.all()
+  serializer_class = AdminSerializer
+  permission_classes = [IsAuthenticated, IsSystemAdmin]
+
+  def list(self, request):
+    role = request.GET.get('role')
+    if role:
+      admins = User.objects.filter(role=role)
+    else:
+      admins = User.objects.all().exclude(role='user')
+
+    all_admins = request.GET.get('all')
+
+    if all_admins:
+      # user requested all admins of the same role
+      admins = User.objects.filter(role=role)
+      return Response(data=AdminSerializer(admins, many=True).data)
+
+    # return paginated results
+    num = request.GET.get('num')
+    paginator = Paginator(admins, num if num else 10)
+    page = request.GET.get('page')
+    admins = paginator.get_page(page if page else 1)
+
+    return Response(data=AdminSerializer(admins, many=True).data)
+
+  def create(self, request):
+    pwd = auth.generate_password()
+    request.data['password'] = pwd
+
+    serializer = AdminSerializer(data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    admin = serializer.save()
+
+    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+    payload = jwt_payload_handler(admin)
+    token = jwt_encode_handler(payload)
+    auth.send_mail_to_admin(admin, pwd, token)
+
+    return Response(data=serializer.data)
+
+  @action(detail=False)
+  def count(self, request):
+      role = request.GET.get('role')
+      admins = User.objects.all().exclude(role='user')
+      if role:
+        return Response(data=admins.filter(role=role).count())
+      else:
+        return Response(data=admins.count())

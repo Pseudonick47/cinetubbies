@@ -7,29 +7,29 @@ from rest_framework.response import Response
 from .permissions import IsCreatorOrReadOnly
 
 class MovieViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows movies to be viewed or edited.
-    """
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
-    permission_classes = [IsCreatorOrReadOnly]
+  """
+  API endpoint that allows movies to be viewed or edited.
+  """
+  queryset = Movie.objects.all()
+  serializer_class = MovieSerializer
+  permission_classes = [IsCreatorOrReadOnly]
 
-    # create new movie
-    def create(self, request):
-        serializer = MovieSerializer(data=request.data, partial=True)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
-        serializer.validated_data['admin'] = request.user
-        serializer.save()
-        return Response(serializer.data)
+  # create new movie
+  def create(self, request):
+    serializer = MovieSerializer(data=request.data, partial=True)
+    if not serializer.is_valid():
+      return Response(serializer.errors, status=400)
+    serializer.validated_data['admin'] = request.user
+    serializer.save()
+    return Response(serializer.data)
 
-    def list(self, request):
-        movies = Movie.objects.filter(admin_id=request.user.id).all()
-        return Response(MovieSerializer(movies, many=True).data)
+  def list(self, request):
+    movies = Movie.objects.filter(admin_id=request.user.id).all()
+    return Response(MovieSerializer(movies, many=True).data)
 
-    # delete movie
-    def destroy(self, request, pk=None):
-        movie = Movie.objects.get(id=pk)
-        self.check_object_permissions(request, movie)
-        movie.delete()
-        return Response({'message': 'Movie successfully deleted'})
+  # delete movie
+  def destroy(self, request, pk=None):
+    movie = Movie.objects.get(id=pk)
+    self.check_object_permissions(request, movie)
+    movie.delete()
+    return Response({'message': 'Movie successfully deleted'})
