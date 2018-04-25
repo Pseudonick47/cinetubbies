@@ -15,7 +15,24 @@
           >
             <v-layout align-center>
               <v-flex>
-                <h3 class="display-3">Theaters</h3>
+                <h3
+                  v-if="kind === 'theaters'"
+                  class="display-3"
+                >
+                  Theaters
+                </h3>
+                <h3
+                  v-else-if="kind === 'theater-admins'"
+                  class="display-3"
+                >
+                  Theater Admins
+                </h3>
+                <h3
+                  v-else
+                  class="display-3"
+                >
+                  Fan Zone Admins
+                </h3>
                 <span class="subheading">Lorem ipsum dolor sit amet, pri veniam forensibus id. Vis maluisset molestiae id, ad semper lobortis cum. At impetus detraxit incorrupte usu, repudiare assueverit ex eum, ne nam essent vocent admodum.</span>
                 <v-divider
                   color="white"
