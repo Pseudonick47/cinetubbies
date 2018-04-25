@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Theater, THEATER_KIND
 
-
 class TheaterSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
   name = serializers.CharField(
@@ -22,6 +21,9 @@ class TheaterSerializer(serializers.Serializer):
     allow_blank=False,
     choices=THEATER_KIND
   )
+  voters_count = serializers.IntegerField(source='get_voters_count')
+  rating = serializers.DecimalField(source='get_avg_rating', max_digits=2, decimal_places=1)
+  all_votes = serializers.DictField(source='get_all_votings', child=serializers.IntegerField())
 
   def create(self, validated_data):
     return Theater.objects.create(**validated_data)
@@ -33,4 +35,8 @@ class TheaterSerializer(serializers.Serializer):
 
     theater.save()
 
-    return theater
+    return Theater
+
+  class Meta:
+    model = Theater
+    fields = ('id','name','address','admin_id','kind','voters_count','rating','all_votes')

@@ -33,3 +33,16 @@ class MovieViewSet(viewsets.ModelViewSet):
     self.check_object_permissions(request, movie)
     movie.delete()
     return Response({'message': 'Movie successfully deleted'})
+
+  @action(detail=False)
+  def update_info(self, request):
+    movie = Movie.objects.get(id=request.data['movie_id'], admin_id=request.data['admin_id'])
+    movie.title = request.data['title']
+    movie.genre = request.data['genre']
+    movie.director = request.data['director']
+    movie.actors = request.data['actors']
+    movie.description = request.data['description']
+    movie.duration = request.data['duration']
+    movie.save()
+    return Response(MovieSerializer(movie).data)
+

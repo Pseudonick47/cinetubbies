@@ -68,5 +68,13 @@ export default {
       this.requestCount(kind);
       this.requestPage(store.getters['systemAdmin/page'], kind);
     });
+  },
+
+  get_theaters() {
+    return TheatersService.get_theaters();
+  },
+
+  update_rating(data) {
+    return TheatersService.update_rating(data);
   }
 };

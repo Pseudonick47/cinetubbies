@@ -12,6 +12,15 @@ export default {
   },
 
   postTheater(data) {
-    return Axios.post(PREFIX, data);
+    Axios.post(PREFIX, data);
+  },
+
+  get_theaters() {
+    return Axios.get(PREFIX + 'just-theaters/');
+  },
+
+  update_rating(data) {
+    return Axios.post(PREFIX + 'rating/', data);
   }
+
 };
