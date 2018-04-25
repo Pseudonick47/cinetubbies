@@ -68,12 +68,12 @@ class TheaterAPI(viewsets.ModelViewSet):
 
     # get all theaters and all cinemas
     @action(detail=False)
-    def getTheaters(self, request):
+    def get_theaters(self, request):
         theaters = Theater.objects.all()
         return Response(TheaterSerializer(theaters, many=True).data)
 
     @action(detail=False)
-    def updateRating(self, request):
+    def update_rating(self, request):
         vote, _ = Voting.objects.get_or_create(user_id=request.user.id, theater_id=request.data['id'])
         vote.rating = request.data['rating']
         vote.save()

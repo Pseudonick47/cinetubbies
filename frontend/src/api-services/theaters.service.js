@@ -15,11 +15,11 @@ export default {
     Axios.post(PREFIX, data);
   },
 
-  getTheaters() {
-    return Axios.get(PREFIX + 'justTheaters/');
+  get_theaters() {
+    return Axios.get(PREFIX + 'just-theaters/');
   },
 
-  updateRating(data) {
+  update_rating(data) {
     return Axios.post(PREFIX + 'rating/', data);
   }
 

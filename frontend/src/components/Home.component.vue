@@ -133,7 +133,7 @@ export default {
   methods: {
     setRating(id, rating) {
       const data = { 'rating': rating, 'id': id };
-      TheatersController.updateRating(data)
+      TheatersController.update_rating(data)
         .then((response) => {
           let found = this.all.find(function(element) {
             return element.id === id;
@@ -147,7 +147,7 @@ export default {
     },
     getTheaters() {
       this.loading = true;
-      TheatersController.getTheaters()
+      TheatersController.get_theaters()
         .then((response) => {
           this.all = response.data;
           this.loading = false;

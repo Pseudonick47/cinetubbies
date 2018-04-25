@@ -28,12 +28,12 @@ export default {
     });
   },
 
-  getTheaters() {
-    return TheatersService.getTheaters();
+  get_theaters() {
+    return TheatersService.get_theaters();
   },
 
-  updateRating(data) {
-    return TheatersService.updateRating(data);
+  update_rating(data) {
+    return TheatersService.update_rating(data);
   }
 
 };

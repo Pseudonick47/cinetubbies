@@ -26,12 +26,12 @@ get_count = TheaterAPI.as_view({
     'get': 'count',
 })
 
-getTheaters = TheaterAPI.as_view({
-    'get': 'getTheaters'
+get_theaters = TheaterAPI.as_view({
+    'get': 'get_theaters'
 })
 
 rating = TheaterAPI.as_view({
-    'post': 'updateRating'
+    'post': 'update_rating'
 })
 
 
@@ -40,6 +40,6 @@ urlpatterns = format_suffix_patterns([
     path('count', get_count, name="get_count"),
     path('<int:pk>', theater, name='theater'),
     path('<int:pk>/admin', update_admin, name='update_admin'),
-    path('justTheaters/', getTheaters, name='get-theaters'),
+    path('just-theaters/', get_theaters, name='get-theaters'),
     path('rating/', rating, name='rating')
 ])
