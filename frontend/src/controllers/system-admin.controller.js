@@ -57,10 +57,7 @@ export default {
   },
 
   registerTheater(theater) {
-    TheatersService.postTheater(theater).then((response) => {
-      this.requestCount('theaters');
-      this.requestPage(store.getters['systemAdmin/page'], 'theaters');
-    });
+    return TheatersService.postTheater(theater);
   },
 
   registerAdmin(admin, kind) {

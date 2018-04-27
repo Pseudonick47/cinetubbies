@@ -4,7 +4,7 @@
       :color="alertColor"
       :value="showAlert"
       :icon="alertIcon"
-      style="position: fixed; top:0; left: 0; width: 100%; z-index: 9999; margin: 0;"
+      style="position: fixed; top:0; left: 20%; width: 60%; z-index: 9999; margin: 0;"
       transition="fade-transition"
     >
       {{ alertMessage }}

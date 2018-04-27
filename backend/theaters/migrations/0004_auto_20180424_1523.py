@@ -28,11 +28,6 @@ class Migration(migrations.Migration):
             model_name='theater',
             name='votes',
         ),
-        migrations.AlterField(
-            model_name='theater',
-            name='admin',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='admin', to=settings.AUTH_USER_MODEL),
-        ),
         migrations.AddField(
             model_name='voting',
             name='theater',

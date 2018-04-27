@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
 
-from .models import User
+from .models import User, THEATER_ADMIN, FAN_ZONE_ADMIN
 from .permissions import IsSelfOrReadOnly, IsSystemAdmin
 from .serializers import AdminSerializer, UserSerializer
 from .utils import auth
@@ -87,7 +87,10 @@ class AdminViewSet(viewsets.ModelViewSet):
     pwd = auth.generate_password()
     request.data['password'] = pwd
 
-    serializer = AdminSerializer(data=request.data, partial=True)
+    if (request.data['role'] == THEATER_ADMIN[0]):
+      serializer = TheaterAdminSerializer(data=request.data, partial=True)
+    else:
+      serializer = AdminSerializer(data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()
 

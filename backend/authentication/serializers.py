@@ -1,6 +1,9 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from .models import User, ROLES, ADMIN_ROLES
 
+from .models import User, ROLES, ADMIN_ROLES, TheaterAdmin
+
+from theaters.models import Theater
 
 class UserSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -26,7 +29,6 @@ class UserSerializer(serializers.Serializer):
       user.set_password(validated_data['password'])
     user.save()
     return user
-
 class AdminSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
   username = serializers.CharField(required=False, allow_blank=False, max_length=30)
@@ -46,3 +48,22 @@ class AdminSerializer(serializers.Serializer):
       user.set_password(validated_data['password'])
     user.save()
     return user
+
+class TheaterAdminSerializer(UserSerializer):
+  theater = serializers.PrimaryKeyRelatedField(
+    queryset=Theater.objects.all(),
+    allow_null=True
+  )
+  phone = None
+  city = None
+
+  def create(self, validated_data):
+    admin = TheaterAdmin(**validated_data)
+    admin.set_password(validated_data['password'])
+    admin.save()
+    return admin
+
+  def update(self, theater_admin, validated_data):
+    theater = get_object_or_404(Theater, pk=validated_data['theater'])
+    theater_admin.theater.set(theater)
+    return super.update(theater_admin, validated_data)
