@@ -78,11 +78,6 @@
 import SystemAdminController from 'Controllers/system-admin.controller';
 import { mapGetters } from 'vuex';
 
-// const MAP_KIND = {
-//   'cinema': 'm',
-//   'theater': 'p'
-// };
-
 export default {
   name: 'TheaterDialog',
   data() {

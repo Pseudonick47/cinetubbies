@@ -6,19 +6,22 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from authentication.models import TheaterAdmin
+from authentication.permissions import IsSystemAdmin
+from authentication.permissions import IsTheaterOrSystemAdmin
 
-from .models import Theater, THEATER_KIND, Voting
+from .models import Theater
+from .models import THEATER_KIND
+from .models import Voting
 from .serializers import PublicSerializer
 from .serializers import RestrictedSerializer
 from .serializers import AdministrationSerializer
 from .permissions import IsResponsibleForTheater
-from .permissions import IsTheaterOrSystemAdmin
-from .permissions import IsSystemAdmin
 
 
 class PublicAPI(ViewSet):

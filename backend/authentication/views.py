@@ -9,10 +9,11 @@ from rest_framework.response import Response
 
 from rest_framework_jwt.settings import api_settings
 
-
 from .models import User, THEATER_ADMIN, FAN_ZONE_ADMIN
 from .permissions import IsSelfOrReadOnly, IsSystemAdmin
-from .serializers import AdminSerializer, UserSerializer
+from .serializers import AdminSerializer
+from .serializers import TheaterAdminSerializer
+from .serializers import UserSerializer
 from .utils import auth
 
 class UserViewSet(viewsets.ModelViewSet):
