@@ -94,21 +94,14 @@ WSGI_APPLICATION = 'cinetubbies.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.mysql',
-#     'NAME': 'cinetubbies',
-#     'USER': 'root',
-#     'PASSWORD': 'password',
-#     'HOST': 'localhost',
-#     'PORT': '3306',
-#   },
-# }
-
 DATABASES = {
   'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': '/home/alexander/Temp/dev.db',
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'cinetubbies',
+    'USER': 'root',
+    'PASSWORD': 'password',
+    'HOST': 'localhost',
+    'PORT': '3306',
   },
 }
 
