@@ -1,7 +1,11 @@
 from rest_framework import serializers
-from .models import Theater, THEATER_KIND
 
-class TheaterSerializer(serializers.Serializer):
+from authentication.models import TheaterAdmin
+
+from .models import Theater
+from .models import THEATER_KIND
+
+class PublicSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
   name = serializers.CharField(
     required=True,
@@ -13,8 +17,9 @@ class TheaterSerializer(serializers.Serializer):
     allow_blank=False,
     max_length=300
   )
-  admin_id = serializers.IntegerField(
-    required=True,
+  description = serializers.CharField(
+    required=False,
+    allow_blank=True
   )
   kind = serializers.ChoiceField(
     required=True,
@@ -22,21 +27,35 @@ class TheaterSerializer(serializers.Serializer):
     choices=THEATER_KIND
   )
   voters_count = serializers.IntegerField(source='get_voters_count')
-  rating = serializers.DecimalField(source='get_avg_rating', max_digits=2, decimal_places=1)
-  all_votes = serializers.DictField(source='get_all_votings', child=serializers.IntegerField())
+  rating = serializers.DecimalField(
+    source='get_avg_rating',
+    max_digits=2,
+    decimal_places=1
+  )
+  all_votes = serializers.DictField(
+    source='get_all_votings',
+    child=serializers.IntegerField()
+  )
 
-  def create(self, validated_data):
-    return Theater.objects.create(**validated_data)
+class RestrictedSerializer(PublicSerializer):
+  voters_count = None
+  rating = None
+  all_votes = None
 
   def update(self, theater, validated_data):
     for k, v in validated_data.items():
-      if k != 'admin':
-        setattr(theater, k, v)
-
+      setattr(theater, k, v)
     theater.save()
+    return theater
 
-    return Theater
+class AdministrationSerializer(RestrictedSerializer):
+  admins = serializers.PrimaryKeyRelatedField(
+    queryset=TheaterAdmin.objects.all(),
+    many=True
+  )
 
-  class Meta:
-    model = Theater
-    fields = ('id','name','address','admin_id','kind','voters_count','rating','all_votes')
+  def create(self, validated_data):
+    admins = validated_data.pop('admins')
+    theater = Theater.objects.create(**validated_data)
+    theater.admins.set(admins)
+    return theater

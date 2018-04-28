@@ -1,45 +1,47 @@
 from django.urls import path
+
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from .views import TheaterAPI
+from cinetubbies.util.routing import BaseManageView
+from .views import AdministrationAPI
+from .views import PublicAPI
+from .views import RestrictedAPI
 
 
-theater = TheaterAPI.as_view({
-  'get': 'retrieve',
-  'put': 'update',
-  'patch': 'update',
-  'delete': 'destroy',
-})
+class TheatersManageView(BaseManageView):
+  VIEWS_BY_METHOD = {
+    'GET': PublicAPI.as_view({'get': 'list'}),
+    'POST': AdministrationAPI.as_view({'post': 'create'}),
+  }
 
+class TheaterManageView(BaseManageView):
+  VIEWS_BY_METHOD = {
+    'DELETE': AdministrationAPI.as_view({'delete': 'destroy'}),
+    'GET': PublicAPI.as_view({'get': 'retrieve'}),
+    'PUT': RestrictedAPI.as_view({'put': 'update'}),
+  }
 
-theaters = TheaterAPI.as_view({
-  'get': 'list',
-  'post': 'create',
-})
-
-update_admin = TheaterAPI.as_view({
-  'put': 'update_admin',
-  'patch': 'update_admin'
-})
-
-get_count = TheaterAPI.as_view({
-  'get': 'count',
-})
-
-get_theaters = TheaterAPI.as_view({
+get_theaters = PublicAPI.as_view({
   'get': 'get_theaters'
 })
 
-rating = TheaterAPI.as_view({
+rating = PublicAPI.as_view({
   'post': 'update_rating'
 })
 
+count_theaters = PublicAPI.as_view({
+  'get': 'count',
+})
+
+update_admins = AdministrationAPI.as_view({
+  'put': 'update',
+})
 
 urlpatterns = format_suffix_patterns([
-  path('', theaters, name='theaters'),
-  path('count', get_count, name="get_count"),
-  path('<int:pk>', theater, name='theater'),
-  path('<int:pk>/admin', update_admin, name='update_admin'),
-  path('just-theaters/', get_theaters, name='get-theaters'),
-  path('rating/', rating, name='rating')
+  path('', TheatersManageView.as_view(), name='theaters'),
+  path('count', count_theaters, name="count-theaters"),
+  path('all', get_theaters, name='get-theaters'),
+  path('<int:pk>', TheaterManageView.as_view(), name='theater'),
+  path('<int:pk>/admins/', update_admins, name='update-admins'),
+  path('rating', rating, name='rating')
 ])

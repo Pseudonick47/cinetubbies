@@ -30,22 +30,30 @@
             type="text"
             required
           />
-          <v-select
+          <v-radio-group
             v-validate="'required'"
             v-model="theater.kind"
-            :items="['Cinema', 'Theater']"
-            label="Kind"
-            required
-          />
+            row
+          >
+            <v-radio
+              label="Cinema"
+              value="m"
+            />
+            <v-radio
+              label="Theater"
+              value="p"
+            />
+          </v-radio-group>
           <v-select
             v-validate="'required'"
             :items="admins"
-            v-model="admin"
+            v-model="selected_admins"
             label="Admin"
             item-text="username"
             autocomplete
             return-object
             required
+            multiple
           />
         </v-form>
         <small>*indicates required field</small>
@@ -70,11 +78,6 @@
 import SystemAdminController from 'Controllers/system-admin.controller';
 import { mapGetters } from 'vuex';
 
-const MAP_KIND = {
-  'Cinema': 'm',
-  'Theater': 'p'
-};
-
 export default {
   name: 'TheaterDialog',
   data() {
@@ -83,9 +86,9 @@ export default {
       theater: {
         name: '',
         address: '',
-        kind: 'Cinema'
+        kind: 'cinema'
       },
-      admin: null
+      selected_admins: null
     };
   },
   computed: {
@@ -106,9 +109,18 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           const theater = this.theater;
-          theater.kind = MAP_KIND[theater.kind];
-          theater.admin_id = this.admin.id;
-          SystemAdminController.registerTheater(theater);
+          theater.admins = _.map(this.selected_admins, 'id');
+
+          SystemAdminController.registerTheater(theater)
+            .then((response) => {
+              SystemAdminController.requestCount('theaters');
+              SystemAdminController.requestPage(this.$store.getters['systemAdmin/page'], 'theaters');
+              this.$alert.success('Theater/cinema has been created!');
+            })
+            .catch(() => {
+              this.$alert.error('Something went wrong. Please try again.');
+            });
+
           this.close();
           return;
         }
