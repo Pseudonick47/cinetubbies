@@ -18,7 +18,7 @@ class TheaterManageView(BaseManageView):
   VIEWS_BY_METHOD = {
     'DELETE': AdministrationAPI.destroy,
     'GET': PublicAPI.retrieve,
-    'PUT': RestrictedAPI,
+    'PUT': RestrictedAPI.update,
   }
 
 get_theaters = PublicAPI.as_view({
