@@ -28,6 +28,9 @@ class User(AbstractUser):
   city = models.CharField(max_length=30, blank=True)
   first_login = models.BooleanField(default=True)
 
+  def is_admin(self):
+    return self.role in [admin[0] for admin in ADMIN_ROLES]
+
   def is_system_admin(self):
     return self.role == SYSTEM_ADMIN[0]
 
@@ -45,15 +48,5 @@ class TheaterAdmin(User):
     null=True,
   )
 
-  def is_system_admin(self):
-    return False
-
-  def is_theater_admin(self):
-    return True
-
-  def is_fan_zone_admin(self):
-    return False
-
   def __str__(self):
     return serialize('json', [self])[1:-1]
-
