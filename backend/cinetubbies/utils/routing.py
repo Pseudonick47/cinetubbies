@@ -14,3 +14,10 @@ class BaseManageView(APIView):
     if request.method in self.VIEWS_BY_METHOD:
       return self.VIEWS_BY_METHOD[request.method](request, *args, **kwargs)
     return Response(status=405)
+
+
+def show_urls(urllist, depth=0):
+  for entry in urllist:
+    print("  " * depth, entry.pattern)
+    if hasattr(entry, 'url_patterns'):
+      show_urls(entry.url_patterns, depth + 1)

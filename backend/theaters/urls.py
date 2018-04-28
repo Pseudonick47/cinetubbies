@@ -2,7 +2,7 @@ from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from cinetubbies.util.routing import BaseManageView
+from cinetubbies.utils.routing import BaseManageView
 from .views import AdministrationAPI
 from .views import PublicAPI
 from .views import RestrictedAPI

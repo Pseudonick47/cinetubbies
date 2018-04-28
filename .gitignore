@@ -1,3 +1,7 @@
+### Media files ###
+media/
+!media/test/*
+
 .DS_Store
 node_modules/
 /dist/
