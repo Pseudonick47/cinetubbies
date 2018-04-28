@@ -16,11 +16,11 @@ export default {
   },
 
   get_theaters() {
-    return Axios.get(PREFIX + 'just-theaters/');
+    return Axios.get(`${PREFIX}all`);
   },
 
   update_rating(data) {
-    return Axios.post(PREFIX + 'rating/', data);
+    return Axios.post(`${PREFIX}rating`, data);
   }
 
 };
