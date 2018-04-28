@@ -10,15 +10,15 @@ from .views import RestrictedAPI
 
 class TheatersManageView(BaseManageView):
   VIEWS_BY_METHOD = {
-    'GET': PublicAPI.list,
-    'POST': AdministrationAPI.create,
+    'GET': PublicAPI.as_view({'get': 'list'}),
+    'POST': AdministrationAPI.as_view({'post': 'create'}),
   }
 
 class TheaterManageView(BaseManageView):
   VIEWS_BY_METHOD = {
-    'DELETE': AdministrationAPI.destroy,
-    'GET': PublicAPI.retrieve,
-    'PUT': RestrictedAPI.update,
+    'DELETE': AdministrationAPI.as_view({'delete': 'destroy'}),
+    'GET': PublicAPI.as_view({'get': 'retrieve'}),
+    'PUT': RestrictedAPI.as_view({'put': 'update'}),
   }
 
 get_theaters = PublicAPI.as_view({
@@ -42,6 +42,6 @@ urlpatterns = format_suffix_patterns([
   path('count', count_theaters, name="count-theaters"),
   path('all', get_theaters, name='get-theaters'),
   path('<int:pk>', TheaterManageView.as_view(), name='theater'),
-  path('<int:pk>/admins', update_admins, name='update-admins'),
+  path('<int:pk>/admins/', update_admins, name='update-admins'),
   path('rating', rating, name='rating')
 ])

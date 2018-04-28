@@ -12,7 +12,7 @@ export default {
   },
 
   postTheater(data) {
-    return Axios.post(`${PREFIX}create`, data);
+    return Axios.post(`${PREFIX}`, data);
   },
 
   get_theaters() {

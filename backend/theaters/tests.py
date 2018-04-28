@@ -70,9 +70,10 @@ class TheaterAPITests(APITestCase):
       'kind': 'm',
       'admins': [1],
     }
+
     # attempt post as a user; should fail
     response = self.client.post(
-      path='http://localhost:8000/api/theaters/create',
+      path='http://localhost:8000/api/theaters/',
       data = new_theater,
       format='json'
     )
@@ -91,7 +92,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt post as a theater admin; should fail
     response = self.client.post(
-      path='http://localhost:8000/api/theaters/create',
+      path='http://localhost:8000/api/theaters/',
       data = new_theater,
       format='json'
     )
@@ -110,7 +111,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt post as a system admin; should pass
     response = self.client.post(
-      path='http://localhost:8000/api/theaters/create',
+      path='http://localhost:8000/api/theaters/',
       data = new_theater,
       format='json'
     )
@@ -122,7 +123,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt creating a theater with an invalid kind value
     response = self.client.post(
-      path='http://localhost:8000/api/theaters/create',
+      path='http://localhost:8000/api/theaters/',
       data = new_theater,
       format='json'
     )
@@ -132,7 +133,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt create a theater with a non-existing admin
     response = self.client.post(
-      path='http://localhost:8000/api/theaters/create',
+      path='http://localhost:8000/api/theaters/',
       data = new_theater,
       format='json'
     )
@@ -187,7 +188,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt put as a user; should fail
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/2/update',
+      path='http://localhost:8000/api/theaters/2',
       data = update_theater,
       format='json'
     )
@@ -206,7 +207,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt put as a theater admin; should pass
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/2/update',
+      path='http://localhost:8000/api/theaters/2',
       data = update_theater,
       format='json'
     )
@@ -218,7 +219,7 @@ class TheaterAPITests(APITestCase):
     # attempt put on a theater that is not theater admins responsibility;
     # should fail
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/1/update',
+      path='http://localhost:8000/api/theaters/1',
       data = update_theater,
       format='json'
     )
@@ -232,7 +233,7 @@ class TheaterAPITests(APITestCase):
     }
 
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/2/update',
+      path='http://localhost:8000/api/theaters/2',
       data = update_theater,
       format='json'
     )
@@ -248,7 +249,7 @@ class TheaterAPITests(APITestCase):
     update_theater['kind'] = 's'
     # attempt updating theater kind to a invalid value; should fail
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/2/update',
+      path='http://localhost:8000/api/theaters/2',
       data = update_theater,
       format='json'
     )
@@ -273,7 +274,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt put as a system admin; should pass
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/2/update',
+      path='http://localhost:8000/api/theaters/2',
       data = update_theater,
       format='json'
     )
@@ -284,7 +285,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt put as a system admin on a different theater; should pass
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/1/update',
+      path='http://localhost:8000/api/theaters/1',
       data = update_theater,
       format='json'
     )
@@ -295,7 +296,7 @@ class TheaterAPITests(APITestCase):
   def test_update_admin(self):
     # attempt put as a user; should fail
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/1/admins',
+      path='http://localhost:8000/api/theaters/1/admins/',
       data = { 'admins': [2] },
       format='json'
     )
@@ -314,7 +315,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt put as a theater admin; should fail
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/1/admins',
+      path='http://localhost:8000/api/theaters/1/admins/',
       data = { 'admins': [2] },
       format='json'
     )
@@ -333,7 +334,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt put as a system admin; should pass
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/1/admins',
+      path='http://localhost:8000/api/theaters/1/admins/',
       data = { 'admins': [2] },
       format='json'
     )
@@ -344,7 +345,7 @@ class TheaterAPITests(APITestCase):
 
     # set theater admin to a non-existing user; should fail
     response = self.client.put(
-      path='http://localhost:8000/api/theaters/1/admins',
+      path='http://localhost:8000/api/theaters/1/admins/',
       data = { 'admins': [99] },
       format='json'
     )
@@ -353,7 +354,7 @@ class TheaterAPITests(APITestCase):
   def test_destroy(self):
     # attempt delete as a user; should fail
     response = self.client.delete(
-      path='http://localhost:8000/api/theaters/1/delete'
+      path='http://localhost:8000/api/theaters/1'
     )
     self.assertTrue(response.status_code, 401)
 
@@ -370,7 +371,7 @@ class TheaterAPITests(APITestCase):
 
     # attempt delete as a theater admin; should fail
     response = self.client.delete(
-      path='http://localhost:8000/api/theaters/1/delete'
+      path='http://localhost:8000/api/theaters/1'
     )
     self.assertTrue(response.status_code, 401)
 
@@ -387,13 +388,13 @@ class TheaterAPITests(APITestCase):
 
     # attempt delete as a system admin; should pass
     response = self.client.delete(
-      path='http://localhost:8000/api/theaters/1/delete'
+      path='http://localhost:8000/api/theaters/1'
     )
     self.assertTrue(response.status_code, 200)
 
     # try to delete a non-existing theater; should fail
     response = self.client.delete(
-      path='http://localhost:8000/api/theaters/999/delete'
+      path='http://localhost:8000/api/theaters/999'
     )
     self.assertTrue(response.status_code, 404)
 
