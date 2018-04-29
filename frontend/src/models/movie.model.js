@@ -6,6 +6,7 @@ export class Movie {
     this.actors = '';
     this.duration = '';
     this.description = '';
+    this.theater = '';
     _.assignWith(this, data);
   }
 }

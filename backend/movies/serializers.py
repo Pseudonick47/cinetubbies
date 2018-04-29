@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Movie
+from .models import Movie, Theater
 
 class MovieSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -9,8 +9,15 @@ class MovieSerializer(serializers.Serializer):
   actors = serializers.CharField(max_length=255, allow_blank=True)
   duration = serializers.CharField(max_length=255, allow_blank=True)
   description = serializers.CharField(max_length=255, allow_blank=True)
+  theater = serializers.PrimaryKeyRelatedField(queryset=Theater.objects.all(),allow_null=False)
 
   def create(self, validated_data):
     movie = Movie.objects.create(**validated_data)
+    movie.save()
+    return movie
+
+  def update(self, movie, validated_data):
+    for k, v in validated_data.items():
+      setattr(movie, k, v)
     movie.save()
     return movie

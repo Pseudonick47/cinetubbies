@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from authentication.models import TheaterAdmin
 
 class IsCreatorOrReadOnly(permissions.BasePermission):
   def has_permission(self, request, view):
@@ -8,4 +9,6 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
       return True
 
   def has_object_permission(self, request, view, obj):
-    return request.user.id == obj.admin_id
+    admin = TheaterAdmin.objects.get(id=request.user.id)
+    return admin.theater_id == obj.theater_id
+    
