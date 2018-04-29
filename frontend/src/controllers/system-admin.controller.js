@@ -67,19 +67,23 @@ export default {
     });
   },
 
-  get_theaters() {
-    return TheatersService.get_theaters();
+  getTheaters() {
+    return TheatersService.getTheaters();
   },
 
-  update_rating(data) {
-    return TheatersService.update_rating(data);
+  updateRating(data) {
+    return TheatersService.updateRating(data);
   },
 
-  get_theater(data) {
-    return TheatersService.get_theater(data);
+  getTheater(data) {
+    return TheatersService.getTheater(data);
   },
 
   update(data, id) {
     return TheatersService.update(data, id);
+  },
+
+  getMovies(data) {
+    return TheatersService.getMovies(data);
   }
 };

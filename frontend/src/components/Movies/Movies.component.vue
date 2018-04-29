@@ -189,6 +189,7 @@
 
 <script>
 import MoviesController from 'Controllers/movies.controller';
+import TheaterController from 'Controllers/system-admin.controller';
 import { Movie } from 'Models/movie.model';
 import { mapGetters } from 'vuex';
 import ChangeInfoDialog from './ChangeInfo.component';
@@ -206,7 +207,8 @@ export default {
     confirmDelete: false,
     editDialog: false,
     editingMovie: new Movie(),
-    deletingMovie: 0
+    deletingMovie: 0,
+    theaterId: 0
   }),
   computed: {
     filteredMovies() {
@@ -222,10 +224,11 @@ export default {
     ])
   },
   mounted() {
-    this.getMovies();
+    this.getTheaterAndMovies();
   },
   methods: {
     submit() {
+      this.movie.theater = this.theaterId;
       MoviesController.create(this.movie
       ).then((response) => {
         this.clear();
@@ -237,7 +240,7 @@ export default {
     },
     editButton(movieId) {
       MoviesController.retrieve(movieId).then((response) => {
-        this.editingMovie = response.data;
+        this.editingMovie = new Movie(response.data);
       }).catch(() => {
         this.$alert.error('Error occurred!');
       });
@@ -256,7 +259,7 @@ export default {
       }, {});
       MoviesController.update(data, this.editingMovie.id).then((response) => {
         this.editDialog = false;
-        this.editingMovie = response.data;
+        this.editingMovie = new Movie(response.data);
         this.$alert.success('Settings successfully saved');
       }).catch(() => {
         this.$alert.error('Error while saving settings');
@@ -265,9 +268,25 @@ export default {
     clear() {
       this.movie = new Movie();
     },
-    getMovies() {
+    getTheaterAndMovies() {
       this.loading = true;
-      MoviesController.getMovies()
+      TheaterController.getTheater(this.activeUser.id)
+        .then((response) => {
+          this.theaterId = response.data.id;
+          this.getMovies();
+          this.loading = false;
+        })
+        .catch((response) => {
+          this.loading = false;
+          this.$alert.error('Error occurred.');
+        });
+    },
+    setId(id) {
+      this.theaterId = id;
+    },
+    getMovies(id = this.theaterId) {
+      this.loading = true;
+      TheaterController.getMovies(id)
         .then((response) => {
           this.movies = response.data;
           this.loading = false;

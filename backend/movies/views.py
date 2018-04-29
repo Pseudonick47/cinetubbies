@@ -21,15 +21,11 @@ class MovieViewSet(viewsets.ModelViewSet):
     serializer = MovieSerializer(data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
-    serializer.validated_data['admin'] = request.user
-    admin = TheaterAdmin.objects.get(user_ptr_id=request.user.id)
-    serializer.validated_data['theater'] = admin.theater
     serializer.save()
     return Response(serializer.data)
 
   def list(self, request):
-    admin = TheaterAdmin.objects.get(user_ptr_id=request.user.id)
-    movies = Movie.objects.filter(theater_id=admin.theater).all()
+    movies = Movie.objects.all()
     return Response(MovieSerializer(movies, many=True).data)
 
   # delete movie
@@ -38,18 +34,6 @@ class MovieViewSet(viewsets.ModelViewSet):
     self.check_object_permissions(request, movie)
     movie.delete()
     return Response({'message': 'Movie successfully deleted'})
-
-  @action(detail=False)
-  def update_info(self, request):
-    movie = Movie.objects.get(id=request.data['movie_id'], admin_id=request.data['admin_id'])
-    movie.title = request.data['title']
-    movie.genre = request.data['genre']
-    movie.director = request.data['director']
-    movie.actors = request.data['actors']
-    movie.description = request.data['description']
-    movie.duration = request.data['duration']
-    movie.save()
-    return Response(MovieSerializer(movie).data)
 
   def retrieve(self, request, pk=None):
     movie = Movie.objects.get(id=pk)

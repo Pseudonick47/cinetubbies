@@ -10,8 +10,7 @@ class Movie(models.Model):
   actors = models.CharField(max_length=255, blank=True)
   duration = models.CharField(max_length=255, blank=True)
   description = models.CharField(max_length=255, blank=True)
-  admin = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
-  theater = models.ForeignKey(Theater, on_delete=models.PROTECT, null=True)
+  theater = models.ForeignKey(Theater, on_delete=models.PROTECT, null=True, related_name='movies')
 
   class Meta:
     db_table = 'movies'

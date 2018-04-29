@@ -12,7 +12,7 @@
     <v-chip
       color="white"
       text-color="black">
-      <span v-if="theater.kind==='m'">Type: cinema</span>
+      <span v-if="theater.isCinema()">Type: cinema</span>
       <span v-else>Type: theater</span>
       <v-tooltip right>
         <v-icon
@@ -60,6 +60,7 @@
 <script>
 import TheatersController from 'Controllers/system-admin.controller';
 import { mapGetters } from 'vuex';
+import { Theater } from 'Models/theater.model';
 
 export default {
   name: 'TheaterSettings',
@@ -67,12 +68,7 @@ export default {
   data: () => ({
     loading: false,
     confirmSubmit: false,
-    theater: {
-      name: '',
-      address: '',
-      kind: '',
-      description: ''
-    }
+    theater: new Theater()
   }),
   computed: {
     ...mapGetters([
@@ -85,9 +81,9 @@ export default {
   methods: {
     loadTheater() {
       this.loading = true;
-      TheatersController.get_theater(this.activeUser.id)
+      TheatersController.getTheater(this.activeUser.id)
         .then((response) => {
-          this.theater = response.data;
+          this.theater = new Theater(response.data);
           this.loading = false;
         })
         .catch((response) => {
@@ -105,7 +101,7 @@ export default {
       }, {});
       this.$validator.validateAll().then((result) => {
         if (result) {
-          TheatersController.update(data, this.activeUser.id).then((response) => {
+          TheatersController.update(data, this.theater.id).then((response) => {
             this.$alert.success('Settings successfully saved');
           }).catch(() => {
             this.$alert.error('Error while saving settings');

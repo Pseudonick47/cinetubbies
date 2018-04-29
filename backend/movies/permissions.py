@@ -9,5 +9,6 @@ class IsCreatorOrReadOnly(permissions.BasePermission):
       return True
 
   def has_object_permission(self, request, view, obj):
-    admin = TheaterAdmin.objects.get(user_ptr_id=request.user.id)
+    admin = TheaterAdmin.objects.get(id=request.user.id)
     return admin.theater_id == obj.theater_id
+    
