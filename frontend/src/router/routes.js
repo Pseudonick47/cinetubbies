@@ -7,6 +7,7 @@ import Movies from 'Components/Movies/Movies.component';
 import Settings from 'Components/User/Settings.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
+import Showtimes from 'Components/Showtimes/Showtimes.component';
 
 export const routes = [
   {
@@ -69,6 +70,14 @@ export const routes = [
     path: '/theater/settings',
     name: 'theater-settings',
     component: TheaterSettings,
+    meta: {
+      cinemaAdmin: true
+    }
+  },
+  {
+    path: '/showtimes',
+    name: 'showtimes',
+    component: Showtimes,
     meta: {
       cinemaAdmin: true
     }

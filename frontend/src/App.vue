@@ -65,7 +65,8 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'App',
   components: {
-    'alert-box': AlertBox
+    'alert-box': AlertBox,
+    'vue-datetime-picker': require('vue-datetime-picker')
   },
   data() {
     return {
@@ -85,9 +86,10 @@ export default {
         'cinema_admin': [
           { icon: 'home', text: 'Home', path: '/home' },
           { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
+          { icon: 'add', text: 'Manage show times', path: '/showtimes' },
           { icon: 'build', text: 'Manage theater info', path: '/theater/settings' },
-          { icon: 'person', text: 'Account settings', path: '/user/settings' },
-          { icon: 'list', text: 'Reports', path: '/reports' }
+          { icon: 'list', text: 'Reports', path: '/reports' },
+          { icon: 'person', text: 'Account settings', path: '/user/settings' }
         ],
         'fan_zone_admin': [
           { icon: 'home', text: 'Home', path: '/home' }

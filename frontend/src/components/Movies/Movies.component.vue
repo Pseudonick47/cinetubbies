@@ -66,7 +66,7 @@
         two-line
         subheader
       >
-        <v-subheader>Movies</v-subheader>
+        <v-subheader>Movies/plays</v-subheader>
         <v-list-tile>
           <v-text-field
             v-model="search"
@@ -88,16 +88,16 @@
               ripple
               @click="editButton(movie.id)"
             >
-              <v-icon color="grey lighten-1">edit</v-icon>
+              <v-icon>edit</v-icon>
             </v-btn>
           </v-list-tile-action>
-          <v-list-tile-action >
+          <v-list-tile-action>
             <v-btn
               icon
               ripple
               @click.stop="deleteButton(movie.id)"
             >
-              <v-icon color="grey lighten-1">delete</v-icon>
+              <v-icon>delete</v-icon>
             </v-btn>
           </v-list-tile-action>
           <v-dialog
@@ -280,9 +280,6 @@ export default {
           this.loading = false;
           this.$alert.error('Error occurred.');
         });
-    },
-    setId(id) {
-      this.theaterId = id;
     },
     getMovies(id = this.theaterId) {
       this.loading = true;
