@@ -14,3 +14,9 @@ class MovieSerializer(serializers.Serializer):
     movie = Movie.objects.create(**validated_data)
     movie.save()
     return movie
+
+  def update(self, movie, validated_data):
+    for k, v in validated_data.items():
+      setattr(movie, k, v)
+    movie.save()
+    return movie

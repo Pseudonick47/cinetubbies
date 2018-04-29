@@ -21,6 +21,14 @@ export default {
 
   update_rating(data) {
     return Axios.post(`${PREFIX}rating`, data);
+  },
+
+  get_theater(data) {
+    return Axios.get(`${PREFIX}specific/${data}`);
+  },
+
+  update(data, id) {
+    return Axios.put(`${PREFIX}${id}`, data);
   }
 
 };

@@ -48,6 +48,12 @@ class PublicAPI(ViewSet):
     return Response(data=PublicSerializer(self.queryset, many=True).data)
 
   @action(detail=False)
+  def get_theater(self, request, pk=None):
+    theater_admin = TheaterAdmin.objects.get(user_ptr_id=pk)
+    theater = Theater.objects.get(id=theater_admin.theater_id)
+    return Response(data=PublicSerializer(theater).data)
+
+  @action(detail=False)
   def update_rating(self, request):
     vote, _ = Voting.objects.get_or_create(
       user_id=request.user.id,

@@ -16,5 +16,11 @@ export default {
   },
   update_info(data) {
     return Axios.patch(ENDPOINTS.MOVIES, data);
+  },
+  retrieve(data) {
+    return Axios.get(`${ENDPOINTS.MOVIES}${data}/`);
+  },
+  update(data, id) {
+    return Axios.put(`${ENDPOINTS.MOVIES}${id}/`, data);
   }
 };

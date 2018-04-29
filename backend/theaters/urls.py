@@ -37,11 +37,16 @@ update_admins = AdministrationAPI.as_view({
   'put': 'update',
 })
 
+get_theater = PublicAPI.as_view({
+  'get': 'get_theater'
+})
+
 urlpatterns = format_suffix_patterns([
   path('', TheatersManageView.as_view(), name='theaters'),
   path('count', count_theaters, name="count-theaters"),
   path('all', get_theaters, name='get-theaters'),
   path('<int:pk>', TheaterManageView.as_view(), name='theater'),
   path('<int:pk>/admins/', update_admins, name='update-admins'),
-  path('rating', rating, name='rating')
+  path('rating', rating, name='rating'),
+  path('specific/<int:pk>', get_theater, name='get-theater')
 ])

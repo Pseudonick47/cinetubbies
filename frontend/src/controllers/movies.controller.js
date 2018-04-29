@@ -12,5 +12,11 @@ export default {
   },
   update_info(data) {
     return MoviesApiService.update_info(data);
+  },
+  retrieve(data) {
+    return MoviesApiService.retrieve(data);
+  },
+  update(data, id) {
+    return MoviesApiService.update(data, id);
   }
 };

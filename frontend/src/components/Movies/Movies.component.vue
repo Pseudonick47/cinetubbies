@@ -114,7 +114,7 @@
                 >
                   <v-text-field
                     v-validate="'required'"
-                    v-model="movie.title"
+                    v-model="editingMovie.title"
                     :error-messages="errors.collect('title')"
                     :counter="255"
                     label="Title"
@@ -123,7 +123,7 @@
                   />
                   <v-text-field
                     :counter="255"
-                    v-model="movie.genre"
+                    v-model="editingMovie.genre"
                     :error-messages="errors.collect('genre')"
                     label="Genre"
                     data-vv-name="genre"
@@ -131,27 +131,27 @@
                   />
                   <v-text-field
                     :counter="255"
-                    v-model="movie.director"
+                    v-model="editingMovie.director"
                     label="Director"
                   />
                   <v-text-field
                     :counter="255"
-                    v-model="movie.actors"
+                    v-model="editingMovie.actors"
                     label="Actors"
                   />
                   <v-text-field
                     :counter="255"
-                    v-model="movie.duration"
+                    v-model="editingMovie.duration"
                     label="Duration"
                   />
                   <v-text-field
                     :counter="255"
-                    v-model="movie.description"
+                    v-model="editingMovie.description"
                     label="Description"
                   />
                   <v-btn
                     :disabled="!valid"
-                    @click="edit(movie.title, movie.genre, movie.director, movie.actors, movie.duration, movie.description)"
+                    @click="edit"
                   >
                     save
                   </v-btn>
@@ -160,6 +160,10 @@
               </v-card-text>
             </v-card>
           </v-dialog>
+          <!--<change-info-dialog
+            valid="valid"
+            movie="movie"
+            editdialog="editDialog"/>-->
           <v-dialog
             v-model="confirmDelete"
             persistent
@@ -174,7 +178,6 @@
                 <v-spacer/>
                 <v-btn @click="confirmDelete = false">no</v-btn>
               </v-card-actions>
-
             </v-card>
           </v-dialog>
         </v-list-tile>
@@ -188,8 +191,12 @@
 import MoviesController from 'Controllers/movies.controller';
 import { Movie } from 'Models/movie.model';
 import { mapGetters } from 'vuex';
+import ChangeInfoDialog from './ChangeInfo.component';
 
 export default {
+  components: {
+    'change-info-dialog': ChangeInfoDialog
+  },
   data: () => ({
     valid: true,
     loading: false,
@@ -198,7 +205,7 @@ export default {
     movie: new Movie(),
     confirmDelete: false,
     editDialog: false,
-    editingMovie: 0,
+    editingMovie: new Movie(),
     deletingMovie: 0
   }),
   computed: {
@@ -229,31 +236,30 @@ export default {
       });
     },
     editButton(movieId) {
+      MoviesController.retrieve(movieId).then((response) => {
+        this.editingMovie = response.data;
+      }).catch(() => {
+        this.$alert.error('Error occurred!');
+      });
       this.editDialog = true;
-      this.editingMovie = movieId;
     },
     deleteButton(id) {
       this.confirmDelete = true;
       this.deletingMovie = id;
     },
-    edit(title, genre, director, actors, duration, description) {
-      this.editDialog = false;
-      let data = {
-        'movie_id': this.editingMovie,
-        'admin_id': this.activeUser.id,
-        'title': title,
-        'genre': genre,
-        'director': director,
-        'actors': actors,
-        'duration': duration,
-        'description': description
-      };
-      MoviesController.update_info(data).then((response) => {
-        this.movie = response.data;
-        this.clear();
-        this.$alert.success('Changes successfully saved');
+    edit() {
+      let data = _.reduce(this.editingMovie, (result, value, key) => {
+        if (!_.isEmpty(value)) {
+          result[key] = value;
+        }
+        return result;
+      }, {});
+      MoviesController.update(data, this.editingMovie.id).then((response) => {
+        this.editDialog = false;
+        this.editingMovie = response.data;
+        this.$alert.success('Settings successfully saved');
       }).catch(() => {
-        this.$alert.error('Error while saving changes');
+        this.$alert.error('Error while saving settings');
       });
     },
     clear() {

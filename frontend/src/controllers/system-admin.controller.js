@@ -73,5 +73,13 @@ export default {
 
   update_rating(data) {
     return TheatersService.update_rating(data);
+  },
+
+  get_theater(data) {
+    return TheatersService.get_theater(data);
+  },
+
+  update(data, id) {
+    return TheatersService.update(data, id);
   }
 };
