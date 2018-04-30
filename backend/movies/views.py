@@ -1,18 +1,54 @@
 from django.shortcuts import render
 from movies.serializers import MovieSerializer
+from showtimes.serializers import ShowtimeSerializer
 from movies.models import Movie
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
+from rest_framework.response import Response
+from .permissions import IsCreatorOrReadOnly
+from authentication.models import TheaterAdmin
+from django.shortcuts import get_object_or_404
 
 class MovieViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows movies to be viewed or edited.
-    """
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+  """
+  API endpoint that allows movies to be viewed or edited.
+  """
+  queryset = Movie.objects.all()
+  serializer_class = MovieSerializer
+  permission_classes = [IsCreatorOrReadOnly]
 
-    # creating new movie
-    @action(detail=False)
-    def create(self, request, * args, ** kwargs):
-        movie = Movie.create_movie(request.data)
-        return Response(MovieSerializer(movie).data)
+  # create new movie
+  def create(self, request):
+    serializer = MovieSerializer(data=request.data, partial=True)
+    if not serializer.is_valid():
+      return Response(serializer.errors, status=400)
+    serializer.save()
+    return Response(serializer.data)
+
+  def list(self, request):
+    movies = Movie.objects.all()
+    return Response(MovieSerializer(movies, many=True).data)
+
+  # delete movie
+  def destroy(self, request, pk=None):
+    movie = Movie.objects.get(id=pk)
+    self.check_object_permissions(request, movie)
+    movie.delete()
+    return Response({'message': 'Movie successfully deleted'})
+
+  def retrieve(self, request, pk=None):
+    movie = Movie.objects.get(id=pk)
+    return Response(data=MovieSerializer(movie).data)
+
+  def update(self, request, pk=None):
+    movie = get_object_or_404(Movie, id=pk)
+    serializer = MovieSerializer(movie, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(data=serializer.data)
+
+  @action(detail=True)
+  def get_showtimes(self, request, pk=None):
+    movie = Movie.objects.get(id=pk)
+    showtimes = movie.showtimes.all()
+    return Response(ShowtimeSerializer(showtimes, many=True).data)

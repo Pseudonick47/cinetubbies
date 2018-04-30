@@ -167,11 +167,10 @@ export default {
   },
   methods: {
     declineRequest(id) {
-      console.log('kao nisi prihvation');
       UsersController.removeFriend(id).then(() => {
-        const index = _.findIndex(this.friendRequests, { id });
+        const index = _.findIndex(this.allFriendRequests, { id });
         if (index > -1) {
-          this.friendRequests.splice(index, 1);
+          this.allFriendRequests.splice(index, 1);
         }
       }).catch(() => {
         this.$alert.error('Error occured while declining friendship');
@@ -179,9 +178,9 @@ export default {
     },
     removeFriend(id) {
       UsersController.removeFriend(id).then((response) => {
-        const index = _.indexOf(this.friends, { id });
+        const index = _.findIndex(this.allFriends, { id });
         if (index > -1) {
-          this.friends.splice(index, 1);
+          this.allFriends.splice(index, 1);
         }
       }).catch(() => {
         this.$alert.error('Error occured while removing friend');
@@ -189,12 +188,10 @@ export default {
     },
     addFriend(id) {
       UsersController.addFriend(id).then(() => {
-        console.log('dodao');
-        const index = _.findIndex(this.friendRequests, { id });
-        console.log(this.friendRequests, index);
+        const index = _.findIndex(this.allFriendRequests, { id });
         if (index > -1) {
-          let added = _.remove(this.friendRequests, { id });
-          this.friends.splice(index, 1, added[0]);
+          let added = _.remove(this.allFriendRequests, { id });
+          this.allFriends.push(added[0]);
         }
       });
     }

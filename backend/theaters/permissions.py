@@ -1,17 +1,11 @@
-from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
-class IsAdminOrReadOnly(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return True
+from authentication.models import SYSTEM_ADMIN, THEATER_ADMIN
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.admin_id == request.user.id
 
-class IsSystemAdmin(permissions.BasePermission):
+class IsResponsibleForTheater(BasePermission):
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user.role == 'admin'
+  def has_object_permission(self, request, view, obj):
+    return request.user.id in [admin.id for admin in obj.admins.all()] or \
+           request.user.is_system_admin()
+
