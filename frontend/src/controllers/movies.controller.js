@@ -18,5 +18,8 @@ export default {
   },
   update(data, id) {
     return MoviesApiService.update(data, id);
+  },
+  getShowtimes(data) {
+    return MoviesApiService.getShowtimes(data);
   }
 };

@@ -22,5 +22,8 @@ export default {
   },
   update(data, id) {
     return Axios.put(`${ENDPOINTS.MOVIES}${id}/`, data);
+  },
+  getShowtimes(data) {
+    return Axios.get(`${ENDPOINTS.MOVIES}${data}/showtimes`);
   }
 };
