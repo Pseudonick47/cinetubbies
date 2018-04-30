@@ -299,7 +299,7 @@ export default {
     show(movieId) {
       MovieController.getShowtimes(movieId)
         .then((response) => {
-          this.showtimes = response.data;
+          this.showtimes = _.map(response.data, x => new Showtime(x));
           this.showShowtimes = true;
         })
         .catch((resposne) => {
@@ -321,7 +321,7 @@ export default {
         });
     },
     editButton(showId) {
-      this.editingShowtime = this.showtimes.find(function(element) {
+      this.editingShowtime = this.showtimes.find((element) => {
         return element.id === showId;
       });
       this.editDialog = true;

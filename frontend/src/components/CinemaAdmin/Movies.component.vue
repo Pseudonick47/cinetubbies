@@ -239,7 +239,7 @@ export default {
       });
     },
     editButton(movieId) {
-      this.editingMovie = this.movies.find(function(element) {
+      this.editingMovie = this.movies.find((element) => {
         return element.id === movieId;
       });
       this.editDialog = true;
