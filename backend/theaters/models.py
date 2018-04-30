@@ -39,6 +39,11 @@ class Theater(models.Model):
   def __str__(self):
     return serialize('json', [self])[1:-1]
 
+  def __eq__(self, other):
+    if not isinstance(other, Theater):
+      return False
+    return self.id == other.id
+
 
 class Voting(models.Model):
   user = models.ForeignKey(User, on_delete=models.PROTECT)

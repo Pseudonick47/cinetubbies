@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from cinetubbies.utils.func import update
 from authentication.models import TheaterAdmin
 
 from .models import Theater
@@ -43,8 +44,7 @@ class RestrictedSerializer(PublicSerializer):
   all_votes = None
 
   def update(self, theater, validated_data):
-    for k, v in validated_data.items():
-      setattr(theater, k, v)
+    theater = update(theater, **validated_data)
     theater.save()
     return theater
 
