@@ -5,6 +5,7 @@ import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/Movies/Movies.component';
 import Settings from 'Components/User/Settings.component';
+import TheaterSettings from 'Components/Theaters/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
 
@@ -71,6 +72,14 @@ export const routes = [
     component: FanZoneAdminHome,
     meta: {
       logged: true
+    }
+  },
+  {
+    path: '/theater/settings',
+    name: 'theater-settings',
+    component: TheaterSettings,
+    meta: {
+      cinemaAdmin: true
     }
   }
 ];

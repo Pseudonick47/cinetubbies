@@ -22,6 +22,7 @@ from .serializers import PublicSerializer
 from .serializers import RestrictedSerializer
 from .serializers import AdministrationSerializer
 from .permissions import IsResponsibleForTheater
+from movies.serializers import MovieSerializer
 
 
 class PublicAPI(ViewSet):
@@ -48,6 +49,12 @@ class PublicAPI(ViewSet):
     return Response(data=PublicSerializer(self.queryset, many=True).data)
 
   @action(detail=False)
+  def get_theater(self, request, pk=None):
+    theater_admin = TheaterAdmin.objects.get(user_ptr_id=pk)
+    theater = Theater.objects.get(id=theater_admin.theater_id)
+    return Response(data=PublicSerializer(theater).data)
+
+  @action(detail=False)
   def update_rating(self, request):
     vote, _ = Voting.objects.get_or_create(
       user_id=request.user.id,
@@ -62,6 +69,11 @@ class PublicAPI(ViewSet):
     data = {'rating':rating,'voters':voters}
     return Response(data)
 
+  @action(detail=True)
+  def get_movies(self, request, pk=None):
+    theater = Theater.objects.get(id=pk)
+    movies = theater.movies.all()
+    return Response(MovieSerializer(movies, many=True).data)
 
 class RestrictedAPI(ViewSet):
   permission_classes = [

@@ -39,6 +39,14 @@ update_admins = AdministrationAPI.as_view({
   'put': 'update',
 })
 
+get_theater = PublicAPI.as_view({
+  'get': 'get_theater'
+})
+
+get_movies = PublicAPI.as_view({
+  'get': 'get_movies'
+})
+
 urlpatterns = [
   path(
     route='',
@@ -66,6 +74,11 @@ urlpatterns = [
     name='update-admins'
   ),
   path(
+    route='<int:pk>/movies',
+    view=get_movies,
+    name='get-movies'
+  ),
+  path(
     route='<int:theater_pk>/props/',
     view=include(prop_urls),
   ),
@@ -74,4 +87,9 @@ urlpatterns = [
     view=rating,
     name='rating'
   ),
+  path(
+    route='admins/<int:pk>/theater',
+    view=get_theater,
+    name='get-theater'
+  )
 ]

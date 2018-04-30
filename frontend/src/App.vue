@@ -85,6 +85,7 @@ export default {
         'cinema_admin': [
           { icon: 'home', text: 'Home', path: '/home' },
           { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
+          { icon: 'build', text: 'Manage theater info', path: '/theater/settings' },
           { icon: 'person', text: 'Account settings', path: '/user/settings' },
           { icon: 'list', text: 'Reports', path: '/reports' }
         ],
