@@ -5,6 +5,7 @@ import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/CinemaAdmin/Movies.component';
 import Settings from 'Components/User/Settings.component';
+import Profile from 'Components/User/Profile.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 import Showtimes from 'Components/Showtimes/Showtimes.component';
@@ -56,6 +57,14 @@ export const routes = [
     path: '/user/settings',
     name: 'user-settings',
     component: Settings,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/user/profile',
+    name: 'user-profile',
+    component: Profile,
     meta: {
       logged: true
     }
