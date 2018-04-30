@@ -145,18 +145,10 @@ export default {
       'activeUser'
     ]),
     friendRequests() {
-      if (!this.search) {
-        return this.allFriendRequests;
-      }
-      return _.filter(this.allFriendRequests, item =>
-        _.toLower(item.first_name).indexOf(_.toLower(this.search)) > -1 || _.toLower(item.last_name).indexOf(_.toLower(this.search)) > -1);
+      return this.searchUsersByFirstOrLastName(this.allFriendRequests, this.search);
     },
     friends() {
-      if (!this.search) {
-        return this.allFriends;
-      }
-      return _.filter(this.allFriends, item =>
-        _.toLower(item.first_name).indexOf(_.toLower(this.search)) > -1 || _.toLower(item.last_name).indexOf(_.toLower(this.search)) > -1);
+      return this.searchUsersByFirstOrLastName(this.allFriends, this.search);
     }
   },
   created() {
@@ -166,6 +158,13 @@ export default {
     });
   },
   methods: {
+    searchUsersByFirstOrLastName(userList, name) {
+      if (!name) {
+        return userList;
+      }
+      return _.filter(userList, user =>
+        _.toLower(user.first_name).indexOf(_.toLower(name)) > -1 || _.toLower(user.last_name).indexOf(_.toLower(name)) > -1);
+    },
     declineRequest(id) {
       UsersController.removeFriend(id).then(() => {
         const index = _.findIndex(this.allFriendRequests, { id });

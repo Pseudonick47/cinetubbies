@@ -52,7 +52,7 @@ class User(AbstractUser):
     return User.objects.filter(Q(id__in=i_added) | Q(id__in=they_added))
 
   def friends_count(self):
-    friends.count()
+    self.friends().count()
 
 
 class Friendship(models.Model):
