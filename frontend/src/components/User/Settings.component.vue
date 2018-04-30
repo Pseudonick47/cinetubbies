@@ -2,6 +2,7 @@
   <v-flex
     xs-12
     sm5
+    pa-4
   >
     <h1>User settings</h1>
     <form>

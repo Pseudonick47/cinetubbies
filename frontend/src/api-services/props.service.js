@@ -1,14 +1,20 @@
 import Axios from 'axios';
 
-const PREFIX = 'fan-zone/';
-const OFFICIAL_PROPS = 'official-props/';
+const THEATERS = 'theaters/';
+const PROPS = 'props/';
+const OFFICIAL = 'official/';
+const CATEGORIES = 'categories/';
 
 export default {
-  fetchOfficialProps(num, page) {
-    return Axios.get(`${PREFIX}${OFFICIAL_PROPS}?num=${num}&page=${page}`);
+  fetchOfficialProps(theater, num, page) {
+    return Axios.get(`${THEATERS}${theater}/${PROPS}${OFFICIAL}?num=${num}&page=${page}`);
   },
 
-  fetchOfficialPropsCount() {
-    return Axios.get(`${PREFIX}${OFFICIAL_PROPS}count`);
+  fetchOfficialPropsCount(theater) {
+    return Axios.get(`${THEATERS}${theater}/${PROPS}${OFFICIAL}count`);
+  },
+
+  fetchCategories() {
+    return Axios.get(`${PROPS}${CATEGORIES}`);
   }
 };

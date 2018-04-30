@@ -13,7 +13,8 @@ const getters = {
 };
 
 const mutations = {
-  set(state, categories) {
+  setCategory(state, categories) {
+    state.categories = [];
     _.forEach(categories, (category) => {
       state.categories.push(new Category(category));
     });

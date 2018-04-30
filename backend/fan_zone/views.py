@@ -10,6 +10,8 @@ from rest_framework.viewsets import ViewSet
 from authentication.permissions import IsFanZoneOrSystemAdmin
 from authentication.permissions import IsSystemAdmin
 
+from theaters.models import Theater
+
 from .models import OfficialProp
 from .models import Category
 from .permissions import IsResponsibleForOfficialProp
@@ -21,36 +23,47 @@ from .serializers import RestrictedOfficialPropSerializer
 
 
 class PublicOfficialPropAPI(ViewSet):
-  queryset = OfficialProp.objects.all()
   permission_classes = [AllowAny]
 
-  def list(self, request):
+  def list(self, request, theater_pk=None):
+    if theater_pk:
+      theater = get_object_or_404(Theater, pk=theater_pk)
+      queryset = theater.officialprops.all()
+    else:
+      queryset = OfficialProp.objects.all()
+
     num = request.GET.get('num')
-    paginator = Paginator(self.queryset.order_by('title'), num if num else 10)
+    paginator = Paginator(queryset.order_by('title'), num if num else 10)
     page = request.GET.get('page')
+
     props = paginator.get_page(page if page else 1)
     return Response(data=PublicOfficialPropSerializer(props, many=True).data)
 
-  def retrieve(self, request, pk=None):
+  def retrieve(self, request, theater_pk=None, pk=None):
     prop = get_object_or_404(OfficialProp, pk=pk)
     return Response(data=PublicOfficialPropSerializer(prop).data)
 
   @action(detail=False)
-  def count(self, request):
-    return Response(data=OfficialProp.objects.count())
+  def count(self, request, theater_pk=None):
+    if theater_pk:
+      theater = get_object_or_404(Theater, pk=theater_pk)
+      num = theater.officialprops.count()
+    else:
+      num = OfficialProp.objects.count()
+    return Response(data=num)
 
 class RestrictedOfficialPropAPI(ViewSet):
   permission_classes = [
     IsAuthenticated, IsFanZoneOrSystemAdmin, IsResponsibleForOfficialProp
   ]
 
-  def create(self, request):
+  def create(self, request, theater_pk=None):
     serializer = RestrictedOfficialPropSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data)
 
-  def destroy(self, request, pk=None):
+  def destroy(self, request, theater_pk=None, pk=None):
     prop = get_object_or_404(OfficialProp, pk=pk)
     self.check_object_permissions(request, prop)
     prop.delete()
@@ -58,7 +71,7 @@ class RestrictedOfficialPropAPI(ViewSet):
       data={'message': 'Official prop {0} successfully deleted.'.format(pk)}
     )
 
-  def update(self, request, pk=None):
+  def update(self, request, theater_pk=None, pk=None):
     prop = get_object_or_404(OfficialProp, pk=pk)
     self.check_object_permissions(request, prop)
     serializer = RestrictedOfficialPropSerializer(

@@ -40,22 +40,25 @@ count_official_props = PublicOfficialPropAPI.as_view({
   'get': 'count'
 })
 
-urlpatterns = format_suffix_patterns([
+prop_urls = [
   path(
-    route='official-props/',
+    route='official/',
     view=OfficialPropsManageView.as_view(),
     name='official-props'
   ),
   path(
-    route='official-props/count',
+    route='official/count',
     view=count_official_props,
     name='count-official-props'
   ),
   path(
-    route='official-props/<int:pk>',
+    route='official/<int:pk>',
     view=OfficialPropManageView.as_view(),
     name="official-prop"
   ),
+]
+
+category_urls = [
   path(
     route='categories/',
     view=CategoriesManageView.as_view(),
@@ -66,4 +69,6 @@ urlpatterns = format_suffix_patterns([
     view=CategoryManageView.as_view(),
     name='category'
   ),
-])
+]
+
+urlpatterns = prop_urls + category_urls

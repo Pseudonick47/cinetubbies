@@ -31,13 +31,7 @@ class Prop(models.Model):
     null=True
   )
 
-
 class OfficialProp(Prop):
-  theater = models.ForeignKey(
-    to='theaters.Theater',
-    on_delete=models.CASCADE,
-    related_name='officialprops'
-  ),
   quantity = models.IntegerField(
     blank=False,
     null=False
@@ -45,4 +39,9 @@ class OfficialProp(Prop):
   price = models.FloatField(
     blank=False,
     null=False
+  )
+  theater = models.ForeignKey(
+    to='theaters.Theater',
+    on_delete=models.CASCADE,
+    related_name='officialprops'
   )

@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 import {
   alert,
   auth,
-  categories,
+  props,
   systemAdmin
 } from './modules';
 
@@ -14,7 +14,7 @@ const storeData = {
   modules: {
     alert,
     auth,
-    categories,
+    props,
     systemAdmin
   }
 };

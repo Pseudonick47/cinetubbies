@@ -29,7 +29,7 @@ class PublicPropSerializer(serializers.Serializer):
     allow_null=True
   )
 
-class PublicOfficialPropSerializer(serializers.Serializer):
+class PublicOfficialPropSerializer(PublicPropSerializer):
   theater = serializers.PrimaryKeyRelatedField(
     queryset=Theater.objects.all(),
     allow_null=False

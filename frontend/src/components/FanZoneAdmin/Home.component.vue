@@ -39,7 +39,9 @@
           xl4
           pa-3
         >
-          Text
+          <official-prop
+            :info="entry"
+          />
         </v-flex>
       </v-layout>
     </v-container>
@@ -55,17 +57,59 @@
   </div>
 </template>
 <script>
-import CategoriesController from 'Controllers/categories.controller';
+import { mapGetters } from 'vuex';
+
+import OfficialProp from 'Components/FanZoneAdmin/OfficialProp.component';
+import PropsController from 'Controllers/props.controller';
 
 export default {
-  name: 'FanZoneHome',
+  name: 'FanZoneAdminHome',
+  components: {
+    OfficialProp
+  },
   data() {
     return {
-      dialog: false
+      dialog: false,
+      entriesPerPage: 9,
+      page: 1,
+      theater: 2
     };
   },
+  computed: {
+    ...mapGetters('props/official/', {
+      entries: 'all',
+      count: 'count'
+    }),
+    pageCount() {
+      return _.ceil(_.divide(this.count, this.entriesPerPage));
+    }
+  },
+  watch: {
+    page() {
+      PropsController.requestOfficialProps(this.theater, this.page);
+    }
+  },
   beforeMount() {
-    CategoriesController.requestCategories();
+    PropsController.requestCategories();
+    PropsController.requestOfficialPropCount(this.theater);
+    PropsController.requestOfficialProps(this.theater, this.page);
   }
 };
 </script>
+<style>
+.theaters-toolbar {
+  width: 100%;
+}
+.theaters-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+</style>
