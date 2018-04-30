@@ -6,6 +6,7 @@ import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/Movies/Movies.component';
 import Settings from 'Components/User/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
+import FanZoneHome from 'Components/FanZone/Home.component';
 
 export const routes = [
   {
@@ -60,6 +61,14 @@ export const routes = [
     path: '/admin/system/:kind',
     name: 'admin-theaters',
     component: SystemAdminHome,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/fan-zone',
+    name: 'fan-zone',
+    component: FanZoneHome,
     meta: {
       logged: true
     }

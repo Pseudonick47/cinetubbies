@@ -5,7 +5,7 @@ const namespaced = true;
 const state = {
   data: [],
   page: 1,
-  entriesPerPage: 8,
+  entriesPerPage: 9,
   count: 0,
   theaterAdmins: []
 };

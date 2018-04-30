@@ -89,10 +89,12 @@ export default {
           { icon: 'list', text: 'Reports', path: '/reports' }
         ],
         'fan_zone_admin': [
-          { icon: 'home', text: 'Home', path: '/home' }
+          { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'shopping_cart', text: 'Fan Zone', path: '/fan-zone' }
         ],
         'user': [
           { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'shopping_cart', text: 'Fan Zone', path: '/fan-zone' },
           { icon: 'settings', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [
@@ -122,7 +124,7 @@ export default {
 };
 </script>
 <style>
-  #app {
+#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
