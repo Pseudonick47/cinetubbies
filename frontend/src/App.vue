@@ -84,7 +84,7 @@ export default {
           { icon: 'group', text: 'Fan Zone Admins', path: '/admin/system/fan-zone-admins' }
         ],
         'cinema_admin': [
-          { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'home', text: 'Home', path: '/admin-home' },
           { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
           { icon: 'add', text: 'Manage show times', path: '/showtimes' },
           { icon: 'build', text: 'Manage theater info', path: '/theater/settings' },
