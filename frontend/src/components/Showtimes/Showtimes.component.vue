@@ -321,10 +321,8 @@ export default {
         });
     },
     editButton(showId) {
-      ShowtimeController.retrieve(showId).then((response) => {
-        this.editingShowtime = new Showtime(response.data);
-      }).catch(() => {
-        this.$alert.error('Error occurred!');
+      this.editingShowtime = this.showtimes.find(function(element) {
+        return element.id === showId;
       });
       this.editDialog = true;
     },

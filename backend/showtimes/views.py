@@ -23,10 +23,6 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
     serializer.save()
     return Response(serializer.data)
 
-  def list(self, request):
-    showtimes = Showtime.objects.all()
-    return Response(ShowtimeSerializer(showtimes, many=True).data)
-
   def destroy(self, request, pk=None):
     showtime = Showtime.objects.get(id=pk)
     # self.check_object_permissions(request, showtime)
@@ -34,7 +30,7 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
     return Response({'message': 'Showtime successfully deleted'})
 
   def retrieve(self, request, pk=None):
-    showtime = Showtime.objects.get(id=pk)
+    showtime = get_object_or_404(Showtime, id=pk)
     return Response(data=ShowtimeSerializer(showtime).data)
 
   def update(self, request, pk=None):

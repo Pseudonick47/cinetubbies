@@ -239,10 +239,8 @@ export default {
       });
     },
     editButton(movieId) {
-      MoviesController.retrieve(movieId).then((response) => {
-        this.editingMovie = new Movie(response.data);
-      }).catch(() => {
-        this.$alert.error('Error occurred!');
+      this.editingMovie = this.movies.find(function(element) {
+        return element.id === movieId;
       });
       this.editDialog = true;
     },
