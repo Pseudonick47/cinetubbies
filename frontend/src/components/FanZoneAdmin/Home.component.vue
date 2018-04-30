@@ -54,18 +54,24 @@
         />
       </v-layout>
     </v-container>
+    <official-prop-dialog
+      v-if="dialog"
+      @close="dialog=false"
+    />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 
 import OfficialProp from 'Components/FanZoneAdmin/OfficialProp.component';
+import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
 import PropsController from 'Controllers/props.controller';
 
 export default {
   name: 'FanZoneAdminHome',
   components: {
-    OfficialProp
+    OfficialProp,
+    OfficialPropDialog
   },
   data() {
     return {
