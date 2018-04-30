@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from movies.serializers import MovieSerializer
+from showtimes.serializers import ShowtimeSerializer
 from movies.models import Movie
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
@@ -45,3 +46,9 @@ class MovieViewSet(viewsets.ModelViewSet):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data)
+
+  @action(detail=True)
+  def get_showtimes(self, request, pk=None):
+    movie = Movie.objects.get(id=pk)
+    showtimes = movie.showtimes.all()
+    return Response(ShowtimeSerializer(showtimes, many=True).data)

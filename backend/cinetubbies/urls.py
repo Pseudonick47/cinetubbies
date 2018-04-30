@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 from authentication import urls
 from movies import urls
+from showtimes import urls
 
 urlpatterns = [
   path('api/', include([
@@ -12,6 +13,7 @@ urlpatterns = [
     path('theaters/', include('theaters.urls')),
     path('movies/', include('movies.urls')),
     path('media/', include('media_upload.urls')),
+    path('showtimes/', include('showtimes.urls'))
   ])),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
