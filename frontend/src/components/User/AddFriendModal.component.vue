@@ -1,13 +1,20 @@
 <template>
   <v-dialog
     v-model="show"
+    max-width="600px"
     persistent
-    max-width="600px">
+  >
     <v-card class="elevation-12">
       <v-toolbar
         dark
         color="primary">
         <v-toolbar-title>Find Friends</v-toolbar-title>
+        <v-spacer/>
+        <v-btn
+          color="accent"
+          @click="close"
+        >Done
+        </v-btn>
       </v-toolbar>
       <v-card-text>
         <v-card>
@@ -22,8 +29,8 @@
             />
           </v-card-title>
           <v-data-table
-            :items="friends"
-            :total-items="friends.length"
+            :items="users"
+            :total-items="users.length"
             hide-headers
             hide-actions
             item-key="date"
@@ -54,7 +61,7 @@
                 <v-btn
                   icon
                   class="mx-0"
-                  @click="deleteItem(props.item)">
+                  @click="addFriend(props.item.id)">
                   <v-icon color="teal">add_circle_outline</v-icon>
                 </v-btn>
               </td>
@@ -67,6 +74,8 @@
 </template>
 
 <script>
+import { User } from 'Models/user.model';
+import UsersController from 'Controllers/users.controller';
 
 export default {
   name: 'AddFriendModal',
@@ -79,93 +88,32 @@ export default {
   data: () => ({
     search: '',
     pagination: {},
-    friends: [
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      }, {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      }, {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      }, {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      }, {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      }, {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
+    users: []
+  }),
+  watch: {
+    search(newVal, oldVal) {
+      if (!_.isEmpty(newVal)) {
+        this.searchFriends(newVal);
       }
-    ]
-  })
+    }
+  },
+  methods: {
+    searchFriends(query) {
+      UsersController.searchFriends(query).then((response) => {
+        this.users = _.map(response.data.results, result => new User(result));
+        this.$forceUpdate();
+      });
+    },
+    addFriend(id) {
+      const index = _.findIndex(this.users, { id });
+      if (index > -1) {
+        this.users.splice(index, 1);
+      }
+      this.$emit('add-friend', id);
+    },
+    close() {
+      this.$emit('closed');
+    }
+  }
 };
 </script>

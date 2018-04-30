@@ -89,7 +89,8 @@ export default {
         ],
         'user': [
           { icon: 'person_add', text: 'Home', path: '/home' },
-          { icon: 'settings', text: 'Settings', path: '/user/settings' }
+          { icon: 'settings', text: 'Settings', path: '/user/settings' },
+          { icon: 'person_add', text: 'Profile', path: '/user/profile' }
         ],
         'guest': [
           { icon: 'person_add', text: 'Login', path: '/login' },

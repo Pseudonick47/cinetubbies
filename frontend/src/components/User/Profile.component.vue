@@ -25,10 +25,10 @@
           />
         </v-card-title>
         <v-data-table
+          v-if="friends.length"
           :items="friends"
-          :pagination.sync="pagination"
-          :rows-per-page-items="[5, 10, 20, 50, 100]"
           hide-headers
+          hide-actions
           item-key="date"
           class="elevation-1"
         >
@@ -51,27 +51,74 @@
                 </v-avatar>
               </v-flex>
             </td>
-            <td>{{ props.item.first_name + props.item.last_name }}</td>
+            <td>{{ `${props.item.first_name} ${props.item.last_name}` }}</td>
             <td class="text-xs-right">{{ props.item.city }}</td>
             <td class="justify-center layout px-0">
               <v-btn
                 icon
                 class="mx-0"
-                @click="editItem(props.item)">
-                <v-icon color="teal">call_made</v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                class="mx-0"
-                @click="deleteItem(props.item)">
+                @click="removeFriend(props.item.id)">
                 <v-icon color="pink">remove_circle_outline</v-icon>
               </v-btn>
             </td>
           </template>
         </v-data-table>
-      </v-card>
+        <hr>
+        <hr>
+        <br>
+        <hr>
+        <hr>
+        <v-data-table
+          v-if="friendRequests.length"
+          :items="friendRequests"
+          hide-headers
+          hide-actions
+          item-key="date"
+          class="elevation-1"
+        >
+          <template
+            slot="items"
+            slot-scope="props">
+            <td>
+              <v-flex
+                xs4
+                sm2
+                md1>
+                <v-avatar
+                  slot="activator"
+                  size="36px"
+                >
+                  <img
+                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                    alt=""
+                  >
+                </v-avatar>
+              </v-flex>
+            </td>
+            <td>{{ `${props.item.first_name} ${props.item.last_name}` }}</td>
+            <td class="text-xs-right">{{ props.item.city }}</td>
+            <td class="justify-center layout px-0">
+              <v-btn
+                icon
+                class="mx-0"
+                @click="addFriend(props.item.id)">
+                <v-icon color="teal">check</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                class="mx-0"
+                @click="declineRequest(props.item.id)">
+                <v-icon color="pink">clear</v-icon>
+              </v-btn>
+            </td>
+          </template>
+      </v-data-table>      </v-card>
     </v-flex>
-    <add-friend-modal v-if="showAddFriend"/>
+    <add-friend-modal
+      v-if="showAddFriend"
+      @add-friend="addFriend"
+      @closed="showAddFriend = false"
+    />
   </v-layout>
 </template>
 
@@ -80,42 +127,77 @@ import AddFriendModal from 'Components/User/AddFriendModal.component';
 import UsersController from 'Controllers/users.controller';
 import { mapGetters } from 'vuex';
 
-var moment = require('moment');
-
 export default {
   name: 'UserSettings',
   components: {
     AddFriendModal
   },
   data: () => ({
-    showAddFriend: true,
+    showAddFriend: false,
     search: '',
+    users: [],
     pagination: {},
-    friends: [
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      },
-      {
-        first_name: 'Ime',
-        last_name: 'Prezime',
-        city: 'Novi Sad'
-      }
-    ]
+    allFriends: [],
+    allFriendRequests: []
   }),
   computed: {
     ...mapGetters([
       'activeUser'
-    ])
+    ]),
+    friendRequests() {
+      if (!this.search) {
+        return this.allFriendRequests;
+      }
+      return _.filter(this.allFriendRequests, item =>
+        _.toLower(item.first_name).indexOf(_.toLower(this.search)) > -1 || _.toLower(item.last_name).indexOf(_.toLower(this.search)) > -1);
+    },
+    friends() {
+      if (!this.search) {
+        return this.allFriends;
+      }
+      return _.filter(this.allFriends, item =>
+        _.toLower(item.first_name).indexOf(_.toLower(this.search)) > -1 || _.toLower(item.last_name).indexOf(_.toLower(this.search)) > -1);
+    }
+  },
+  created() {
+    UsersController.getFriends(this.activeUser.id).then((response) => {
+      this.allFriends = response.data.friends;
+      this.allFriendRequests = response.data.friend_requests;
+    });
   },
   methods: {
-
+    declineRequest(id) {
+      console.log('kao nisi prihvation');
+      UsersController.removeFriend(id).then(() => {
+        const index = _.findIndex(this.friendRequests, { id });
+        if (index > -1) {
+          this.friendRequests.splice(index, 1);
+        }
+      }).catch(() => {
+        this.$alert.error('Error occured while declining friendship');
+      });
+    },
+    removeFriend(id) {
+      UsersController.removeFriend(id).then((response) => {
+        const index = _.indexOf(this.friends, { id });
+        if (index > -1) {
+          this.friends.splice(index, 1);
+        }
+      }).catch(() => {
+        this.$alert.error('Error occured while removing friend');
+      });
+    },
+    addFriend(id) {
+      UsersController.addFriend(id).then(() => {
+        console.log('dodao');
+        const index = _.findIndex(this.friendRequests, { id });
+        console.log(this.friendRequests, index);
+        if (index > -1) {
+          let added = _.remove(this.friendRequests, { id });
+          this.friends.splice(index, 1, added[0]);
+        }
+      });
+    }
   }
 };
 </script>
