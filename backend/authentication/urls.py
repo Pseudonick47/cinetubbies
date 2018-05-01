@@ -1,10 +1,11 @@
-from .views import UserViewSet, FriendViewSet
 from django.urls import path
 
-from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework_jwt.views import obtain_jwt_token
 
-from .views import UserViewSet, AdminViewSet
+from .views import AdminViewSet
+from .views import UserViewSet
+from .views import FriendViewSet
+from .views import SystemAdminViewSet
 
 
 active = UserViewSet.as_view({
@@ -26,13 +27,17 @@ users = UserViewSet.as_view({
   'get': 'list',
 })
 
-admins = AdminViewSet.as_view({
+admins = SystemAdminViewSet.as_view({
   'post': 'create',
   'get': 'list',
 })
 
-admin_count = AdminViewSet.as_view({
+admin_count = SystemAdminViewSet.as_view({
   'get': 'count'
+})
+
+admin_theater = AdminViewSet.as_view({
+  'get': 'get_theater'
 })
 
 user_friends = FriendViewSet.as_view({
@@ -45,7 +50,7 @@ search_friends = FriendViewSet.as_view({
     'get': 'search_for_friends'
 })
 
-urlpatterns = format_suffix_patterns([
+urlpatterns = [
   path('users/<int:pk>/friends/', user_friends, name='user-friends'),
   path('users/friends/<str:query>', search_friends, name='user-friends-search'),
   path('users/<int:pk>/', user, name='user'),
@@ -55,4 +60,5 @@ urlpatterns = format_suffix_patterns([
   path('auth/register/', register, name='register'),
   path('admins/', admins, name='admins'),
   path('admins/count/', admin_count, name='admin-count'),
-])
+  path('admins/<int:pk>/theater', admin_theater, name='admin-theater'),
+]

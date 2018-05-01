@@ -57,6 +57,7 @@
     <official-prop-dialog
       v-if="dialog"
       @close="dialog=false"
+      @reload="reloadPage"
     />
   </div>
 </template>
@@ -65,6 +66,8 @@ import { mapGetters } from 'vuex';
 
 import OfficialProp from 'Components/FanZone/OfficialProp.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
+
+import SystemAdminController from 'Controllers/system-admin.controller';
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/official-props.controller';
 
@@ -78,8 +81,7 @@ export default {
     return {
       dialog: false,
       entriesPerPage: 9,
-      page: 1,
-      theater: 2
+      page: 1
     };
   },
   computed: {
@@ -87,19 +89,35 @@ export default {
       entries: 'all',
       count: 'count'
     }),
+    ...mapGetters({
+      admin: 'activeUser'
+    }),
     pageCount() {
+      console.log(this.admin.theater);
       return _.ceil(_.divide(this.count, this.entriesPerPage));
+    },
+    theater() {
+      return this.admin.theater.id;
     }
   },
   watch: {
     page() {
-      PropsController.requestPage(this.page, { theater: this.theater });
+      reloadPage();
     }
   },
   beforeMount() {
-    CategoriesController.requestCategories();
-    PropsController.requestCount({ theater: this.theater });
-    PropsController.requestPage(this.page, { theater: this.theater });
+    SystemAdminController.requestAdminsTheater(this.$store.getters.activeUser.id)
+      .then(() => {
+        const theater = this.theater;
+        CategoriesController.requestCategories();
+        PropsController.requestCount({ theater });
+        PropsController.requestPage(this.page, { theater });
+      });
+  },
+  methods: {
+    reloadPage() {
+      PropsController.requestPage(this.page, { theater: this.theater });
+    }
   }
 };
 </script>

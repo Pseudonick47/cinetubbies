@@ -49,13 +49,13 @@ class RestrictedSerializer(PublicSerializer):
     return theater
 
 class AdministrationSerializer(RestrictedSerializer):
-  admins = serializers.PrimaryKeyRelatedField(
+  theateradmins = serializers.PrimaryKeyRelatedField(
     queryset=TheaterAdmin.objects.all(),
     many=True
   )
 
   def create(self, validated_data):
-    admins = validated_data.pop('admins')
+    admins = validated_data.pop('theateradmins')
     theater = Theater.objects.create(**validated_data)
-    theater.admins.set(admins)
+    theater.theateradmins.set(admins)
     return theater

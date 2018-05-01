@@ -217,6 +217,7 @@ export default {
               PropsController.postProp(this.prop)
                 .then((response) => {
                   this.$alert.success('Official prop successfully created.');
+                  this.$emit('reload');
                   this.reset();
                 })
                 .catch((e) => {
