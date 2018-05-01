@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.core.serializers import serialize
 
@@ -26,6 +27,7 @@ class User(AbstractUser):
   role = models.CharField(max_length=20, choices=ROLES, default='user')
   phone = models.CharField(max_length=30, blank=True)
   city = models.CharField(max_length=30, blank=True)
+  friendships = models.ManyToManyField('self', through='Friendship', symmetrical=False)
   first_login = models.BooleanField(default=True)
 
   def is_admin(self):
@@ -39,6 +41,25 @@ class User(AbstractUser):
 
   def is_fan_zone_admin(self):
     return self.role == FAN_ZONE_ADMIN[0]
+
+  def friend_requests(self):
+    requests_ids = Friendship.objects.filter(friend_id=self.id).filter(accepted=False).values_list('me_id')
+    return User.objects.filter(id__in=requests_ids)
+
+  def friends(self):
+    they_added = Friendship.objects.filter(friend_id=self.id).filter(accepted=True).values_list('me_id')
+    i_added = Friendship.objects.filter(me_id=self.id).filter(accepted=True).values_list('friend_id')
+    return User.objects.filter(Q(id__in=i_added) | Q(id__in=they_added))
+
+  def friends_count(self):
+    self.friends().count()
+
+
+class Friendship(models.Model):
+    me = models.ForeignKey(User, on_delete=models.PROTECT, related_name='me')
+    friend = models.ForeignKey(User, on_delete=models.PROTECT, related_name='friend')
+    accepted = models.BooleanField(default=False)
+
 
 class TheaterAdmin(User):
   theater = models.ForeignKey(

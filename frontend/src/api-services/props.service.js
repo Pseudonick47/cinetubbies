@@ -6,15 +6,27 @@ const OFFICIAL = 'official/';
 const CATEGORIES = 'categories/';
 
 export default {
-  fetchOfficialProps(theater, num, page) {
+  fetchOfficialProps(num, page) {
+    return Axios.get(`${PROPS}${OFFICIAL}?num=${num}&page=${page}`);
+  },
+
+  fetchOfficialPropsCount() {
+    return Axios.get(`${PROPS}${OFFICIAL}count`);
+  },
+
+  fetchOfficialPropsByTheater(theater, num, page) {
     return Axios.get(`${THEATERS}${theater}/${PROPS}${OFFICIAL}?num=${num}&page=${page}`);
   },
 
-  fetchOfficialPropsCount(theater) {
+  fetchOfficialPropsCountByTheater(theater) {
     return Axios.get(`${THEATERS}${theater}/${PROPS}${OFFICIAL}count`);
   },
 
   fetchCategories() {
     return Axios.get(`${PROPS}${CATEGORIES}`);
+  },
+
+  postOfficialProp(data) {
+    return Axios.post(`${PROPS}${OFFICIAL}`, data);
   }
 };

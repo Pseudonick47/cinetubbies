@@ -38,6 +38,8 @@
                   v-validate="'required'"
                   :items="categories"
                   v-model="selected_category"
+                  :error-messages="errors.collect('category')"
+                  name="category"
                   label="Category"
                   item-text="name"
                   autocomplete
@@ -54,6 +56,9 @@
                     md5
                   >
                     <v-text-field
+                      v-validate="'required|decimal:3'"
+                      v-model="prop.price"
+                      :error-messages="errors.collect('price')"
                       name="price"
                       label="Price"
                       prefix="$"
@@ -65,6 +70,9 @@
                     md5
                   >
                     <v-text-field
+                      v-validate="'required|numeric'"
+                      v-model="prop.quantity"
+                      :error-messages="errors.collect('quantity')"
                       name="quantity"
                       label="Quantity"
                       required
@@ -109,6 +117,7 @@
               mt-3
             >
               <v-text-field
+                v-model="prop.description"
                 name="description"
                 label="Description"
                 rows="3"
@@ -141,6 +150,7 @@
             md2
           >
             <v-btn
+              :disabled="errors.any()"
               block
               @click.native="submit"
             >
@@ -156,6 +166,7 @@
 import { mapGetters } from 'vuex';
 
 import { OfficialProp } from 'Models/prop.model';
+import PropsController from 'Controllers/props.controller';
 
 export default {
   name: 'OfficialPropDialog',
@@ -182,7 +193,22 @@ export default {
     },
     submit() {
       this.$validator.validateAll().then((result) => {
-
+        if (result) {
+          this.prop.category = this.selected_category.id;
+          this.prop.image = null;
+          this.prop.theater = 2;
+          console.log(this.prop);
+          PropsController.postOfficialProp(this.prop)
+            .then((response) => {
+              this.$alert.success('Official prop successfully created.');
+              this.reset();
+            })
+            .catch((e) => {
+              this.$alert.error('Something went wrong. Please try again!');
+            });
+        } else {
+          this.$alert.error('Please fill all required fields.');
+        }
       });
     }
   }

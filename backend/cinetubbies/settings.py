@@ -44,6 +44,7 @@ INSTALLED_APPS = [
   'movies',
   'media_upload',
   'fan_zone',
+  'showtimes'
 ]
 
 MIDDLEWARE = [

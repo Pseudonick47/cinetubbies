@@ -9,7 +9,8 @@ const state = {
 const getters = {
   all: (state) => state.categories,
   one: (state) => (id) => _.find(state.categories, 'id'),
-  subcategories: (state) => (id) => _.filter(state.categories, [ 'supercategory', id ])
+  subcategories: (state) => (id) => _.filter(state.categories, [ 'supercategory', id ]),
+  root: (state) => (id) => _.filter(state.categories, [ 'supercategory', null ])
 };
 
 const mutations = {

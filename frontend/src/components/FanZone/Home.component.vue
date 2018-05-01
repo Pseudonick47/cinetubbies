@@ -18,10 +18,6 @@
               class="mx-3"
               flat
             />
-            <v-btn
-              color="primary"
-              @click.native.stop="dialog=true"
-            >New</v-btn>
           </v-layout>
         </v-card>
       </v-layout>
@@ -54,28 +50,21 @@
         />
       </v-layout>
     </v-container>
-    <official-prop-dialog
-      v-if="dialog"
-      @close="dialog=false"
-    />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 
 import OfficialProp from 'Components/FanZone/OfficialProp.component';
-import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
 import PropsController from 'Controllers/props.controller';
 
 export default {
-  name: 'FanZoneAdminHome',
+  name: 'FanZoneHome',
   components: {
-    OfficialProp,
-    OfficialPropDialog
+    OfficialProp
   },
   data() {
     return {
-      dialog: false,
       entriesPerPage: 9,
       page: 1,
       theater: 2
@@ -92,13 +81,13 @@ export default {
   },
   watch: {
     page() {
-      PropsController.requestOfficialProps(this.theater, this.page);
+      PropsController.requestOfficialProps(this.page);
     }
   },
   beforeMount() {
     PropsController.requestCategories();
-    PropsController.requestOfficialPropCount(this.theater);
-    PropsController.requestOfficialProps(this.theater, this.page);
+    PropsController.requestOfficialPropCount();
+    PropsController.requestOfficialProps(this.page);
   }
 };
 </script>

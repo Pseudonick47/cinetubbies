@@ -17,6 +17,7 @@
     "moment": "^2.22.1",
     "vee-validate": "^2.0.6",
     "vue": "^2.5.2",
+    "vue-datetime-picker": "^0.2.1",
     "vue-router": "^3.0.1",
     "vue-star-rating": "^1.5.1",
     "vuetify": "^1.0.8",

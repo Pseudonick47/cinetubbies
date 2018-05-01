@@ -42,6 +42,10 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'home' });
   }
 
+  if (to.name === 'home' && store.getters.isCinemaAdmin) {
+    return next({ name: 'adminHome' });
+  }
+
   return next();
 });
 

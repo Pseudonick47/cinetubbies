@@ -12,11 +12,15 @@ movie_detail = MovieViewSet.as_view({
 
 movie_list = MovieViewSet.as_view({
   'get': 'list',
-  'post': 'create',
-  'patch': 'update_info'
+  'post': 'create'
+})
+
+get_showtimes = MovieViewSet.as_view({
+  'get': 'get_showtimes'
 })
 
 urlpatterns = format_suffix_patterns([
   path('<int:pk>/', movie_detail, name='movie-detail'),
-  path('', movie_list, name='movie-list')
+  path('', movie_list, name='movie-list'),
+  path('<int:pk>/showtimes', get_showtimes, name='get-showtimes')
 ])

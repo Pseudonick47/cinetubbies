@@ -5,6 +5,17 @@ from .models import User, ROLES, ADMIN_ROLES, TheaterAdmin
 
 from theaters.models import Theater
 
+class FriendSerializer(serializers.Serializer):
+  id = serializers.IntegerField(read_only=True)
+  username = serializers.CharField(required=False, allow_blank=False, max_length=30)
+  email = serializers.CharField(required=False, allow_blank=True)
+  first_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
+  last_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
+  birth_date = serializers.DateTimeField(required=False)
+  phone = serializers.CharField(max_length=30, allow_blank=False)
+  city = serializers.CharField(max_length=30, allow_blank=False)
+
+
 class UserSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
   username = serializers.CharField(required=False, allow_blank=False, max_length=30)
@@ -16,6 +27,15 @@ class UserSerializer(serializers.Serializer):
   birth_date = serializers.DateTimeField(required=False)
   phone = serializers.CharField(max_length=30, allow_blank=False)
   city = serializers.CharField(max_length=30, allow_blank=False)
+  friends_count = serializers.IntegerField(read_only=True),
+  friend_requests = serializers.ListField(
+    read_only=True,
+    child = FriendSerializer(),
+  )
+  friends = serializers.ListField(
+    read_only=True,
+    child = FriendSerializer(),
+  )
 
   def create(self, validated_data):
     user = User( ** validated_data)

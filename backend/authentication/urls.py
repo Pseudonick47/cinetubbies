@@ -1,4 +1,4 @@
-
+from .views import UserViewSet, FriendViewSet
 from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
@@ -35,7 +35,19 @@ admin_count = AdminViewSet.as_view({
   'get': 'count'
 })
 
+user_friends = FriendViewSet.as_view({
+    'get': 'retrieve',
+    'post': 'create',
+    'delete': 'delete',
+})
+
+search_friends = FriendViewSet.as_view({
+    'get': 'search_for_friends'
+})
+
 urlpatterns = format_suffix_patterns([
+  path('users/<int:pk>/friends/', user_friends, name='user-friends'),
+  path('users/friends/<str:query>', search_friends, name='user-friends-search'),
   path('users/<int:pk>/', user, name='user'),
   path('users/', users, name='users'),
   path('auth/me/', active, name='active-user'),

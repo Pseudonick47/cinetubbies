@@ -3,11 +3,16 @@ import Home from 'Components/Home.component';
 import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
-import Movies from 'Components/Movies/Movies.component';
+import Movies from 'Components/CinemaAdmin/Movies.component';
 import Settings from 'Components/User/Settings.component';
+import Profile from 'Components/User/Profile.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
+import FanZoneHome from 'Components/FanZone/Home.component';
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
+import Showtimes from 'Components/Showtimes/Showtimes.component';
+import AdminHome from 'Components/CinemaAdmin/AdminHome.component';
+import Reports from 'Components/CinemaAdmin/Reports.component';
 
 export const routes = [
   {
@@ -59,6 +64,14 @@ export const routes = [
     }
   },
   {
+    path: '/user/profile',
+    name: 'user-profile',
+    component: Profile,
+    meta: {
+      logged: true
+    }
+  },
+  {
     path: '/admin/system/:kind',
     name: 'admin-theaters',
     component: SystemAdminHome,
@@ -67,9 +80,17 @@ export const routes = [
     }
   },
   {
-    path: '/fan-zone',
+    path: '/admin/fan-zone',
     name: 'fan-zone',
     component: FanZoneAdminHome,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/fan-zone',
+    name: 'fan-zone',
+    component: FanZoneHome,
     meta: {
       logged: true
     }
@@ -78,6 +99,30 @@ export const routes = [
     path: '/theater/settings',
     name: 'theater-settings',
     component: TheaterSettings,
+    meta: {
+      cinemaAdmin: true
+    }
+  },
+  {
+    path: '/showtimes',
+    name: 'showtimes',
+    component: Showtimes,
+    meta: {
+      cinemaAdmin: true
+    }
+  },
+  {
+    path: '/admin-home',
+    name: 'adminHome',
+    component: AdminHome,
+    meta: {
+      cinemaAdmin: true
+    }
+  },
+  {
+    path: '/reports',
+    name: 'reports',
+    component: Reports,
     meta: {
       cinemaAdmin: true
     }
