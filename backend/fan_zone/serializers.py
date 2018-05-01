@@ -3,6 +3,7 @@ from rest_framework import serializers
 from cinetubbies.utils.func import update
 
 from media_upload.models import Image
+from media_upload.serializers import ImageSerializer
 from theaters.models import Theater
 
 from .models import Category
@@ -24,9 +25,14 @@ class PublicPropSerializer(serializers.Serializer):
     queryset=Category.objects.all(),
     allow_null=False
   )
-  image = serializers.PrimaryKeyRelatedField(
+  image_id = serializers.PrimaryKeyRelatedField(
     queryset=Image.objects.all(),
-    allow_null=True
+    allow_null=True,
+    write_only=True,
+    source='image'
+  )
+  image = ImageSerializer(
+    read_only=True
   )
 
 class PublicOfficialPropSerializer(PublicPropSerializer):

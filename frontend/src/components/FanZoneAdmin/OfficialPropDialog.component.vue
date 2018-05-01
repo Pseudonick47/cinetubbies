@@ -37,11 +37,11 @@
                 <v-select
                   v-validate="'required'"
                   :items="categories"
-                  v-model="selected_category"
+                  v-model="selectedCategory"
                   :error-messages="errors.collect('category')"
                   name="category"
                   label="Category"
-                  item-text="name"
+                  item-text="path"
                   autocomplete
                   return-object
                   required
@@ -100,12 +100,11 @@
                       align-center
                       justify-center
                     >
-                      <v-btn
+                      <input
                         class="img-button"
-                        small
+                        type="file"
+                        @change="imageSelected"
                       >
-                        Upload Image
-                      </v-btn>
                       <div class="img-background"/>
                     </v-layout>
                   </v-container>
@@ -165,8 +164,9 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import { OfficialProp } from 'Models/prop.model';
-import PropsController from 'Controllers/props.controller';
+import { OfficialProp } from 'Models/props/official-prop.model';
+import PropsController from 'Controllers/props/official-props.controller';
+import MediaService from 'Api/media-upload.service';
 
 export default {
   name: 'OfficialPropDialog',
@@ -174,15 +174,22 @@ export default {
     return {
       show: true,
       prop: new OfficialProp(),
-      selected_category: null
+      selectedCategory: null,
+      selectedImage: null
     };
   },
   computed: {
-    ...mapGetters('props', {
-      categories: 'categories/all'
+    ...mapGetters('props/categories', {
+      categories: 'leafs'
+    }),
+    ...mapGetters({
+      admin: 'activeUser'
     })
   },
   methods: {
+    imageSelected(event) {
+      this.selectedImage = event.target.files[0];
+    },
     close() {
       this.show = false;
       this.$emit('close');
@@ -192,16 +199,29 @@ export default {
       this.close();
     },
     submit() {
+      console.log(this.admin);
+      if (!this.admin.theater) {
+        return;
+      }
       this.$validator.validateAll().then((result) => {
         if (result) {
-          this.prop.category = this.selected_category.id;
-          this.prop.image = null;
-          this.prop.theater = 2;
-          console.log(this.prop);
-          PropsController.postOfficialProp(this.prop)
+          const fd = new FormData();
+          fd.append('kind', 'o');
+          fd.append('data', this.selectedImage, this.selectedImage.name);
+          MediaService.postImage(fd)
             .then((response) => {
-              this.$alert.success('Official prop successfully created.');
-              this.reset();
+              this.prop.category = this.selectedCategory.id;
+              this.prop.image_id = response.data.id;
+              this.prop.theater = this.admin.theater.id;
+
+              PropsController.postProp(this.prop)
+                .then((response) => {
+                  this.$alert.success('Official prop successfully created.');
+                  this.reset();
+                })
+                .catch((e) => {
+                  this.$alert.error('Something went wrong. Please try again!');
+                });
             })
             .catch((e) => {
               this.$alert.error('Something went wrong. Please try again!');

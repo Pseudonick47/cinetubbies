@@ -1,5 +1,10 @@
 <template>
   <v-card class="theater-card">
+    <v-card-media
+      v-if="info.image"
+      :src="info.image.path"
+      height="200px"
+    />
     <v-card-title primary-title>
       <div>
         <div class="headline">{{ info.title }}</div>

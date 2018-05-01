@@ -1,4 +1,5 @@
-import { OfficialProp } from 'Models/prop.model';
+import { OfficialProp } from 'Models/props/official-prop.model';
+import ImageHelper from '@/helpers/image-helper';
 
 const namespaced = true;
 
@@ -17,6 +18,10 @@ const mutations = {
   setProps(state, props) {
     state.props = [];
     _.forEach(props, (prop) => {
+      if (prop.image) {
+        console.log(ImageHelper.getAbsolutePath('/media/default/theater.jpg'));
+        prop.image.path = ImageHelper.getAbsolutePath(prop.image.path);
+      }
       state.props.push(new OfficialProp(prop));
     });
   },

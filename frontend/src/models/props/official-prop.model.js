@@ -1,4 +1,4 @@
-class OfficialProp {
+export class OfficialProp {
   constructor(data) {
     _.assignWith(this, data);
   }
@@ -8,6 +8,3 @@ class OfficialProp {
   }
 };
 
-export {
-  OfficialProp
-};

@@ -65,7 +65,8 @@ import { mapGetters } from 'vuex';
 
 import OfficialProp from 'Components/FanZone/OfficialProp.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
-import PropsController from 'Controllers/props.controller';
+import CategoriesController from 'Controllers/props/categories.controller';
+import PropsController from 'Controllers/props/official-props.controller';
 
 export default {
   name: 'FanZoneAdminHome',
@@ -92,13 +93,13 @@ export default {
   },
   watch: {
     page() {
-      PropsController.requestOfficialProps(this.theater, this.page);
+      PropsController.requestPage(this.page, { theater: this.theater });
     }
   },
   beforeMount() {
-    PropsController.requestCategories();
-    PropsController.requestOfficialPropCount(this.theater);
-    PropsController.requestOfficialProps(this.theater, this.page);
+    CategoriesController.requestCategories();
+    PropsController.requestCount({ theater: this.theater });
+    PropsController.requestPage(this.page, { theater: this.theater });
   }
 };
 </script>

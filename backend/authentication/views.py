@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import User, THEATER_ADMIN, FAN_ZONE_ADMIN, Friendship
 from .permissions import IsSelfOrReadOnly, IsSystemAdmin
-from .serializers import TheaterAdminSerializer, AdminSerializer, UserSerializer, FriendSerializer
+from .serializers import TheaterAdminSerializer, SystemAdminSerializer, UserSerializer, FriendSerializer
 from .utils import auth
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -92,10 +92,8 @@ class FriendViewSet(viewsets.ViewSet):
 
     return Response({'message': 'Friend successfully deleted'})
 
-
 class AdminViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
-  serializer_class = AdminSerializer
   permission_classes = [IsAuthenticated, IsSystemAdmin]
 
   def list(self, request):
@@ -110,7 +108,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     if all_admins:
       # user requested all admins of the same role
       admins = User.objects.filter(role=role)
-      return Response(data=AdminSerializer(admins, many=True).data)
+      return Response(data=SystemAdminSerializer(admins, many=True).data)
 
     # return paginated results
     num = request.GET.get('num')
@@ -118,7 +116,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     page = request.GET.get('page')
     admins = paginator.get_page(page if page else 1)
 
-    return Response(data=AdminSerializer(admins, many=True).data)
+    return Response(data=SystemAdminSerializer(admins, many=True).data)
 
   def create(self, request):
     pwd = auth.generate_password()
@@ -127,7 +125,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     if (request.data['role'] == THEATER_ADMIN[0]):
       serializer = TheaterAdminSerializer(data=request.data, partial=True)
     else:
-      serializer = AdminSerializer(data=request.data, partial=True)
+      serializer = SystemAdminSerializer(data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()
 

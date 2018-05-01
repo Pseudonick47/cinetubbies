@@ -6,8 +6,20 @@ from .models import IMAGE_KIND
 
 class ImageSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
-  kind = serializers.ChoiceField(required=True, choices=IMAGE_KIND)
-  data = serializers.ImageField(required=True, allow_empty_file=False)
+  kind = serializers.ChoiceField(
+    write_only=True,
+    required=True,
+    choices=IMAGE_KIND
+  )
+  data = serializers.ImageField(
+    write_only=True,
+    required=True,
+    allow_empty_file=False
+  )
+  path = serializers.ImageField(
+    read_only=True,
+    source='data'
+  )
 
   def create(self, validated_data):
     return Image.objects.create(**validated_data)

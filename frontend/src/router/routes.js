@@ -81,7 +81,7 @@ export const routes = [
   },
   {
     path: '/admin/fan-zone',
-    name: 'fan-zone',
+    name: 'admin-fan-zone',
     component: FanZoneAdminHome,
     meta: {
       logged: true

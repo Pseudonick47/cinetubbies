@@ -22,7 +22,6 @@ class OfficialPropManageView(BaseManageView):
     'GET': PublicOfficialPropAPI.as_view({'get': 'retrieve'}),
     'PUT': RestrictedOfficialPropAPI.as_view({'put': 'update'})
   }
-
 class CategoriesManageView(BaseManageView):
   VIEWS_BY_METHOD = {
     'GET': PublicCategoryAPI.as_view({'get': 'list'}),
@@ -40,6 +39,18 @@ count_official_props = PublicOfficialPropAPI.as_view({
   'get': 'count'
 })
 
+official_props_of_category = PublicOfficialPropAPI.as_view({
+  'get': 'list',
+})
+
+official_prop_of_category = PublicCategoryAPI.as_view({
+  'get': 'retrieve'
+})
+
+count_official_props_of_category = PublicOfficialPropAPI.as_view({
+  'get': 'count',
+})
+
 prop_urls = [
   path(
     route='official/',
@@ -55,6 +66,21 @@ prop_urls = [
     route='official/<int:pk>',
     view=OfficialPropManageView.as_view(),
     name="official-prop"
+  ),
+  path(
+    route='categories/<int:category_pk>/official/',
+    view=official_props_of_category,
+    name='official-props-of-category'
+  ),
+  path(
+    route='categories/<int:category_pk>/official/count',
+    view=count_official_props_of_category,
+    name='official-props-of-category'
+  ),
+  path(
+    route='categories/<int:category_pk>/official/<int:pk>',
+    view=official_prop_of_category,
+    name='official-prop-of-category'
   ),
 ]
 

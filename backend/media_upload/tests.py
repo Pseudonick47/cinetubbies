@@ -39,7 +39,7 @@ class ImageAPITestCase(APITestCase):
     'email': 'sysadmin@test.com',
   }
 
-  media = os.path.join(BASE_DIR, 'media', 'test')
+  media = os.path.join(BASE_DIR, 'media', 'default')
 
   tmp_img_path = None
 

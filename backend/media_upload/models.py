@@ -28,6 +28,6 @@ def generate_image_path(instance, filename):
 
 
 class Image(models.Model):
-  id = models.IntegerField(primary_key=True)
+  id = models.AutoField(primary_key=True)
   kind = models.CharField(max_length=1, choices=IMAGE_KIND)
   data = models.ImageField(upload_to=generate_image_path)

@@ -10,6 +10,10 @@ from rest_framework.viewsets import ViewSet
 from authentication.permissions import IsFanZoneOrSystemAdmin
 from authentication.permissions import IsSystemAdmin
 
+from media_upload.defaults import DEFAULT_PROP_IMAGE
+from media_upload.models import Image
+from media_upload.models import OFFICIAL_PROP_IMAGE
+
 from theaters.models import Theater
 
 from .models import OfficialProp
@@ -25,12 +29,14 @@ from .serializers import RestrictedOfficialPropSerializer
 class PublicOfficialPropAPI(ViewSet):
   permission_classes = [AllowAny]
 
-  def list(self, request, theater_pk=None):
+  def list(self, request, theater_pk=None, category_pk=None):
+    queryset = OfficialProp.objects.all()
+
     if theater_pk:
-      theater = get_object_or_404(Theater, pk=theater_pk)
-      queryset = theater.officialprops.all()
-    else:
-      queryset = OfficialProp.objects.all()
+      queryset = OfficialProp.objects.filter(theater_id=theater_pk)
+
+    if category_pk:
+      queryset = queryset.filter(category_id=category_pk)
 
     num = request.GET.get('num')
     paginator = Paginator(queryset.order_by('title'), num if num else 10)
@@ -39,18 +45,21 @@ class PublicOfficialPropAPI(ViewSet):
     props = paginator.get_page(page if page else 1)
     return Response(data=PublicOfficialPropSerializer(props, many=True).data)
 
-  def retrieve(self, request, theater_pk=None, pk=None):
+  def retrieve(self, request, theater_pk=None, category_pk=None, pk=None):
     prop = get_object_or_404(OfficialProp, pk=pk)
     return Response(data=PublicOfficialPropSerializer(prop).data)
 
   @action(detail=False)
-  def count(self, request, theater_pk=None):
+  def count(self, request, theater_pk=None, category_pk=None):
+    queryset = OfficialProp.objects.all()
+
     if theater_pk:
-      theater = get_object_or_404(Theater, pk=theater_pk)
-      num = theater.officialprops.count()
-    else:
-      num = OfficialProp.objects.count()
-    return Response(data=num)
+      queryset = queryset.filter(theater_id=theater_pk)
+
+    if category_pk:
+      queryset = queryset.filter(category_id=category_pk)
+
+    return Response(data=queryset.count())
 
 class RestrictedOfficialPropAPI(ViewSet):
   permission_classes = [
@@ -60,7 +69,16 @@ class RestrictedOfficialPropAPI(ViewSet):
   def create(self, request, theater_pk=None):
     serializer = RestrictedOfficialPropSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    prop = serializer.save()
+
+    if not prop.image:
+      image = Image.objects.create(
+        path = DEFAULT_PROP_IMAGE,
+        kind = OFFICIAL_PROP_IMAGE[0]
+      )
+      prop.image = image
+      prop.save()
+
     return Response(data=serializer.data)
 
   def destroy(self, request, theater_pk=None, pk=None):

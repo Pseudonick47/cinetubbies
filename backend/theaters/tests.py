@@ -3,7 +3,7 @@ from copy import deepcopy
 from rest_framework.test import APITestCase
 
 from authentication.models import User
-from authentication.serializers import AdminSerializer
+from authentication.serializers import SystemAdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 
 from .models import Theater
@@ -53,7 +53,7 @@ class TheaterAPITests(APITestCase):
       print(serializer.errors)
     serializer.save()
 
-    serializer = AdminSerializer(data=self.test_system_admin)
+    serializer = SystemAdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       print(serializer.errors)
     serializer.save()

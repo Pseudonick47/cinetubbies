@@ -48,7 +48,10 @@
     <v-content
       class="pt-2"
     >
-      <v-container fluid>
+      <v-container
+        class="content-container"
+        fluid
+      >
         <router-view/>
       </v-container>
     </v-content>
@@ -93,14 +96,13 @@ export default {
         ],
         'fan_zone_admin': [
           { icon: 'home', text: 'Home', path: '/home' },
-          { icon: 'shopping_cart', text: 'Fan Zone', path: '/fan-zone' }
+          { icon: 'shopping_cart', text: 'Official Props', path: '/admin/fan-zone' }
         ],
         'user': [
           { icon: 'home', text: 'Home', path: '/home' },
+          { icon: 'person_add', text: 'Profile', path: '/user/profile' },
           { icon: 'shopping_cart', text: 'Fan Zone', path: '/fan-zone' },
-          { icon: 'person_add', text: 'Home', path: '/home' },
-          { icon: 'settings', text: 'Settings', path: '/user/settings' },
-          { icon: 'person_add', text: 'Profile', path: '/user/profile' }
+          { icon: 'settings', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [
           { icon: 'person_add', text: 'Login', path: '/login' },
