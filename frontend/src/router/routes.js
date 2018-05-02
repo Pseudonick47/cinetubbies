@@ -76,7 +76,7 @@ export const routes = [
     name: 'admin-theaters',
     component: SystemAdminHome,
     meta: {
-      logged: true
+      admin: true
     }
   },
   {
@@ -84,7 +84,7 @@ export const routes = [
     name: 'admin-fan-zone',
     component: FanZoneAdminHome,
     meta: {
-      logged: true
+      fanZoneAdmin: true
     }
   },
   {
