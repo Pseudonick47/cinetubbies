@@ -162,20 +162,14 @@ class SystemAdminViewSet(viewsets.ViewSet):
 
   def create(self, request):
     pwd = auth.generate_password()
+    request.data['password'] = pwd
 
-    data = {
-      'username': request.data['username'],
-      'password': pwd,
-      'email': request.data['email'],
-      'role': request.data['role'],
-    }
-
-    if data['role'] == THEATER_ADMIN[0]:
-      serializer = TheaterAdminSerializer(data=data, partial=True)
-    elif data['role'] == FAN_ZONE_ADMIN[0]:
-      serializer = FanZoneAdminSerializer(data=data, partial=True)
+    if request.data['role'] == THEATER_ADMIN[0]:
+      serializer = TheaterAdminSerializer(data=request.data, partial=True)
+    elif request.data['role'] == FAN_ZONE_ADMIN[0]:
+      serializer = FanZoneAdminSerializer(data=request.data, partial=True)
     else:
-      serializer = SystemAdminSerializer(data=data, partial=True)
+      serializer = SystemAdminSerializer(data=request.data, partial=True)
 
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()
