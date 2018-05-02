@@ -28,4 +28,6 @@ class RewardScaleSerializer(serializers.Serializer):
     return data
 
   def update(self, scale, validated_data):
-    return update(scale, **validated_data)
+    update(scale, **validated_data)
+    scale.save()
+    return scale

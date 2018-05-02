@@ -198,11 +198,10 @@ import { mapGetters } from 'vuex';
 
 import ReservationsController from 'Controllers/reservations.controller';
 
-
 export default {
   name: 'SystemAdminRewards',
   computed: {
-    ...mapGetters('reservations', ['basic', 'bronze', 'silver', 'gold', 'all'])
+    ...mapGetters('reservations', [ 'basic', 'bronze', 'silver', 'gold', 'all' ])
   },
   beforeMount() {
     ReservationsController.requestRewards();
@@ -221,9 +220,13 @@ export default {
               max_points: Number(e.max)
             };
           });
-          ReservationsController.updateRewards(data).then(() => {
-            this.$alert.success('Rewards successfully updated!');
-          })
+          ReservationsController.updateRewards(data)
+            .then(() => {
+              this.$alert.success('Rewards successfully updated!');
+            })
+            .catch(() => {
+              this.$alert.error('Something went wrong! Please try again.');
+            });
         } else {
           this.$alert.error('All fileds accept only numeric values!');
         }
