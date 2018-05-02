@@ -10,7 +10,6 @@ showtime_detail = ShowtimeViewSet.as_view({
 })
 
 showtime_list = ShowtimeViewSet.as_view({
-  'get': 'list',
   'post': 'create'
 })
 
