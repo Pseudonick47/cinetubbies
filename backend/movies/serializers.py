@@ -5,10 +5,10 @@ class MovieSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
   title = serializers.CharField(required=True, allow_blank=False, max_length=255)
   genre = serializers.CharField(required=True, allow_blank=False, max_length=255)
-  director = serializers.CharField(max_length=255, allow_blank=True)
-  actors = serializers.CharField(max_length=255, allow_blank=True)
-  duration = serializers.CharField(max_length=255, allow_blank=True)
-  description = serializers.CharField(max_length=255, allow_blank=True)
+  director = serializers.CharField(required=False, max_length=255, allow_blank=True)
+  actors = serializers.CharField(required=False, max_length=255, allow_blank=True)
+  duration = serializers.CharField(required=False, max_length=255, allow_blank=True)
+  description = serializers.CharField(required=False, max_length=255, allow_blank=True)
   theater = serializers.PrimaryKeyRelatedField(queryset=Theater.objects.all(),allow_null=False)
 
   def create(self, validated_data):
