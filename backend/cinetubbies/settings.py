@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'cinetubbies.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-  # 'default': {
+  'default': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'cinetubbies',
     'USER': 'root',
