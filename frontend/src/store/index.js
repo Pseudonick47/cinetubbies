@@ -5,6 +5,7 @@ import {
   alert,
   auth,
   props,
+  reservations,
   systemAdmin
 } from './modules';
 
@@ -15,6 +16,7 @@ const storeData = {
     alert,
     auth,
     props,
+    reservations,
     systemAdmin
   }
 };
