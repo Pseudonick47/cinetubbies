@@ -31,17 +31,18 @@ class MovieViewSet(viewsets.ModelViewSet):
 
   # delete movie
   def destroy(self, request, pk=None):
-    movie = Movie.objects.get(id=pk)
+    movie = get_object_or_404(Movie, pk=pk)
     self.check_object_permissions(request, movie)
     movie.delete()
     return Response({'message': 'Movie successfully deleted'})
 
   def retrieve(self, request, pk=None):
-    movie = Movie.objects.get(id=pk)
+    movie = get_object_or_404(Movie, pk=pk)
     return Response(data=MovieSerializer(movie).data)
 
   def update(self, request, pk=None):
     movie = get_object_or_404(Movie, id=pk)
+    self.check_object_permissions(request, movie)
     serializer = MovieSerializer(movie, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -49,6 +50,6 @@ class MovieViewSet(viewsets.ModelViewSet):
 
   @action(detail=True)
   def get_showtimes(self, request, pk=None):
-    movie = Movie.objects.get(id=pk)
+    movie = get_object_or_404(Movie, id=pk)
     showtimes = movie.showtimes.all()
     return Response(ShowtimeSerializer(showtimes, many=True).data)
