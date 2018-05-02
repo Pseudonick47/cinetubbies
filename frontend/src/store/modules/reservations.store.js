@@ -15,26 +15,13 @@ const getters = {
   bronze: (state) => state.bronze,
   silver: (state) => state.silver,
   gold: (state) => state.gold,
-  all: (state) => {
-    return {
-      basic: state.basic,
-      bronze: state.bronze,
-      silver: state.silver,
-      gold: state.gold
-    };
-  }
+  all: (state) => [ state.basic, state.bronze, state.silver, state.gold ]
 };
 
 const mutations = {
   setRewards(state, data) {
     _.each(data, (reward) => {
-      const r = {
-        status: reward.status,
-        min: reward.min_points,
-        max: reward.max_points
-      };
-
-      state[reward.status] = new Reward(r);
+      state[reward.status] = new Reward(reward);
     });
   }
 };

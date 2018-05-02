@@ -20,6 +20,17 @@ class RewardScaleSerializer(serializers.Serializer):
     max_value=32767
   )
 
+  def to_representation(self, obj):
+    res = super().to_representation(obj)
+    res['min'] = res.pop('min_points')
+    res['max'] = res.pop('max_points')
+    return res
+
+  def to_internal_value(self, data):
+    data['min_points'] = data.pop('min')
+    data['max_points'] = data.pop('max')
+    return super().to_internal_value(data)
+
   def validate(self, data):
     if data['min_points'] > data['max_points']:
       raise serializers.ValidationError(

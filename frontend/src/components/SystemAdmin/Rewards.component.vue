@@ -193,7 +193,6 @@
   </v-container>
 </template>
 <script>
-import * as _ from 'lodash';
 import { mapGetters } from 'vuex';
 
 import ReservationsController from 'Controllers/reservations.controller';
@@ -213,14 +212,7 @@ export default {
     confirm() {
       this.$validator.validateAll().then((result) => {
         if (result) {
-          const data = _.map(this.all, (e) => {
-            return {
-              status: e.status,
-              min_points: Number(e.min),
-              max_points: Number(e.max)
-            };
-          });
-          ReservationsController.updateRewards(data)
+          ReservationsController.updateRewards(this.all)
             .then(() => {
               this.$alert.success('Rewards successfully updated!');
             })
