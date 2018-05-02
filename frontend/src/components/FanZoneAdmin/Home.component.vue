@@ -93,7 +93,6 @@ export default {
       admin: 'activeUser'
     }),
     pageCount() {
-      console.log(this.admin.theater);
       return _.ceil(_.divide(this.count, this.entriesPerPage));
     },
     theater() {

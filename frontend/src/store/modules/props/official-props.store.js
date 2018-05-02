@@ -19,7 +19,6 @@ const mutations = {
     state.props = [];
     _.forEach(props, (prop) => {
       if (prop.image) {
-        console.log(ImageHelper.getAbsolutePath('/media/default/theater.jpg'));
         prop.image.path = ImageHelper.getAbsolutePath(prop.image.path);
       }
       state.props.push(new OfficialProp(prop));

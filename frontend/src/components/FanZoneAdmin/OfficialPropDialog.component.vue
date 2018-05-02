@@ -199,10 +199,6 @@ export default {
       this.close();
     },
     submit() {
-      console.log(this.admin);
-      if (!this.admin.theater) {
-        return;
-      }
       this.$validator.validateAll().then((result) => {
         if (result) {
           const fd = new FormData();

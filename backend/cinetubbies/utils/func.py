@@ -22,3 +22,9 @@ def update(obj: object, **kwargs) -> object:
       )
     setattr(obj, k, v)
   return obj
+
+def show_urls(urllist, depth=0):
+  for entry in urllist:
+    print("  " * depth, entry.pattern)
+    if hasattr(entry, 'url_patterns'):
+      show_urls(entry.url_patterns, depth + 1)
