@@ -5,6 +5,80 @@ from .serializers import FanZoneAdminSerializer
 from .serializers import TheaterAdminSerializer
 from .serializers import SystemAdminSerializer
 
+class UserAPI(APITestCase):
+
+  test_user_1 = {
+    'username': 'user1',
+    'password': '123456',
+    'role': 'user',
+    'email': 'user@test.com',
+  }
+
+  test_user_2 = {
+    'username': 'user1',
+    'password': '123456',
+    'role': 'user',
+    'email': 'user@test.com',
+  }
+
+  test_user_3 = {
+    'username': 'user3',
+    'password': '',
+    'role': 'user',
+    'email': 'user3@test.com',
+  }
+
+  def register(self, user):
+    response = self.client.post(
+      path='http://localhost:8000/api/auth/register/',
+      data = {
+        'username': user['username'],
+        'password': user['password']
+      },
+      format='json'
+    )
+    if 'token' in response.data:
+      self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
+    return response
+
+  def login(self, user):
+    response = self.client.post(
+      path='http://localhost:8000/api/auth/login/',
+      data = {
+        'username': user['username'],
+        'password': user['password']
+      },
+      format='json'
+    )
+    if 'token' in response.data:
+      self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
+    return response
+
+  def test_user_authentication(self):
+    response = self.client.get(path='http://localhost:8000/api/auth/me/')
+    self.assertEqual(response.status_code, 401)
+
+    response = self.register(self.test_user_1)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.data['user']['username'], self.test_user_1['username'])
+
+    response = self.register(self.test_user_2)
+    self.assertEqual(response.status_code, 400)
+
+    response = self.register(self.test_user_3)
+    self.assertEqual(response.status_code, 400)
+
+    response = self.login(self.test_user_1)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.data['user']['username'], self.test_user_1['username'])
+
+    response = self.client.get(path='http://localhost:8000/api/auth/me/')
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.data['username'], self.test_user_1['username'])
+
+    response = self.login(self.test_user_3)
+    self.assertEqual(response.status_code, 400)
+
 
 class SystemAdminAPI(APITestCase):
 
@@ -94,7 +168,7 @@ class SystemAdminAPI(APITestCase):
       'username': 'sysadmin2',
       'password': '123456',
       'role': 'admin',
-      'email': 'sysadmin@test.com',
+      'email': 'sysadmin2@test.com',
     }
 
     serializer = SystemAdminSerializer(data=test_system_admin2)
@@ -117,7 +191,7 @@ class SystemAdminAPI(APITestCase):
     test_system_admin2 = {
       'username': 'sysadmin2',
       'role': 'admin',
-      'email': 'sysadmin@test.com',
+      'email': 'sysadmin2@test.com',
     }
 
     response = self.client.post(
@@ -177,10 +251,10 @@ class SystemAdminAPI(APITestCase):
     self.assertEqual(response.data, 3)
 
     test_system_admin2 = {
-      'username': 'sysadmin2',
+      'username': 'sysadmin12',
       'password': '123456',
       'role': 'admin',
-      'email': 'sysadmin@test.com',
+      'email': 'sysadmin12@test.com',
     }
 
     serializer = SystemAdminSerializer(data=test_system_admin2)
