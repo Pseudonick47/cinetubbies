@@ -21,6 +21,10 @@ export default {
     }
   },
 
+  fetchAdminsTheater(id) {
+    return Axios.get(`${PREFIX}${id}/theater`);
+  },
+
   postAdmin(data) {
     return Axios.post(PREFIX, data);
   }

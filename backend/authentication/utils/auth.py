@@ -1,8 +1,11 @@
 import random
 import string
 
-from authentication.serializers import UserSerializer
+
 from django.core.mail import send_mail
+
+from authentication.serializers import UserSerializer
+
 
 CHAR_SET = string.digits + string.ascii_letters
 

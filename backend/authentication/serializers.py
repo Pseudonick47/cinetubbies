@@ -1,9 +1,15 @@
 from django.shortcuts import get_object_or_404
+
 from rest_framework import serializers
 
-from .models import User, ROLES, ADMIN_ROLES, TheaterAdmin
-
 from theaters.models import Theater
+
+from .models import FanZoneAdmin
+from .models import ROLES
+from .models import TheaterAdmin
+from .models import User
+from .models import USER
+
 
 class FriendSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -27,11 +33,13 @@ class UserSerializer(serializers.Serializer):
   birth_date = serializers.DateTimeField(required=False)
   phone = serializers.CharField(max_length=30, allow_blank=False)
   city = serializers.CharField(max_length=30, allow_blank=False)
-  friends_count = serializers.IntegerField(),
+  friends_count = serializers.IntegerField(read_only=True),
   friend_requests = serializers.ListField(
+    read_only=True,
     child = FriendSerializer(),
   )
   friends = serializers.ListField(
+    read_only=True,
     child = FriendSerializer(),
   )
 
@@ -47,12 +55,9 @@ class UserSerializer(serializers.Serializer):
       user.set_password(validated_data['password'])
     user.save()
     return user
-class AdminSerializer(serializers.Serializer):
-  id = serializers.IntegerField(read_only=True)
-  username = serializers.CharField(required=False, allow_blank=False, max_length=30)
-  password = serializers.CharField(write_only=True, min_length=5)
-  email = serializers.CharField(required=True, allow_blank=False)
-  role = serializers.ChoiceField(required=True, choices=ADMIN_ROLES)
+class SystemAdminSerializer(UserSerializer):
+  phone = None
+  city = None
 
   def create(self, validated_data):
     user = User( ** validated_data)
@@ -85,3 +90,22 @@ class TheaterAdminSerializer(UserSerializer):
     theater = get_object_or_404(Theater, pk=validated_data['theater'])
     theater_admin.theater.set(theater)
     return super.update(theater_admin, validated_data)
+
+class FanZoneAdminSerializer(UserSerializer):
+  theater = serializers.PrimaryKeyRelatedField(
+    queryset=Theater.objects.all(),
+    allow_null=True
+  )
+  phone = None
+  city = None
+
+  def create(self, validated_data):
+    admin = FanZoneAdmin(**validated_data)
+    admin.set_password(validated_data['password'])
+    admin.save()
+    return admin
+
+  def update(self, fan_zone_admin, validated_data):
+    theater = get_object_or_404(Theater, pk=validated_data['theater'])
+    fan_zone_admin.theater.set(theater)
+    return super.update(fan_zone_admin, validated_data)

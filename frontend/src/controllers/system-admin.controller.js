@@ -45,6 +45,12 @@ export default {
     }
   },
 
+  requestAdminsTheater(id) {
+    return AdminsService.fetchAdminsTheater(id).then((response) => {
+      store.commit('setAdminsTheater', response.data);
+    });
+  },
+
   requestTheaterAdmins() {
     AdminsService.fetchAdmins({ role: 'cinema_admin', all: true })
       .then((response) => {

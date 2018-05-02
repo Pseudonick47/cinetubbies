@@ -43,7 +43,9 @@ INSTALLED_APPS = [
   'theaters',
   'movies',
   'media_upload',
-  'showtimes'
+  'fan_zone',
+  'showtimes',
+  'reservations'
 ]
 
 MIDDLEWARE = [
@@ -104,6 +106,11 @@ DATABASES = {
     'HOST': 'localhost',
     'PORT': '3306',
   },
+  # for unit tests
+  # 'default': {
+  #   'ENGINE': 'django.db.backends.sqlite3',
+  #   'NAME': 'mydatabase'
+  # }
 }
 
 # REST framework settings

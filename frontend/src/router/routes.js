@@ -10,6 +10,9 @@ import TheaterSettings from 'Components/Theaters/Settings.component';
 import Theater from 'Components/Theaters/Theater.component';
 import Movie from 'Components/Theaters/Movie.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
+import SystemAdminRewards from 'Components/SystemAdmin/Rewards.component';
+import FanZoneHome from 'Components/FanZone/Home.component';
+import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
 import Showtimes from 'Components/Showtimes/Showtimes.component';
 import AdminHome from 'Components/CinemaAdmin/AdminHome.component';
 import Reports from 'Components/CinemaAdmin/Reports.component';
@@ -72,9 +75,33 @@ export const routes = [
     }
   },
   {
+    path: '/admin/system/rewards',
+    name: 'system-admin-rewards',
+    component: SystemAdminRewards,
+    meta: {
+      admin: true
+    }
+  },
+  {
     path: '/admin/system/:kind',
-    name: 'admin-theaters',
+    name: 'system-admin-theaters',
     component: SystemAdminHome,
+    meta: {
+      admin: true
+    }
+  },
+  {
+    path: '/admin/fan-zone',
+    name: 'admin-fan-zone',
+    component: FanZoneAdminHome,
+    meta: {
+      fanZoneAdmin: true
+    }
+  },
+  {
+    path: '/fan-zone',
+    name: 'fan-zone',
+    component: FanZoneHome,
     meta: {
       logged: true
     }

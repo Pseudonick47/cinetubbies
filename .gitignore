@@ -1,6 +1,7 @@
 ### Media files ###
-media/
-!media/test/*
+!media/
+media/*
+!media/default/
 
 .DS_Store
 node_modules/

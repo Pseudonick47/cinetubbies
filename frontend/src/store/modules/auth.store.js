@@ -27,6 +27,9 @@ const mutations = {
   },
   updateActiveUser(state, data) {
     state.activeUser.updateUser(data);
+  },
+  setAdminsTheater(state, theater) {
+    state.activeUser.theater = theater;
   }
 };
 

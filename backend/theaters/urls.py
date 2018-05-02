@@ -1,8 +1,10 @@
+from django.urls import include
 from django.urls import path
 
-from rest_framework.urlpatterns import format_suffix_patterns
-
 from cinetubbies.utils.routing import BaseManageView
+
+from fan_zone.urls import prop_urls
+
 from .views import AdministrationAPI
 from .views import PublicAPI
 from .views import RestrictedAPI
@@ -45,13 +47,49 @@ get_movies = PublicAPI.as_view({
   'get': 'get_movies'
 })
 
-urlpatterns = format_suffix_patterns([
-  path('', TheatersManageView.as_view(), name='theaters'),
-  path('count', count_theaters, name="count-theaters"),
-  path('all', get_theaters, name='get-theaters'),
-  path('<int:pk>', TheaterManageView.as_view(), name='theater'),
-  path('<int:pk>/admins/', update_admins, name='update-admins'),
-  path('rating', rating, name='rating'),
-  path('admins/<int:pk>/theater', get_theater, name='get-theater'),
-  path('<int:pk>/movies', get_movies, name='get-movies')
-])
+urlpatterns = [
+  path(
+    route='',
+    view=TheatersManageView.as_view(),
+    name='theaters'
+  ),
+  path(
+    route='count',
+    view=count_theaters,
+    name="count-theaters"
+  ),
+  path(
+    route='all',
+    view=get_theaters,
+    name='get-theaters'
+  ),
+  path(
+    route='<int:pk>',
+    view=TheaterManageView.as_view(),
+    name='theater'
+  ),
+  path(
+    route='<int:pk>/admins/',
+    view=update_admins,
+    name='update-admins'
+  ),
+  path(
+    route='<int:pk>/movies',
+    view=get_movies,
+    name='get-movies'
+  ),
+  path(
+    route='<int:theater_pk>/props/',
+    view=include(prop_urls),
+  ),
+  path(
+    route='rating',
+    view=rating,
+    name='rating'
+  ),
+  path(
+    route='admins/<int:pk>/theater',
+    view=get_theater,
+    name='get-theater'
+  )
+]
