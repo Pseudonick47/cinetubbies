@@ -1,6 +1,6 @@
 export class Category {
   constructor(data) {
-    _.assignWith(this, data);
+    _.assign(this, data);
     this.subcategories = [];
   }
 
