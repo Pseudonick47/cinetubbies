@@ -20,9 +20,13 @@
         </v-list-tile>
         <v-list-tile
           v-for="cinema in filteredCinemas"
-          :key="cinema.id" >
-          <v-list-tile-content>
-            <v-list-tile-title>{{ cinema.name }}, <i>{{ cinema.address }}<i/></i></v-list-tile-title>
+          :key="cinema.id"
+          class="cinema-list-item"
+        >
+          <v-list-tile-content
+            @click="goToCinema(cinema.id)"
+          >
+            <v-list-tile-title>{{ cinema.name }}, <i>{{ cinema.address }}</i></v-list-tile-title>
             <v-list-tile-sub-title><i>rating: </i>{{ cinema.rating }}/5</v-list-tile-sub-title>
             <v-list-tile-sub-title><i>votes: </i> {{ cinema.voters_count }}
             <v-divider/></v-list-tile-sub-title>
@@ -131,6 +135,9 @@ export default {
     this.getTheaters();
   },
   methods: {
+    goToCinema(id) {
+      this.$router.push({ name: 'theater', params: { theaterId: id.toString() } });
+    },
     setRating(id, rating) {
       const data = { 'rating': rating, 'id': id };
       TheatersController.updateRating(data)
@@ -160,3 +167,8 @@ export default {
   }
 };
 </script>
+<style>
+.cinema-list-item:hover {
+  background: rgba(158, 158, 158, 0.4);
+}
+</style>
