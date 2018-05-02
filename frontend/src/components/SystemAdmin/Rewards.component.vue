@@ -200,7 +200,13 @@ import ReservationsController from 'Controllers/reservations.controller';
 export default {
   name: 'SystemAdminRewards',
   computed: {
-    ...mapGetters('reservations', [ 'basic', 'bronze', 'silver', 'gold', 'all' ])
+    ...mapGetters('reservations', [
+       'basic',
+       'bronze',
+       'silver',
+       'gold',
+       'all'
+    ])
   },
   beforeMount() {
     ReservationsController.requestRewards();
