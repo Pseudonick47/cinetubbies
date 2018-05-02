@@ -17,6 +17,7 @@ ADMIN_ROLES = (
 
 ROLES = ADMIN_ROLES + (USER,)
 
+
 class User(AbstractUser):
   id = models.AutoField(primary_key=True)
   username = models.CharField(max_length=30, unique=True, editable=False)
@@ -65,7 +66,18 @@ class TheaterAdmin(User):
   theater = models.ForeignKey(
     to='theaters.Theater',
     on_delete=models.SET_NULL,
-    related_name='admins',
+    related_name='theateradmins',
+    null=True,
+  )
+
+  def __str__(self):
+    return serialize('json', [self])[1:-1]
+
+class FanZoneAdmin(User):
+  theater = models.ForeignKey(
+    to='theaters.Theater',
+    on_delete=models.SET_NULL,
+    related_name='fanzoneadmins',
     null=True,
   )
 

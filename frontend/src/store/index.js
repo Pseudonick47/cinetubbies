@@ -1,14 +1,20 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { auth, alert, systemAdmin } from './modules';
+import {
+  alert,
+  auth,
+  props,
+  systemAdmin
+} from './modules';
 
 Vue.use(Vuex);
 
 const storeData = {
   modules: {
-    auth,
     alert,
+    auth,
+    props,
     systemAdmin
   }
 };

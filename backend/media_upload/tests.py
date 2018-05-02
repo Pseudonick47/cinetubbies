@@ -1,11 +1,12 @@
 import os
 import tempfile
+
 from PIL import Image as PILImage
 
 from rest_framework.request import Request
 from rest_framework.test import APITestCase
 
-from authentication.serializers import AdminSerializer
+from authentication.serializers import SystemAdminSerializer
 
 from .serializers import ImageSerializer
 
@@ -39,12 +40,12 @@ class ImageAPITestCase(APITestCase):
     'email': 'sysadmin@test.com',
   }
 
-  media = os.path.join(BASE_DIR, 'media', 'test')
+  media = os.path.join(BASE_DIR, 'media', 'default')
 
   tmp_img_path = None
 
   def setUp(self):
-    serializer = AdminSerializer(data=self.test_system_admin)
+    serializer = SystemAdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       print(serializer.errors)
     serializer.save()
@@ -72,7 +73,7 @@ class ImageAPITestCase(APITestCase):
       format='multipart'
     )
     image.close()
-    self.tmp_img_path = os.path.join(BASE_DIR, response.data['data'][1:])
+    self.tmp_img_path = os.path.join(BASE_DIR, response.data['path'][1:])
 
   def tearDown(self):
     os.remove(self.tmp_img_path)

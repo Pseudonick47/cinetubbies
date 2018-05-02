@@ -1,16 +1,35 @@
 from django.core.paginator import Paginator
-from django.utils.decorators import decorator_from_middleware
-from rest_framework import viewsets
-from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.permissions import AllowAny, DjangoModelPermissionsOrAnonReadOnly, IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework_jwt.settings import api_settings
-from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from .models import User, THEATER_ADMIN, FAN_ZONE_ADMIN, Friendship
-from .permissions import IsSelfOrReadOnly, IsSystemAdmin
-from .serializers import TheaterAdminSerializer, AdminSerializer, UserSerializer, FriendSerializer
+from django.utils.decorators import decorator_from_middleware
+from django.shortcuts import get_object_or_404
+
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from rest_framework_jwt.settings import api_settings
+
+from theaters.serializers import PublicSerializer as TheaterSerializer
+
+from .models import FanZoneAdmin
+from .models import FAN_ZONE_ADMIN
+from .models import Friendship
+from .models import TheaterAdmin
+from .models import THEATER_ADMIN
+from .models import User
+from .permissions import IsAdmin
+from .permissions import IsSelfOrReadOnly
+from .permissions import IsSystemAdmin
+from .serializers import FanZoneAdminSerializer
+from .serializers import FriendSerializer
+from .serializers import SystemAdminSerializer
+from .serializers import TheaterAdminSerializer
+from .serializers import UserSerializer
 from .utils import auth
+
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
@@ -93,9 +112,29 @@ class FriendViewSet(viewsets.ViewSet):
     return Response({'message': 'Friend successfully deleted'})
 
 
-class AdminViewSet(viewsets.ModelViewSet):
-  queryset = User.objects.all()
-  serializer_class = AdminSerializer
+class AdminViewSet(viewsets.ViewSet):
+  permission_classes = [IsAuthenticated, IsAdmin]
+
+  @action(detail=True)
+  def get_theater(self, request, pk=None):
+    user = get_object_or_404(User, pk=pk)
+
+    if user.role == THEATER_ADMIN[0]:
+      theater = TheaterAdmin.objects.get(pk=pk).theater
+      return Response(data=TheaterSerializer(theater).data)
+
+    elif user.role == FAN_ZONE_ADMIN[0]:
+      theater = FanZoneAdmin.objects.get(pk=pk).theater
+      return Response(data=TheaterSerializer(theater).data)
+
+    else:
+      return Response(
+        data={'message': 'system admin isn\'t assossiated with any theater'},
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
+
+class SystemAdminViewSet(viewsets.ViewSet):
   permission_classes = [IsAuthenticated, IsSystemAdmin]
 
   def list(self, request):
@@ -110,7 +149,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     if all_admins:
       # user requested all admins of the same role
       admins = User.objects.filter(role=role)
-      return Response(data=AdminSerializer(admins, many=True).data)
+      return Response(data=SystemAdminSerializer(admins, many=True).data)
 
     # return paginated results
     num = request.GET.get('num')
@@ -118,16 +157,19 @@ class AdminViewSet(viewsets.ModelViewSet):
     page = request.GET.get('page')
     admins = paginator.get_page(page if page else 1)
 
-    return Response(data=AdminSerializer(admins, many=True).data)
+    return Response(data=SystemAdminSerializer(admins, many=True).data)
 
   def create(self, request):
     pwd = auth.generate_password()
     request.data['password'] = pwd
 
-    if (request.data['role'] == THEATER_ADMIN[0]):
+    if request.data['role'] == THEATER_ADMIN[0]:
       serializer = TheaterAdminSerializer(data=request.data, partial=True)
+    elif request.data['role'] == FAN_ZONE_ADMIN[0]:
+      serializer = FanZoneAdminSerializer(data=request.data, partial=True)
     else:
-      serializer = AdminSerializer(data=request.data, partial=True)
+      serializer = SystemAdminSerializer(data=request.data, partial=True)
+
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()
 

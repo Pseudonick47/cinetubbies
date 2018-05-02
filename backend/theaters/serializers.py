@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from cinetubbies.utils.func import update
 from authentication.models import TheaterAdmin
 
 from .models import Theater
@@ -43,19 +44,18 @@ class RestrictedSerializer(PublicSerializer):
   all_votes = None
 
   def update(self, theater, validated_data):
-    for k, v in validated_data.items():
-      setattr(theater, k, v)
+    theater = update(theater, **validated_data)
     theater.save()
     return theater
 
 class AdministrationSerializer(RestrictedSerializer):
-  admins = serializers.PrimaryKeyRelatedField(
+  theateradmins = serializers.PrimaryKeyRelatedField(
     queryset=TheaterAdmin.objects.all(),
     many=True
   )
 
   def create(self, validated_data):
-    admins = validated_data.pop('admins')
+    admins = validated_data.pop('theateradmins')
     theater = Theater.objects.create(**validated_data)
-    theater.admins.set(admins)
+    theater.theateradmins.set(admins)
     return theater

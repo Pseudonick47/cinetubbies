@@ -3,7 +3,7 @@ from copy import deepcopy
 from rest_framework.test import APITestCase
 
 from authentication.models import User
-from authentication.serializers import AdminSerializer
+from authentication.serializers import SystemAdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 
 from .models import Theater
@@ -39,7 +39,7 @@ class TheaterAPITests(APITestCase):
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'admins': [1],
+    'theateradmins': [1],
   }
 
   def setUp(self):
@@ -53,7 +53,7 @@ class TheaterAPITests(APITestCase):
       print(serializer.errors)
     serializer.save()
 
-    serializer = AdminSerializer(data=self.test_system_admin)
+    serializer = SystemAdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       print(serializer.errors)
     serializer.save()
@@ -68,7 +68,7 @@ class TheaterAPITests(APITestCase):
       'name': 'theater2',
       'address': 'some street',
       'kind': 'm',
-      'admins': [1],
+      'theateradmins': [1],
     }
 
     # attempt post as a user; should fail
@@ -172,7 +172,7 @@ class TheaterAPITests(APITestCase):
       'name': 'theater1',
       'address': 'some street',
       'kind': 'p',
-      'admins': [1],
+      'theateradmins': [1],
     }
 
     serializer = AdministrationSerializer(data=new_theater)
@@ -297,7 +297,7 @@ class TheaterAPITests(APITestCase):
     # attempt put as a user; should fail
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1/admins/',
-      data = { 'admins': [2] },
+      data = { 'theateradmins': [2] },
       format='json'
     )
     self.assertTrue(response.status_code, 401)
@@ -316,7 +316,7 @@ class TheaterAPITests(APITestCase):
     # attempt put as a theater admin; should fail
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1/admins/',
-      data = { 'admins': [2] },
+      data = { 'theateradmins': [2] },
       format='json'
     )
     self.assertTrue(response.status_code, 401)
@@ -335,18 +335,20 @@ class TheaterAPITests(APITestCase):
     # attempt put as a system admin; should pass
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1/admins/',
-      data = { 'admins': [2] },
+      data = { 'theateradmins': [2] },
       format='json'
     )
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
-    self.assertTrue(response.data['admins'] == [2])
-    self.assertTrue(list(Theater.objects.get(pk=1).admins.all())[0].id == 2)
+    self.assertTrue(response.data['theateradmins'] == [2])
+    self.assertTrue(
+      list(Theater.objects.get(pk=1).theateradmins.all())[0].id == 2
+    )
 
     # set theater admin to a non-existing user; should fail
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1/admins/',
-      data = { 'admins': [99] },
+      data = { 'theateradmins': [99] },
       format='json'
     )
     self.assertTrue(response.status_code, 400)

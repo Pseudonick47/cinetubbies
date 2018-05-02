@@ -134,9 +134,6 @@ export default {
     },
     pageCount() {
       return _.ceil(_.divide(this.count, this.entriesPerPage));
-    },
-    theaterGrid() {
-      return _.chunk(this.data, 4);
     }
   },
   watch: {

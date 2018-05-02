@@ -43,6 +43,7 @@ INSTALLED_APPS = [
   'theaters',
   'movies',
   'media_upload',
+  'fan_zone',
   'showtimes'
 ]
 
