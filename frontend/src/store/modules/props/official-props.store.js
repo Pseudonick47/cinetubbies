@@ -1,5 +1,4 @@
 import { OfficialProp } from 'Models/props/official-prop.model';
-import ImageHelper from '@/helpers/image-helper';
 
 const namespaced = true;
 
@@ -16,13 +15,7 @@ const getters = {
 
 const mutations = {
   setProps(state, props) {
-    state.props = [];
-    _.forEach(props, (prop) => {
-      if (prop.image) {
-        prop.image.path = ImageHelper.getAbsolutePath(prop.image.path);
-      }
-      state.props.push(new OfficialProp(prop));
-    });
+    state.props = _.map(props, p => new OfficialProp(p));
   },
 
   setCount(state, count) {
