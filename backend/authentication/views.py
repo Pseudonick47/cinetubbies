@@ -20,6 +20,7 @@ from .models import Friendship
 from .models import TheaterAdmin
 from .models import THEATER_ADMIN
 from .models import User
+from .models import USER
 from .permissions import IsAdmin
 from .permissions import IsSelfOrReadOnly
 from .permissions import IsSystemAdmin
@@ -153,7 +154,7 @@ class SystemAdminViewSet(viewsets.ViewSet):
 
     # return paginated results
     num = request.GET.get('num')
-    paginator = Paginator(admins, num if num else 10)
+    paginator = Paginator(admins.order_by('id'), num if num else 10)
     page = request.GET.get('page')
     admins = paginator.get_page(page if page else 1)
 
@@ -161,14 +162,20 @@ class SystemAdminViewSet(viewsets.ViewSet):
 
   def create(self, request):
     pwd = auth.generate_password()
-    request.data['password'] = pwd
 
-    if request.data['role'] == THEATER_ADMIN[0]:
-      serializer = TheaterAdminSerializer(data=request.data, partial=True)
-    elif request.data['role'] == FAN_ZONE_ADMIN[0]:
-      serializer = FanZoneAdminSerializer(data=request.data, partial=True)
+    data = {
+      'username': request.data['username'],
+      'password': pwd,
+      'email': request.data['email'],
+      'role': request.data['role'],
+    }
+
+    if data['role'] == THEATER_ADMIN[0]:
+      serializer = TheaterAdminSerializer(data=data, partial=True)
+    elif data['role'] == FAN_ZONE_ADMIN[0]:
+      serializer = FanZoneAdminSerializer(data=data, partial=True)
     else:
-      serializer = SystemAdminSerializer(data=request.data, partial=True)
+      serializer = SystemAdminSerializer(data=data, partial=True)
 
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()
@@ -184,7 +191,10 @@ class SystemAdminViewSet(viewsets.ViewSet):
   @action(detail=False)
   def count(self, request):
       role = request.GET.get('role')
-      admins = User.objects.all().exclude(role='user')
+      admins = User.objects.exclude(role=USER[0])
+      if not admins:
+        return Response(data=0)
+
       if role:
         return Response(data=admins.filter(role=role).count())
       else:

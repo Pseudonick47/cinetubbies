@@ -201,11 +201,11 @@ export default {
   name: 'SystemAdminRewards',
   computed: {
     ...mapGetters('reservations', [
-       'basic',
-       'bronze',
-       'silver',
-       'gold',
-       'all'
+      'basic',
+      'bronze',
+      'silver',
+      'gold',
+      'all'
     ])
   },
   beforeMount() {
