@@ -129,21 +129,24 @@ class SystemAdminAPI(APITestCase):
     self.login(self.test_fan_zone_admin)
     response = self.client.post(
       path='http://localhost:8000/api/admins/',
-      data=test_system_admin2
+      data=test_system_admin2,
+      format='json'
     )
     self.assertEqual(response.status_code, 403)
 
     self.login(self.test_theater_admin)
     response = self.client.post(
       path='http://localhost:8000/api/admins/',
-      data=test_system_admin2
+      data=test_system_admin2,
+      format='json'
     )
     self.assertEqual(response.status_code, 403)
 
     self.login(self.test_system_admin)
     response = self.client.post(
       path='http://localhost:8000/api/admins/',
-      data=test_system_admin2
+      data=test_system_admin2,
+      format='json'
     )
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
