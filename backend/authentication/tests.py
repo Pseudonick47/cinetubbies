@@ -122,7 +122,8 @@ class SystemAdminAPI(APITestCase):
 
     response = self.client.post(
       path='http://localhost:8000/api/admins/',
-      data=test_system_admin2
+      data=test_system_admin2,
+      format='json'
     )
     self.assertEqual(response.status_code, 401)
 

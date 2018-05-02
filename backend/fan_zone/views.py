@@ -33,9 +33,11 @@ class PublicOfficialPropAPI(ViewSet):
     queryset = OfficialProp.objects.all()
 
     if theater_pk:
+      get_object_or_404(Theater, pk=theater_pk)
       queryset = OfficialProp.objects.filter(theater_id=theater_pk)
 
     if category_pk:
+      get_object_or_404(Category, pk=category_pk)
       queryset = queryset.filter(category_id=category_pk)
 
     num = request.GET.get('num')
@@ -54,9 +56,11 @@ class PublicOfficialPropAPI(ViewSet):
     queryset = OfficialProp.objects.all()
 
     if theater_pk:
+      get_object_or_404(Theater, pk=theater_pk)
       queryset = queryset.filter(theater_id=theater_pk)
 
     if category_pk:
+      get_object_or_404(Category, pk=category_pk)
       queryset = queryset.filter(category_id=category_pk)
 
     return Response(data=queryset.count())
@@ -119,7 +123,7 @@ class AdminCategoryAPI(ViewSet):
     serializer.save()
     return Response(data=serializer.data)
 
-  def delete(self, request, pk=None):
+  def destroy(self, request, pk=None):
     category = get_object_or_404(Category, pk=pk)
     category.delete()
     return Response(
