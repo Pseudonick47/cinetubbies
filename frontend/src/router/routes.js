@@ -8,6 +8,7 @@ import Settings from 'Components/User/Settings.component';
 import Profile from 'Components/User/Profile.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
+import SystemAdminRewards from 'Components/SystemAdmin/Rewards.component';
 import FanZoneHome from 'Components/FanZone/Home.component';
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
 import Showtimes from 'Components/Showtimes/Showtimes.component';
@@ -72,8 +73,16 @@ export const routes = [
     }
   },
   {
+    path: '/admin/system/rewards',
+    name: 'system-admin-rewards',
+    component: SystemAdminRewards,
+    meta: {
+      admin: true
+    }
+  },
+  {
     path: '/admin/system/:kind',
-    name: 'admin-theaters',
+    name: 'system-admin-theaters',
     component: SystemAdminHome,
     meta: {
       admin: true
