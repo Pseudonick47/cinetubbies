@@ -3,6 +3,7 @@ from copy import deepcopy
 from rest_framework.test import APITestCase
 
 from authentication.models import User
+from authentication.serializers import FanZoneAdminSerializer
 from authentication.serializers import SystemAdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 
@@ -28,6 +29,14 @@ class TheaterAPITests(APITestCase):
     'theater': '',
   }
 
+  test_fan_zone_admin = {
+    'username': 'admin3',
+    'password': '123456',
+    'email': 'admin3@test.com',
+    'role': 'fan_zone_admin',
+    'theater': '',
+  }
+
   test_system_admin = {
     'username': 'sysadmin',
     'password': '123456',
@@ -40,6 +49,7 @@ class TheaterAPITests(APITestCase):
     'address': 'some street',
     'kind': 'p',
     'theateradmins': [1],
+    'fanzoneadmins': [3],
   }
 
   def setUp(self):
@@ -51,6 +61,11 @@ class TheaterAPITests(APITestCase):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
     if not serializer.is_valid():
       print(serializer.errors)
+    serializer.save()
+
+    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = SystemAdminSerializer(data=self.test_system_admin)
@@ -69,6 +84,7 @@ class TheaterAPITests(APITestCase):
       'address': 'some street',
       'kind': 'm',
       'theateradmins': [1],
+      'fanzoneadmins': [3],
     }
 
     # attempt post as a user; should fail
@@ -173,6 +189,7 @@ class TheaterAPITests(APITestCase):
       'address': 'some street',
       'kind': 'p',
       'theateradmins': [1],
+      'fanzoneadmins': [3],
     }
 
     serializer = AdministrationSerializer(data=new_theater)

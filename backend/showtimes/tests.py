@@ -1,6 +1,7 @@
 from rest_framework.test import APITestCase
 
 from authentication.models import User
+from authentication.serializers import FanZoneAdminSerializer
 from authentication.serializers import SystemAdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 from authentication.serializers import UserSerializer
@@ -32,13 +33,21 @@ class ShowtimeAPITests(APITestCase):
     'theater': '',
   }
 
+  test_fan_zone_admin = {
+    'username': 'admin3',
+    'password': '123456',
+    'email': 'admin3@test.com',
+    'role': 'fan_zone_admin',
+    'theater': '',
+  }
+
   test_system_admin = {
     'username': 'sysadmin',
     'password': '123456',
     'role': 'admin',
     'email': 'sysadmin@test.com',
   }
-  
+
   test_user = {
     'username': 'username',
     'password': '123456',
@@ -51,6 +60,7 @@ class ShowtimeAPITests(APITestCase):
     'address': 'some street',
     'kind': 'p',
     'theateradmins': [1],
+    'fanzoneadmins': [3],
   }
 
   test_theater2 = {
@@ -58,6 +68,7 @@ class ShowtimeAPITests(APITestCase):
     'address': 'address',
     'kind': 'm',
     'theateradmins': [2],
+    'fanzoneadmins': [3],
   }
 
   test_movie = {
@@ -83,6 +94,11 @@ class ShowtimeAPITests(APITestCase):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
     if not serializer.is_valid():
       print(serializer.errors)
+    serializer.save()
+
+    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = SystemAdminSerializer(data=self.test_system_admin)
@@ -125,14 +141,14 @@ class ShowtimeAPITests(APITestCase):
       format='json'
     )
     self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
-  
+
   def post(self, new_showtime):
     return self.client.post(
       path='http://localhost:8000/api/showtimes/',
       data = new_showtime,
       format='json'
     )
-  
+
   def delete(self, id):
     return self.client.delete(
       path='http://localhost:8000/api/showtimes/'+id+'/'
