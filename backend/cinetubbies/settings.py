@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'cinetubbies.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-  # 'default': {
+   'default': {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'cinetubbies',
     'USER': 'root',
@@ -106,12 +106,6 @@ DATABASES = {
     'HOST': 'localhost',
     'PORT': '3306',
   },
-
-  # for unit tests
-  # 'default': {
-  #   'ENGINE': 'django.db.backends.sqlite3',
-  #   'NAME': 'mydatabase'
-  # }
 }
 
 # REST framework settings
