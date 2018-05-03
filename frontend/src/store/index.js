@@ -6,7 +6,8 @@ import {
   auth,
   props,
   reservations,
-  systemAdmin
+  systemAdmin,
+  repertoire
 } from './modules';
 
 Vue.use(Vuex);
@@ -17,7 +18,8 @@ const storeData = {
     auth,
     props,
     reservations,
-    systemAdmin
+    systemAdmin,
+    repertoire
   }
 };
 

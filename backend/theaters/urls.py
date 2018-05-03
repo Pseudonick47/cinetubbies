@@ -47,6 +47,10 @@ get_movies = PublicAPI.as_view({
   'get': 'get_movies'
 })
 
+get_repertoire = PublicAPI.as_view({
+  'get': 'get_repertoire'
+})
+
 urlpatterns = [
   path(
     route='',
@@ -91,5 +95,10 @@ urlpatterns = [
     route='admins/<int:pk>/theater',
     view=get_theater,
     name='get-theater'
+  ),
+  path(
+    route='<int:pk>/repertoire',
+    view=get_repertoire,
+    name='get-repertoire'
   )
 ]

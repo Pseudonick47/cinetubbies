@@ -49,7 +49,7 @@
               >
                 <v-icon>
                   list</v-icon></v-btn>
-              <span>See all showtimes</span>
+              <span>See showtimes</span>
             </v-tooltip>
           </v-list-tile-action>
         </v-list-tile>
@@ -101,11 +101,44 @@
         </v-dialog>
       </v-list>
     </v-flex>
+    <v-tooltip bottom>
+      <v-btn
+        slot="activator"
+        @click="showRepertoire()">
+        repertoire
+      </v-btn>
+      <span>See all showtimes</span>
+    </v-tooltip>
     <v-flex
       s12
       sm5
       md5
-      offset-lg2>
+      offset-lg1>
+      <v-data-table
+        v-show="showTable"
+        :items="repertoire"
+        :headers="headers"
+        item-key="date"
+        class="elevation-1"
+      >
+        <template
+          slot="items"
+          slot-scope="props">
+          <td>{{ `${movieTitle(props.item.movie).title}` }}</td>
+          <td>{{ `${props.item.auditorium}` }} </td>
+          <td class="text-xs-right">{{ props.item.date }}</td>
+          <td class="text-xs-right">{{ props.item.time }}</td>
+          <td class="text-xs-right">{{ props.item.price }}</td>
+        </template>
+        <template slot="no-data">
+          <v-alert
+            :value="true"
+            color="error"
+            icon="warning">
+            Sorry, nothing to display here.
+          </v-alert>
+        </template>
+      </v-data-table>
       <v-list
         v-show="showShowtimes"
         two-line
@@ -206,7 +239,8 @@
 </template>
 
 <script>
-import TheaterController from 'Controllers/system-admin.controller';
+import SysAdminController from 'Controllers/system-admin.controller';
+import TheaterController from 'Controllers/theaters.controller';
 import ShowtimeController from 'Controllers/showtimes.controller';
 import MovieController from 'Controllers/movies.controller';
 import { Movie } from 'Models/movie.model';
@@ -231,7 +265,9 @@ export default {
     showtimes: [],
     showShowtimes: false,
     movieName: '',
-    editDialog: false
+    editDialog: false,
+    showTable: false,
+    repertoire: []
   }),
   computed: {
     filteredMovies() {
@@ -243,7 +279,8 @@ export default {
       return this.movies;
     },
     ...mapGetters([
-      'activeUser'
+      'activeUser',
+      'headers'
     ])
   },
   mounted() {
@@ -273,7 +310,7 @@ export default {
     },
     getTheaterAndMovies() {
       this.loading = true;
-      TheaterController.getTheater(this.activeUser.id)
+      SysAdminController.getTheater(this.activeUser.id)
         .then((response) => {
           this.theaterId = response.data.id;
           this.getMovies();
@@ -286,7 +323,7 @@ export default {
     },
     getMovies(id = this.theaterId) {
       this.loading = true;
-      TheaterController.getMovies(id)
+      SysAdminController.getMovies(id)
         .then((response) => {
           this.movies = response.data;
           this.loading = false;
@@ -297,6 +334,7 @@ export default {
         });
     },
     show(movieId) {
+      this.showTable = false;
       MovieController.getShowtimes(movieId)
         .then((response) => {
           this.showtimes = _.map(response.data, x => new Showtime(x));
@@ -339,6 +377,22 @@ export default {
         this.$alert.success('Settings successfully saved');
       }).catch(() => {
         this.$alert.error('Error while saving settings');
+      });
+    },
+    showRepertoire() {
+      this.showTable = true;
+      this.showShowtimes = false;
+      TheaterController.getRepertoire(this.theaterId)
+        .then((response) => {
+          this.repertoire = response.data;
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
+    movieTitle(id) {
+      return this.movies.find((element) => {
+        return element.id === id;
       });
     }
   }
