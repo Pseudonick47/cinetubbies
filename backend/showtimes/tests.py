@@ -36,7 +36,7 @@ class ShowtimeAPITests(APITestCase):
   test_fan_zone_admin = {
     'username': 'admin3',
     'password': '123456',
-    'email': 'admin2@test.com',
+    'email': 'admin3@test.com',
     'role': 'fan_zone_admin',
     'theater': '',
   }

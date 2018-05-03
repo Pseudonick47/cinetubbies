@@ -397,6 +397,14 @@ class PublicOfficialPropAPI(APITestCase):
 
 class RestrictedOfficialPropAPITests(APITestCase):
 
+  test_theater_admin = {
+    'username': 'admin',
+    'password': '123456',
+    'email': 'admin@test.com',
+    'role': 'cinema_admin',
+    'theater': '',
+  }
+
   test_fan_zone_admin = {
     'username': 'admin2',
     'password': '123456',
@@ -408,16 +416,8 @@ class RestrictedOfficialPropAPITests(APITestCase):
   test_fan_zone_admin_2 = {
     'username': 'admin3',
     'password': '123456',
-    'email': 'admin2@test.com',
+    'email': 'admin3@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
-  }
-
-  test_theater_admin = {
-    'username': 'admin',
-    'password': '123456',
-    'email': 'admin@test.com',
-    'role': 'cinema_admin',
     'theater': '',
   }
 
