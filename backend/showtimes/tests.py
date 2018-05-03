@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-from collections import Counter
-from copy import deepcopy
->>>>>>> 8350734ee7ba7a6c8db4257277bb85518651bbe9
 from rest_framework.test import APITestCase
 
 from authentication.models import User

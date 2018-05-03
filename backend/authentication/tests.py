@@ -107,9 +107,9 @@ class SystemAdminAPI(APITestCase):
   }
 
   test_theater_admin2 = {
-    'username': 'admin2',
+    'username': 'admin3',
     'password': '123456',
-    'email': 'admin2@test.com',
+    'email': 'admin3@test.com',
     'role': 'cinema_admin',
     'theater': '',
   }
@@ -193,7 +193,7 @@ class SystemAdminAPI(APITestCase):
     self.assertEqual(self.test_fan_zone_admin['username'], response.data[0]['username'])
 
     response = self.client.get(path='http://localhost:8000/api/admins/?role=cinema_admin')
-    self.assertEqual(len(response.data), 1)
+    self.assertEqual(len(response.data), 2)
     self.assertEqual(self.test_theater_admin['username'], response.data[0]['username'])
 
     response = self.client.get(path='http://localhost:8000/api/admins/?role=admin')
@@ -284,7 +284,7 @@ class SystemAdminAPI(APITestCase):
     response = self.client.get(path='http://localhost:8000/api/admins/count')
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
-    self.assertEqual(response.data, 3)
+    self.assertEqual(response.data, 4)
 
     test_system_admin2 = {
       'username': 'sysadmin12',
@@ -299,13 +299,13 @@ class SystemAdminAPI(APITestCase):
     serializer.save()
 
     response = self.client.get(path='http://localhost:8000/api/admins/count')
-    self.assertEqual(response.data, 4)
+    self.assertEqual(response.data, 5)
 
     response = self.client.get(path='http://localhost:8000/api/admins/count?role=admin')
     self.assertEqual(response.data, 2)
 
     response = self.client.get(path='http://localhost:8000/api/admins/count?role=cinema_admin')
-    self.assertEqual(response.data, 1)
+    self.assertEqual(response.data, 2)
 
     response = self.client.get(path='http://localhost:8000/api/admins/count?role=fan_zone_admin')
     self.assertEqual(response.data, 1)
