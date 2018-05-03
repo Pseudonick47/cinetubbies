@@ -35,11 +35,13 @@ from .utils import auth
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
-  permission_classes = [AllowAny]
+  permission_classes = [IsSelfOrReadOnly]
 
   @action(detail=False)
   def active_user(self, request, *args, **kwargs):
     user = request.user
+    if not user.is_authenticated:
+      return Response({'message': 'You are not logged in'}, status=401)
     user = User.objects.get(id=user.id)
     return Response(UserSerializer(user).data)
 

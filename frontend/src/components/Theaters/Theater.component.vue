@@ -1,18 +1,17 @@
 <template>
   <div>
-    <v-jumbotron
-      gradient="to top right, rgba(63,81,181, .7), rgba(25,32,72, .7)"
+    <v-parallax
       src="http://arab-culture.info/wp-content/uploads/2018/02/1-68.jpg"
-      dark
+      height="400"
     >
-      <v-container fill-height>
-        <v-layout align-center>
-          <v-flex text-xs-center>
-            <h3 class="display-3">{{ theater.name }}</h3>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-jumbotron>
+      <v-layout
+        column
+        align-center
+        justify-center>
+        <h1 class="white--text title-text-shadow">{{ theater.name }}</h1>
+        <h4 class="white--text title-text-shadow">{{ theater.rating }} ★</h4>
+      </v-layout>
+    </v-parallax>
     <v-layout row>
       <v-flex>
         <v-list
@@ -113,5 +112,8 @@ export default {
 <style>
 .cinema-list-item:hover {
   background: rgba(158, 158, 158, 0.4);
+}
+.title-text-shadow {
+    text-shadow: 2px 2px 3px #555;
 }
 </style>
