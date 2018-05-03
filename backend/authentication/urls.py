@@ -59,6 +59,6 @@ urlpatterns = [
   path('auth/login/', obtain_jwt_token, name='login'),
   path('auth/register/', register, name='register'),
   path('admins/', admins, name='admins'),
-  path('admins/count/', admin_count, name='admin-count'),
+  path('admins/count', admin_count, name='admin-count'),
   path('admins/<int:pk>/theater', admin_theater, name='admin-theater'),
 ]

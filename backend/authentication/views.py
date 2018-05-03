@@ -20,6 +20,7 @@ from .models import Friendship
 from .models import TheaterAdmin
 from .models import THEATER_ADMIN
 from .models import User
+from .models import USER
 from .permissions import IsAdmin
 from .permissions import IsSelfOrReadOnly
 from .permissions import IsSystemAdmin
@@ -39,6 +40,8 @@ class UserViewSet(viewsets.ModelViewSet):
   @action(detail=False)
   def active_user(self, request, *args, **kwargs):
     user = request.user
+    if not user.is_authenticated:
+      return Response({'message': 'You are not logged in'}, status=401)
     user = User.objects.get(id=user.id)
     return Response(UserSerializer(user).data)
 
@@ -153,7 +156,7 @@ class SystemAdminViewSet(viewsets.ViewSet):
 
     # return paginated results
     num = request.GET.get('num')
-    paginator = Paginator(admins, num if num else 10)
+    paginator = Paginator(admins.order_by('id'), num if num else 10)
     page = request.GET.get('page')
     admins = paginator.get_page(page if page else 1)
 
@@ -184,7 +187,10 @@ class SystemAdminViewSet(viewsets.ViewSet):
   @action(detail=False)
   def count(self, request):
       role = request.GET.get('role')
-      admins = User.objects.all().exclude(role='user')
+      admins = User.objects.exclude(role=USER[0])
+      if not admins:
+        return Response(data=0)
+
       if role:
         return Response(data=admins.filter(role=role).count())
       else:

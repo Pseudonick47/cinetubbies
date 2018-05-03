@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers
 
+from rest_framework.validators import UniqueValidator
+
 from theaters.models import Theater
 
 from .models import FanZoneAdmin
@@ -24,16 +26,49 @@ class FriendSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
-  username = serializers.CharField(required=False, allow_blank=False, max_length=30)
-  email = serializers.CharField(required=False, allow_blank=True)
-  first_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
-  last_name = serializers.CharField(required=False, allow_blank=True, max_length=30)
-  role = serializers.ChoiceField(choices=ROLES, default='user')
-  password = serializers.CharField(write_only=True, min_length=5)
-  birth_date = serializers.DateTimeField(required=False)
-  phone = serializers.CharField(max_length=30, allow_blank=False)
-  city = serializers.CharField(max_length=30, allow_blank=False)
-  friends_count = serializers.IntegerField(read_only=True),
+  username = serializers.CharField(
+    required=False,
+    allow_blank=False,
+    max_length=30,
+    validators=[UniqueValidator(queryset=User.objects.all())]
+  )
+  email = serializers.CharField(
+    required=False,
+    allow_blank=True,
+    validators=[UniqueValidator(queryset=User.objects.all())]
+  )
+  first_name = serializers.CharField(
+    required=False,
+    allow_blank=True,
+    max_length=30
+  )
+  last_name = serializers.CharField(
+    required=False,
+    allow_blank=True,
+    max_length=30
+  )
+  role = serializers.ChoiceField(
+    choices=ROLES,
+    default='user'
+  )
+  password = serializers.CharField(
+    write_only=True,
+    min_length=5
+  )
+  birth_date = serializers.DateTimeField(
+    required=False
+  )
+  phone = serializers.CharField(
+    max_length=30,
+    allow_blank=False
+  )
+  city = serializers.CharField(
+    max_length=30,
+    allow_blank=False
+  )
+  friends_count = serializers.IntegerField(
+    read_only=True
+  ),
   friend_requests = serializers.ListField(
     read_only=True,
     child = FriendSerializer(),

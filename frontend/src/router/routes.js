@@ -7,6 +7,8 @@ import Movies from 'Components/CinemaAdmin/Movies.component';
 import Settings from 'Components/User/Settings.component';
 import Profile from 'Components/User/Profile.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
+import Theater from 'Components/Theaters/Theater.component';
+import Movie from 'Components/Theaters/Movie.component';
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 import SystemAdminRewards from 'Components/SystemAdmin/Rewards.component';
 import FanZoneHome from 'Components/FanZone/Home.component';
@@ -111,6 +113,18 @@ export const routes = [
     meta: {
       cinemaAdmin: true
     }
+  },
+  {
+    path: '/theater/:theaterId',
+    name: 'theater',
+    component: Theater,
+    props: true
+  },
+  {
+    path: '/theater/:theaterId/movie/:movieId',
+    name: 'theater-movie',
+    component: Movie,
+    props: true
   },
   {
     path: '/showtimes',

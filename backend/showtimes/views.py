@@ -4,8 +4,7 @@ from showtimes.models import Showtime
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-# from .permissions import IsCreatorOrReadOnly
-# from authentication.models import TheaterAdmin
+from .permissions import IsCreatorOrReadOnly
 from django.shortcuts import get_object_or_404
 
 class ShowtimeViewSet(viewsets.ModelViewSet):
@@ -14,7 +13,7 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
   """
   queryset = Showtime.objects.all()
   serializer_class = ShowtimeSerializer
-  # permission_classes = [IsCreatorOrReadOnly]
+  permission_classes = [IsCreatorOrReadOnly]
 
   def create(self, request):
     serializer = ShowtimeSerializer(data=request.data, partial=True)
@@ -24,8 +23,8 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):
-    showtime = Showtime.objects.get(id=pk)
-    # self.check_object_permissions(request, showtime)
+    showtime = get_object_or_404(Showtime, id=pk)
+    self.check_object_permissions(request, showtime)
     showtime.delete()
     return Response({'message': 'Showtime successfully deleted'})
 
@@ -35,6 +34,7 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
 
   def update(self, request, pk=None):
     showtime = get_object_or_404(Showtime, id=pk)
+    self.check_object_permissions(request, showtime)
     serializer = ShowtimeSerializer(showtime, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()

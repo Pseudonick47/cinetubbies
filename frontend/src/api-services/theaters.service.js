@@ -7,6 +7,10 @@ export default {
     return Axios.get(`${PREFIX}?num=${num}&page=${page}`);
   },
 
+  retrieveTheater(id) {
+    return Axios.get(`${PREFIX}${id}`);
+  },
+
   fetchCount() {
     return Axios.get(`${PREFIX}count`);
   },

@@ -3,6 +3,8 @@
 media/*
 !media/default/
 
+mydatabase
+
 .DS_Store
 node_modules/
 /dist/
