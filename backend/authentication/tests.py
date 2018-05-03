@@ -195,6 +195,21 @@ class SystemAdminAPI(APITestCase):
     'email': 'sysadmin@test.com',
   }
 
+  test_theater_admin2 = {
+    'username': 'admin3',
+    'password': '123456',
+    'email': 'admin3@test.com',
+    'role': 'cinema_admin',
+    'theater': '',
+  }
+
+  def patch(self, user, id):
+    return self.client.patch(
+      path='http://localhost:8000/api/users/'+id+'/',
+      data = user,
+      format='json'
+    )
+
   def login(self, user):
     response = self.client.post(
       path='http://localhost:8000/api/auth/login/',
@@ -222,6 +237,26 @@ class SystemAdminAPI(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
+    serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+  def test_partial_update(self):
+    update_user = {
+      'name': 'name'
+    }
+
+    # user changes the profile info of another user; fail
+    self.login(self.test_theater_admin2)
+    response = self.patch(update_user,'2')
+    self.assertEqual(response.status_code, 403)
+
+    # user changes his profile info; pass
+    self.login(self.test_theater_admin)
+    response = self.patch(update_user,'2')
+    self.assertEqual(response.status_code, 200)
+
   def test_list(self):
     response = self.client.get(path='http://localhost:8000/api/admins/')
     self.assertEqual(response.status_code, 401)
@@ -247,7 +282,7 @@ class SystemAdminAPI(APITestCase):
     self.assertEqual(self.test_fan_zone_admin['username'], response.data[0]['username'])
 
     response = self.client.get(path='http://localhost:8000/api/admins/?role=cinema_admin')
-    self.assertEqual(len(response.data), 1)
+    self.assertEqual(len(response.data), 2)
     self.assertEqual(self.test_theater_admin['username'], response.data[0]['username'])
 
     response = self.client.get(path='http://localhost:8000/api/admins/?role=admin')
@@ -338,7 +373,7 @@ class SystemAdminAPI(APITestCase):
     response = self.client.get(path='http://localhost:8000/api/admins/count')
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
-    self.assertEqual(response.data, 3)
+    self.assertEqual(response.data, 4)
 
     test_system_admin2 = {
       'username': 'sysadmin12',
@@ -353,13 +388,13 @@ class SystemAdminAPI(APITestCase):
     serializer.save()
 
     response = self.client.get(path='http://localhost:8000/api/admins/count')
-    self.assertEqual(response.data, 4)
+    self.assertEqual(response.data, 5)
 
     response = self.client.get(path='http://localhost:8000/api/admins/count?role=admin')
     self.assertEqual(response.data, 2)
 
     response = self.client.get(path='http://localhost:8000/api/admins/count?role=cinema_admin')
-    self.assertEqual(response.data, 1)
+    self.assertEqual(response.data, 2)
 
     response = self.client.get(path='http://localhost:8000/api/admins/count?role=fan_zone_admin')
     self.assertEqual(response.data, 1)

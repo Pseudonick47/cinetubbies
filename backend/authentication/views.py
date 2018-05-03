@@ -35,7 +35,7 @@ from .utils import auth
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
-  permission_classes = [AllowAny]
+  permission_classes = [IsSelfOrReadOnly]
 
   @action(detail=False)
   def active_user(self, request, *args, **kwargs):
