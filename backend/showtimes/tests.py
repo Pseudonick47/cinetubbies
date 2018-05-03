@@ -1,5 +1,3 @@
-from collections import Counter
-from copy import deepcopy
 from rest_framework.test import APITestCase
 
 from authentication.models import User

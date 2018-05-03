@@ -106,13 +106,15 @@ DATABASES = {
     'HOST': 'localhost',
     'PORT': '3306',
   },
-
-  # for unit tests
-  # 'default': {
-  #   'ENGINE': 'django.db.backends.sqlite3',
-  #   'NAME': 'mydatabase'
-  # }
 }
+
+#for unit tests
+import sys
+if 'test' in sys.argv:
+  DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': 'mydatabase'
+  }
 
 # REST framework settings
 
