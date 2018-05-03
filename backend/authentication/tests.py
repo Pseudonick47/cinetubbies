@@ -2,8 +2,9 @@ from rest_framework.test import APITestCase
 
 from .models import User
 from .serializers import FanZoneAdminSerializer
-from .serializers import TheaterAdminSerializer
 from .serializers import SystemAdminSerializer
+from .serializers import TheaterAdminSerializer
+from .serializers import UserSerializer
 
 class UserAPI(APITestCase):
 
@@ -78,6 +79,95 @@ class UserAPI(APITestCase):
 
     response = self.login(self.test_user_3)
     self.assertEqual(response.status_code, 400)
+
+
+class FriendAPI(APITestCase):
+  test_user_1 = {
+    'username': 'user11',
+    'first_name': 'arst',
+    'password': '123456',
+    'phone': '12312',
+    'city': 'NS',
+    'role': 'user',
+    'email': 'user@test.com',
+  }
+
+  test_user_2 = {
+    'username': 'user22',
+    'first_name': 'user',
+    'password': '123456',
+    'phone': '12312',
+    'city': 'NS',
+    'role': 'user',
+    'email': 'user2@test.com',
+  }
+
+  test_user_3 = {
+    'username': 'user33',
+    'first_name': 'userrr',
+    'password': '123456',
+    'phone': '12312',
+    'city': 'NS',
+    'role': 'user',
+    'email': 'user3@test.com',
+  }
+
+  def login(self, user):
+    response = self.client.post(
+      path='http://localhost:8000/api/auth/login/',
+      data = {
+        'username': user['username'],
+        'password': user['password']
+      },
+      format='json'
+    )
+    if 'token' in response.data:
+      self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
+    return response
+
+  def setUp(self):
+    serializer = UserSerializer(data=self.test_user_1)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = UserSerializer(data=self.test_user_2)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = UserSerializer(data=self.test_user_3)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  def test_friends(self):
+    self.login(self.test_user_1)
+
+    response = self.client.get(path='http://localhost:8000/api/users/1/friends/')
+    self.assertEqual(response.data['friends'], [])
+    self.assertEqual(response.data['friend_requests'], [])
+
+    response = self.client.get(path='http://localhost:8000/api/users/friends/use')
+    self.assertEqual(len(response.data['results']), 2)
+
+    response = self.client.post(path='http://localhost:8000/api/users/2/friends/')
+    self.assertEqual(response.status_code, 200)
+
+    self.login(self.test_user_2)
+
+    response = self.client.get(path='http://localhost:8000/api/users/2/friends/')
+    self.assertEqual(response.data['friends'], [])
+    self.assertEqual(len(response.data['friend_requests']), 1)
+
+    response = self.client.post(path='http://localhost:8000/api/users/1/friends/')
+    self.assertEqual(response.status_code, 200)
+
+    self.login(self.test_user_1)
+
+    response = self.client.get(path='http://localhost:8000/api/users/1/friends/')
+    self.assertEqual(len(response.data['friends']), 1)
+    self.assertEqual(response.data['friend_requests'], [])
 
 
 class SystemAdminAPI(APITestCase):
