@@ -77,7 +77,7 @@ class RestrictedOfficialPropAPI(ViewSet):
 
     if not prop.image:
       image = Image.objects.create(
-        path = DEFAULT_PROP_IMAGE,
+        data = DEFAULT_PROP_IMAGE,
         kind = OFFICIAL_PROP_IMAGE[0]
       )
       prop.image = image

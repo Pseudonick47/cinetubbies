@@ -16,7 +16,7 @@ class Category(models.Model):
 
 
 class Prop(models.Model):
-  id = models.IntegerField(primary_key=True)
+  id = models.AutoField(primary_key=True)
   title = models.CharField(max_length=100)
   description = models.TextField(blank=True, default='')
   category = models.ForeignKey(
