@@ -1,18 +1,16 @@
 <template>
   <div>
-    <v-jumbotron
-      gradient="to top right, rgba(63,81,181, .7), rgba(25,32,72, .7)"
-      src="https://wasahiro.files.wordpress.com/2014/02/sharknado-2-banner.png"
-      dark
+    <v-parallax
+      src="http://blog.hdwallsource.com/wp-content/uploads/2017/05/fast-and-furious-8-logo-wallpaper-61267-63082-hd-wallpapers.jpg"
     >
-      <v-container fill-height>
-        <v-layout align-center>
-          <v-flex text-xs-center>
-            <h3 class="display-3">{{ movie.title }}</h3>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-jumbotron>
+      <v-layout
+        column
+        align-center
+        justify-center>
+        <h1 class="white--text title-text-shadow">{{ movie.title }}</h1>
+        <h4 class="white--text title-text-shadow">by <i>{{ movie.director }}</i></h4>
+      </v-layout>
+    </v-parallax>
     <v-layout
       row
     >
@@ -86,3 +84,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.title-text-shadow {
+    text-shadow: 2px 2px 3px #555;
+}
+</style>
