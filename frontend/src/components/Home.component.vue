@@ -31,7 +31,7 @@
             <v-list-tile-sub-title><i>votes: </i> {{ cinema.voters_count }}
             <v-divider/></v-list-tile-sub-title>
           </v-list-tile-content>
-          <v-list-tile-action>
+          <!-- <v-list-tile-action>
             <star-rating
               v-model="cinema.all_votes[activeUser.id]"
               :max-rating="5"
@@ -40,7 +40,7 @@
               active-color="#9900cc"
               @rating-selected="setRating(cinema.id,$event)"
             />
-          </v-list-tile-action>
+          </v-list-tile-action> -->
         </v-list-tile>
 
       </v-list>
@@ -74,7 +74,7 @@
             <v-list-tile-sub-title><i>votes: </i>{{ theater.voters_count }}
             <v-divider/></v-list-tile-sub-title>
           </v-list-tile-content>
-          <v-list-tile-action>
+          <!-- <v-list-tile-action>
             <star-rating
               v-model="theater.all_votes[activeUser.id]"
               :max-rating="5"
@@ -83,7 +83,7 @@
               active-color="#9900cc"
               @rating-selected="setRating(theater.id,$event)"
             />
-          </v-list-tile-action>
+          </v-list-tile-action> -->
         </v-list-tile>
       </v-list>
     </v-flex>

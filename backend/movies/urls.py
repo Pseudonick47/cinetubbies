@@ -19,8 +19,13 @@ get_showtimes = MovieViewSet.as_view({
   'get': 'get_showtimes'
 })
 
+rating = MovieViewSet.as_view({
+  'post': 'update_rating'
+})
+
 urlpatterns = format_suffix_patterns([
   path('<int:pk>/', movie_detail, name='movie-detail'),
   path('', movie_list, name='movie-list'),
-  path('<int:pk>/showtimes', get_showtimes, name='get-showtimes')
+  path('<int:pk>/showtimes', get_showtimes, name='get-showtimes'),
+  path('<int:pk>/rating', rating, name='rating')
 ])
