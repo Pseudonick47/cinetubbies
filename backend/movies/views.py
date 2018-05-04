@@ -54,17 +54,17 @@ class MovieViewSet(viewsets.ModelViewSet):
     showtimes = movie.showtimes.all()
     return Response(ShowtimeSerializer(showtimes, many=True).data)
 
-  @action(detail=False)
-  def update_rating(self, request):
+  @action(detail=True)
+  def update_rating(self, request, pk=None):
     vote, _ = Voting.objects.get_or_create(
       user_id=request.user.id,
-      movie_id=request.data['id']
+      movie_id=pk
     )
     vote.rating = request.data['rating']
     vote.save()
     rating = Voting.objects.filter(
-      movie_id=request.data['id']).aggregate(rating=Avg('rating')
+      movie_id=pk).aggregate(rating=Avg('rating')
     )
-    voters = len(Voting.objects.filter(movie_id=request.data['id']).all())
+    voters = len(Voting.objects.filter(movie_id=pk).all())
     data = {'rating':rating,'voters':voters}
     return Response(data)

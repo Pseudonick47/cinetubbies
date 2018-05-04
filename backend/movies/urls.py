@@ -27,5 +27,5 @@ urlpatterns = format_suffix_patterns([
   path('<int:pk>/', movie_detail, name='movie-detail'),
   path('', movie_list, name='movie-list'),
   path('<int:pk>/showtimes', get_showtimes, name='get-showtimes'),
-  path('rating', rating, name='rating')
+  path('<int:pk>/rating', rating, name='rating')
 ])

@@ -31,7 +31,6 @@
             <v-list-tile-sub-title><i>votes: </i> {{ cinema.voters_count }}
             <v-divider/></v-list-tile-sub-title>
           </v-list-tile-content>
-          <!-- NE BRISI OVO ZAKOMENTARISANO !!!-->
           <!-- <v-list-tile-action>
             <star-rating
               v-model="cinema.all_votes[activeUser.id]"
@@ -75,7 +74,6 @@
             <v-list-tile-sub-title><i>votes: </i>{{ theater.voters_count }}
             <v-divider/></v-list-tile-sub-title>
           </v-list-tile-content>
-          <!-- NE BRISI OVO ZAKOMENTARISANO !!! -->
           <!-- <v-list-tile-action>
             <star-rating
               v-model="theater.all_votes[activeUser.id]"
