@@ -23,6 +23,7 @@ from .serializers import RestrictedSerializer
 from .serializers import AdministrationSerializer
 from .permissions import IsResponsibleForTheater
 from movies.serializers import MovieSerializer
+from showtimes.serializers import ShowtimeSerializer
 
 
 class PublicAPI(ViewSet):
@@ -74,6 +75,17 @@ class PublicAPI(ViewSet):
     theater = Theater.objects.get(id=pk)
     movies = theater.movies.all()
     return Response(MovieSerializer(movies, many=True).data)
+
+  @action(detail=True)
+  def get_repertoire(self, request, pk=None):
+    theater = Theater.objects.get(id=pk)
+    movies = theater.movies.all()
+    showtimes = []
+    for movie in movies:
+      showtime_list = list(movie.showtimes.all())
+      for s in showtime_list:
+        showtimes.append(s)
+    return Response(ShowtimeSerializer(showtimes, many=True).data)
 
 class RestrictedAPI(ViewSet):
   permission_classes = [

@@ -38,6 +38,10 @@ export default {
 
   getMovies(data) {
     return Axios.get(`${PREFIX}${data}/movies`);
+  },
+
+  getRepertoire(data) {
+    return Axios.get(`${PREFIX}${data}/repertoire`);
   }
 
 };

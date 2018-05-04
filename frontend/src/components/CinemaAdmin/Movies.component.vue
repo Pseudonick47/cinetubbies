@@ -6,6 +6,7 @@
       md3
       offset-lg2
     >
+      New movie/play:
       <v-form
         v-model="valid"
       >
