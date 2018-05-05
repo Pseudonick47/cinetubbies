@@ -10,9 +10,9 @@ services:
         # create database on startup
         MYSQL_DATABASE: cinetubbies
         # MYSQL_USER will create user on startup and grant all on database
-        MYSQL_USER: tubbie
+        # MYSQL_USER: tubbie
         # set user password
-        MYSQL_PASSWORD: purple
+        # MYSQL_PASSWORD: password
         # set user password
         MYSQL_ROOT_PASSWORD: password
     volumes:
@@ -23,7 +23,7 @@ services:
     build: .
     container_name: django_app
     command: while ! nc -z db 3306; do sleep 3; done
-    command: bash -c "cd backend; ./manage.py migrate; ./manage.py runserver 0.0.0.0:8000"
+    command: bash -c "cd backend; pipenv install; pipenv install mysqlclient; pipenv run python manage.py migrate; pipenv run python manage.py runserver 0.0.0.0:8000;"
     volumes:
       - .:/code
     ports:
@@ -36,6 +36,3 @@ services:
 
 volumes:
   mysql:
-
-networks:
-  cinenet:

@@ -10,6 +10,9 @@ class MovieSerializer(serializers.Serializer):
   duration = serializers.CharField(required=False, max_length=255, allow_blank=True)
   description = serializers.CharField(required=False, max_length=255, allow_blank=True)
   theater = serializers.PrimaryKeyRelatedField(queryset=Theater.objects.all(),allow_null=False)
+  voters_count = serializers.IntegerField(source='get_voters_count')
+  rating = serializers.DecimalField(source='get_avg_rating', max_digits=2, decimal_places=1)
+  all_votes = serializers.DictField(source='get_all_votings', child=serializers.IntegerField())
 
   def create(self, validated_data):
     movie = Movie.objects.create(**validated_data)

@@ -4,6 +4,7 @@ RUN apt-get -qq update
 RUN apt-get -qq -y install netcat
 RUN mkdir /code
 WORKDIR /code
-ADD backend/requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pip install pipenv
+ADD backend/Pipfile /code/
+ADD backend/Pipfile.lock /code/
 ADD backend /code/
