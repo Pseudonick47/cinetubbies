@@ -9,7 +9,8 @@ import {
   systemAdmin,
   repertoire,
   ticketsOnSale,
-  showtimes
+  showtimes,
+  movies
 } from './modules';
 
 Vue.use(Vuex);
@@ -23,7 +24,8 @@ const storeData = {
     systemAdmin,
     repertoire,
     ticketsOnSale,
-    showtimes
+    showtimes,
+    movies
   }
 };
 
