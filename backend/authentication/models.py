@@ -31,6 +31,9 @@ class User(AbstractUser):
   friendships = models.ManyToManyField('self', through='Friendship', symmetrical=False)
   first_login = models.BooleanField(default=True)
 
+  def is_user(self):
+    return self.role == USER[0]
+
   def is_admin(self):
     return self.role in [admin[0] for admin in ADMIN_ROLES]
 

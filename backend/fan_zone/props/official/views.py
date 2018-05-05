@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from authentication.permissions import IsFanZoneOrSystemAdmin
-from authentication.permissions import IsSystemAdmin
 
 from media_upload.defaults import DEFAULT_PROP_IMAGE
 from media_upload.models import Image
@@ -16,17 +15,17 @@ from media_upload.models import OFFICIAL_PROP_IMAGE
 
 from theaters.models import Theater
 
+from fan_zone.categories.models import Category
+
 from .models import OfficialProp
-from .models import Category
-from .permissions import IsResponsibleForOfficialProp
-from .serializers import AdminCategorySerializer
-from .serializers import PublicCategorySerializer
-from .serializers import PublicOfficialPropSerializer
-from .serializers import RestrictedOfficialPropSerializer
+
+from .serializers import PublicSerializer
+from .serializers import RestrictedSerializer
+
+from .permissions import IsResponsible
 
 
-
-class PublicOfficialPropAPI(ViewSet):
+class PublicAPI(ViewSet):
   permission_classes = [AllowAny]
 
   def list(self, request, theater_pk=None, category_pk=None):
@@ -45,11 +44,11 @@ class PublicOfficialPropAPI(ViewSet):
     page = request.GET.get('page')
 
     props = paginator.get_page(page if page else 1)
-    return Response(data=PublicOfficialPropSerializer(props, many=True).data)
+    return Response(data=PublicSerializer(props, many=True).data)
 
   def retrieve(self, request, theater_pk=None, category_pk=None, pk=None):
     prop = get_object_or_404(OfficialProp, pk=pk)
-    return Response(data=PublicOfficialPropSerializer(prop).data)
+    return Response(data=PublicSerializer(prop).data)
 
   @action(detail=False)
   def count(self, request, theater_pk=None, category_pk=None):
@@ -65,13 +64,11 @@ class PublicOfficialPropAPI(ViewSet):
 
     return Response(data=queryset.count())
 
-class RestrictedOfficialPropAPI(ViewSet):
-  permission_classes = [
-    IsAuthenticated, IsFanZoneOrSystemAdmin, IsResponsibleForOfficialProp
-  ]
+class RestrictedAPI(ViewSet):
+  permission_classes = [IsAuthenticated, IsFanZoneOrSystemAdmin, IsResponsible]
 
   def create(self, request, theater_pk=None):
-    serializer = RestrictedOfficialPropSerializer(data=request.data)
+    serializer = RestrictedSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     prop = serializer.save()
 
@@ -96,44 +93,8 @@ class RestrictedOfficialPropAPI(ViewSet):
   def update(self, request, theater_pk=None, pk=None):
     prop = get_object_or_404(OfficialProp, pk=pk)
     self.check_object_permissions(request, prop)
-    serializer = RestrictedOfficialPropSerializer(
+    serializer = RestrictedSerializer(
       prop, data=request.data, partial=True
-    )
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(data=serializer.data)
-
-class PublicCategoryAPI(ViewSet):
-  permission_classes = [AllowAny]
-
-  def list(self, request):
-    categories = Category.objects.all()
-    return Response(data=PublicCategorySerializer(categories, many=True).data)
-
-  def retrieve(self, request, pk=None):
-    category = get_object_or_404(Category, pk=pk)
-    return Response(data=PublicCategorySerializer(category).data)
-
-class AdminCategoryAPI(ViewSet):
-  permission_classes = [IsAuthenticated, IsSystemAdmin]
-
-  def create(self, request):
-    serializer = AdminCategorySerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(data=serializer.data)
-
-  def destroy(self, request, pk=None):
-    category = get_object_or_404(Category, pk=pk)
-    category.delete()
-    return Response(
-      data={'message': 'Category {0} successfully deleted.'.format(pk)}
-    )
-
-  def update(self, request, pk=None):
-    category = get_object_or_404(Category, pk=pk)
-    serializer = AdminCategorySerializer(
-      category, data=request.data, partial=True
     )
     serializer.is_valid(raise_exception=True)
     serializer.save()

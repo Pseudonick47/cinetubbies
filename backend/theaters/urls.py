@@ -3,8 +3,6 @@ from django.urls import path
 
 from cinetubbies.utils.routing import BaseManageView
 
-from fan_zone.urls import prop_urls
-
 from .views import AdministrationAPI
 from .views import PublicAPI
 from .views import RestrictedAPI
@@ -77,10 +75,6 @@ urlpatterns = [
     route='<int:pk>/movies',
     view=get_movies,
     name='get-movies'
-  ),
-  path(
-    route='<int:theater_pk>/props/',
-    view=include(prop_urls),
   ),
   path(
     route='rating',

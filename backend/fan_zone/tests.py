@@ -10,10 +10,14 @@ from authentication.serializers import SystemAdminSerializer
 
 from theaters.serializers import AdministrationSerializer as TheaterSerializer
 
-from .models import Category
-from .models import OfficialProp
-from .serializers import AdminCategorySerializer
-from .serializers import RestrictedOfficialPropSerializer
+from .categories.models import Category
+from .categories.serializers import AdministrationSerializer as \
+                                    AdminCategorySerializer
+
+from .props.official.models import OfficialProp
+from .props.official.serializers import RestrictedSerializer as \
+                                        RestrictedOfficialPropSerializer
+
 
 class PublicCategoryAPI(APITestCase):
 
@@ -270,7 +274,7 @@ class PublicOfficialPropAPI(APITestCase):
     'quantity': 2,
     'price': 99.9,
     'theater': 1,
-    'image_id': None
+    'imageId': None
   }
 
   test_prop_2 = {
@@ -280,7 +284,7 @@ class PublicOfficialPropAPI(APITestCase):
     'quantity': 5,
     'price': 59.9,
     'theater': 1,
-    'image_id': None
+    'imageId': None
   }
 
   def setUp(self):
@@ -338,19 +342,6 @@ class PublicOfficialPropAPI(APITestCase):
     response = self.client.get(path='http://localhost:8000/api/props/categories/99/official/')
     self.assertEqual(response.status_code, 404)
 
-    response = self.client.get(path='http://localhost:8000/api/theaters/1/props/official/')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(len(response.data), 2)
-
-    response = self.client.get(path='http://localhost:8000/api/theaters/99/props/official/')
-    self.assertEqual(response.status_code, 404)
-
-    response = self.client.get(path='http://localhost:8000/api/theaters/1/props/categories/1/official/')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(len(response.data), 1)
-
     OfficialProp.objects.all().delete()
 
     response = self.client.get(path='http://localhost:8000/api/props/official/')
@@ -375,19 +366,6 @@ class PublicOfficialPropAPI(APITestCase):
 
     response = self.client.get(path='http://localhost:8000/api/props/categories/99/official/count')
     self.assertEqual(response.status_code, 404)
-
-    response = self.client.get(path='http://localhost:8000/api/theaters/1/props/official/count')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(response.data, 2)
-
-    response = self.client.get(path='http://localhost:8000/api/theaters/99/props/official/count')
-    self.assertEqual(response.status_code, 404)
-
-    response = self.client.get(path='http://localhost:8000/api/theaters/1/props/categories/1/official/count')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(response.data, 1)
 
     OfficialProp.objects.all().delete()
 
@@ -461,7 +439,7 @@ class RestrictedOfficialPropAPITests(APITestCase):
     'quantity': 2,
     'price': 99.9,
     'theater': 1,
-    'image_id': None
+    'imageId': None
   }
 
   def login(self, user):
@@ -548,7 +526,7 @@ class RestrictedOfficialPropAPITests(APITestCase):
       'quantity': 5,
       'price': 59.9,
       'theater': 1,
-      'image_id': None
+      'imageId': None
     }
 
     response = self.post(test_prop_2)
@@ -575,7 +553,7 @@ class RestrictedOfficialPropAPITests(APITestCase):
       'quantity': 5,
       'price': 59.9,
       'theater': 2,
-      'image_id': None
+      'imageId': None
     }
 
     serializer = RestrictedOfficialPropSerializer(data=test_prop_2)
@@ -629,7 +607,7 @@ class RestrictedOfficialPropAPITests(APITestCase):
       'quantity': 5,
       'price': 59.9,
       'theater': 1,
-      'image_id': None
+      'imageId': None
     }
 
     serializer = RestrictedOfficialPropSerializer(data=test_prop_2)
