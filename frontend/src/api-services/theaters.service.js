@@ -42,6 +42,10 @@ export default {
 
   getRepertoire(data) {
     return Axios.get(`${PREFIX}${data}/repertoire`);
+  },
+
+  getTicketsOnSale(data) {
+    return Axios.get(`${PREFIX}${data}/tickets-on-sale`);
   }
 
 };

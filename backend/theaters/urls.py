@@ -51,6 +51,10 @@ get_repertoire = PublicAPI.as_view({
   'get': 'get_repertoire'
 })
 
+get_tickets_on_sale = PublicAPI.as_view({
+  'get': 'get_tickets_on_sale'
+})
+
 urlpatterns = [
   path(
     route='',
@@ -100,5 +104,10 @@ urlpatterns = [
     route='<int:pk>/repertoire',
     view=get_repertoire,
     name='get-repertoire'
+  ),
+  path(
+    route='<int:pk>/tickets-on-sale',
+    view=get_tickets_on_sale,
+    name='tickets-on-sale'
   )
 ]

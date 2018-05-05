@@ -90,6 +90,7 @@ export default {
           { icon: 'home', text: 'Home', path: '/admin-home' },
           { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
           { icon: 'add', text: 'Manage show times', path: '/showtimes' },
+          { icon: 'add', text: 'Manage tickets on sale', path: '/tickets-on-sale' },
           { icon: 'build', text: 'Manage theater info', path: '/theater/settings' },
           { icon: 'list', text: 'Reports', path: '/reports' },
           { icon: 'person', text: 'Account settings', path: '/user/settings' }
