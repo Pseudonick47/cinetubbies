@@ -4,6 +4,8 @@ import * as systemAdmin from './system-admin.store';
 import * as reservations from './reservations.store';
 import props from './props';
 import * as repertoire from './repertoire.store';
+import * as ticketsOnSale from './tickets-on-sale.store';
+import * as showtimes from './showtime.store';
 
 export {
   alert,
@@ -11,5 +13,7 @@ export {
   props,
   reservations,
   systemAdmin,
-  repertoire
+  repertoire,
+  ticketsOnSale,
+  showtimes
 };
