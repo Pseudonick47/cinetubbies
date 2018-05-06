@@ -1,6 +1,6 @@
 const state = {
   headers: [
-    { text: 'Movie', sortable: false },
+    { text: 'Movie', sortable: false, value: 'movie' },
     { text: 'Auditorium', sortable: false },
     { text: 'Date', sortable: false },
     { text: 'Time', sortable: false },

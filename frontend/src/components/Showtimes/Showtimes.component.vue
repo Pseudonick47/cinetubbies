@@ -1,70 +1,20 @@
 <template>
   <v-layout row>
-    <v-flex
-      s12
-      sm5
-      md5
-      offset-lg
-    >
-      <v-list
-        two-line
-        subheader
-      >
-        <v-subheader>Movies/plays</v-subheader>
-        <v-list-tile>
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Search"
-            class="mx-3"
-          />
-        </v-list-tile>
-        <v-list-tile
-          v-for="movie in filteredMovies"
-          :key="movie.id" >
-          <v-list-tile-content>
-            <v-list-tile-title>{{ movie.title }}</v-list-tile-title>
-            <v-list-tile-sub-title>{{ movie.genre }}</v-list-tile-sub-title>
-          </v-list-tile-content>
-          <v-list-tile-action >
-            <v-tooltip bottom>
-              <v-btn
-                slot="activator"
-                icon
-                ripple
-                @click="createDialog(movie)"
-              >
-                <v-icon>
-                  add</v-icon></v-btn>
-              <span>New show time</span>
-            </v-tooltip>
-          </v-list-tile-action>
-          <v-list-tile-action >
-            <v-tooltip bottom>
-              <v-btn
-                slot="activator"
-                icon
-                ripple
-                @click="show(movie.id, movie.name)"
-              >
-                <v-icon>
-                  list</v-icon></v-btn>
-              <span>See showtimes</span>
-            </v-tooltip>
-          </v-list-tile-action>
-        </v-list-tile>
-        <v-dialog
-          v-model="createDialogBool"
-          max-width="500px"
-        >
-          <v-card>
-            <v-card-title>
-              New showtime
-            </v-card-title>
-            <v-card-text>
-              <v-form
-                v-model="valid"
-              >
+    <v-dialog
+      v-model="dialog"
+      max-width="700px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout
+              column>
+              <v-flex
+                xs12
+                sm6
+                md4>
                 <v-text-field
                   v-validate="'required'"
                   v-model="showtime.auditorium"
@@ -74,12 +24,11 @@
                   data-vv-name="auditorium"
                   required
                 />
-                <v-date-picker
-                  v-model="showtime.date"
-                />
-                <v-time-picker
-                  v-model="time"
-                />
+              </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4>
                 <v-text-field
                   v-validate="'required'"
                   v-model.number="showtime.price"
@@ -88,152 +37,165 @@
                   data-vv-name="price"
                   required
                 />
-                <v-btn
-                  :disabled="!valid"
-                  @click="create"
-                >
-                  add
-                </v-btn>
-                <v-btn @click="clear">clear</v-btn>
-              </v-form>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
-      </v-list>
-    </v-flex>
-    <v-tooltip bottom>
-      <v-btn
-        slot="activator"
-        @click="showRepertoire()">
-        repertoire
-      </v-btn>
-      <span>See all showtimes</span>
-    </v-tooltip>
+              </v-flex>
+              <v-layout row>
+                <v-flex>
+                  <v-date-picker
+                    v-model="showtime.date"
+                  />
+                </v-flex>
+                <v-flex>
+                  <v-time-picker
+                    v-model="time"
+                  />
+                </v-flex>
+              </v-layout>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer/>
+          <v-btn
+            color="blue darken-1"
+            flat
+            @click="dialog = false">Cancel</v-btn>
+          <v-btn
+            color="blue darken-1"
+            flat
+            @click="save">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-flex
-      s12
-      sm5
-      md5
-      offset-lg1>
-      <v-data-table
-        v-show="showTable"
-        :items="repertoire"
-        :headers="headers"
-        item-key="date"
-        class="elevation-1"
-      >
-        <template
-          slot="items"
-          slot-scope="props">
-          <td>{{ `${movieTitle(props.item.movie).title}` }}</td>
-          <td>{{ `${props.item.auditorium}` }} </td>
-          <td class="text-xs-right">{{ props.item.date }}</td>
-          <td class="text-xs-right">{{ props.item.time }}</td>
-          <td class="text-xs-right">{{ props.item.price }}</td>
-        </template>
-        <template slot="no-data">
+      md4
+      offset-lg
+    >
+      <v-card>
+        <v-card-title>
+          {{ kind }}s
+          <v-spacer/>
+          <v-text-field
+            v-model="search"
+            append-icon="search"
+            label="Search"
+            single-line
+            hide-details
+          />
+        </v-card-title>
+        <v-data-table
+          :items="movies"
+          :search="search"
+          :headers="[{ text: kind, sortable: false, value: 'title' },]"
+          item-key="date"
+          class="elevation-1"
+        >
+          <template
+            slot="items"
+            slot-scope="props">
+            <td>{{ props.item.title }}</td>
+            <td class="right layout px-0">
+              <v-tooltip left>
+                <v-btn
+                  slot="activator"
+                  icon
+                  @click="create(props.item)">
+                  <v-icon>add</v-icon>
+                </v-btn>
+                <span>New showtime</span>
+              </v-tooltip>
+              <v-tooltip right>
+                <v-btn
+                  slot="activator"
+                  icon
+                  @click="filter(props.item.id)">
+                  <v-icon>list</v-icon>
+                </v-btn>
+                <span>See showtimes<br>for this movie</span>
+              </v-tooltip>
+            </td>
+          </template>
           <v-alert
+            slot="no-results"
             :value="true"
             color="error"
             icon="warning">
-            Sorry, nothing to display here.
+            Your search for "{{ search }}" found no results.
           </v-alert>
-        </template>
-      </v-data-table>
-      <v-list
-        v-show="showShowtimes"
-        two-line
-        subheader
-      >
-        <v-subheader>Showtimes</v-subheader>
-        <v-list-tile
-          v-for="show in showtimes"
-          :key="show.id" >
-          <v-list-tile-content>
-            <v-list-tile-title>auditorium: {{ show.auditorium }}, price: {{ show.price }}din</v-list-tile-title>
-            <v-list-tile-sub-title>{{ show.time }}, {{ show.date }}</v-list-tile-sub-title>
-          </v-list-tile-content>
-          <v-list-tile-action >
-            <v-btn
-              icon
-              ripple
-              @click="editButton(show.id)"
+          <template slot="no-data">
+            Sorry, nothing to display here.
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-flex>
+    <v-flex
+      s12
+      sm5
+      md7
+      offset-lg1>
+      <v-card>
+        <v-card-title>
+          Showtimes
+          <v-spacer/>
+          <v-btn
+            v-show="filtered"
+            @click="removeFilter"
+          >remove filter</v-btn>
+        </v-card-title>
+        <v-data-table
+          :items="repertoire"
+          :headers="headers"
+          item-key="date"
+          class="elevation-1"
+        >
+          <template
+            slot="items"
+            slot-scope="props">
+            <td>{{ `${movieTitle(props.item.movie).title}` }}</td>
+            <td>{{ `${props.item.auditorium}` }} </td>
+            <td>{{ props.item.date }}</td>
+            <td>{{ props.item.time }}</td>
+            <td>{{ props.item.price }}</td>
+            <td class="justify-center layout px-0">
+              <v-btn
+                slot="activator"
+                icon
+                @click="editButton(props.item)">
+                <v-icon>edit</v-icon>
+              </v-btn>
+              <v-btn
+                slot="activator"
+                icon
+                @click="deleteButton(props.item.id)">
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </td>
+            <v-dialog
+              v-model="confirmDelete"
+              persistent
+              max-width="300px"
             >
-              <v-icon>edit</v-icon>
-            </v-btn>
-          </v-list-tile-action>
-          <v-list-tile-action>
-            <v-btn
-              icon
-              ripple
-              @click.stop="deleteButton(show.id)"
-            >
-              <v-icon>delete</v-icon>
-            </v-btn>
-          </v-list-tile-action>
-          <v-dialog
-            v-model="editDialog"
-            max-width="500px"
-          >
-            <v-card>
-              <v-card-title>
-                Change information
-              </v-card-title>
-              <v-card-text>
-                <v-form
-                  v-model="valid"
-                >
-                  <v-text-field
-                    v-validate="'required'"
-                    v-model="editingShowtime.auditorium"
-                    :error-messages="errors.collect('auditorium')"
-                    :counter="255"
-                    label="Auditorium"
-                    data-vv-name="auditorium"
-                    required
-                  />
-                  <v-date-picker
-                    v-model="editingShowtime.date"
-                  />
-                  <v-time-picker
-                    v-model="editingShowtime.time"
-                  />
-                  <v-text-field
-                    v-validate="'required'"
-                    v-model="editingShowtime.price"
-                    :error-messages="errors.collect('price')"
-                    label="Price"
-                    data-vv-name="price"
-                    required
-                  />
-                  <v-btn
-                    :disabled="!valid"
-                    @click="edit"
-                  >
-                    save
-                  </v-btn>
-                  <v-btn @click="editDialog=false">close</v-btn>
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
-          <v-dialog
-            v-model="confirmDelete"
-            persistent
-            max-width="300px"
-          >
-            <v-card>
-              <v-card-text>
-                Delete this showtime?
-              </v-card-text>
-              <v-card-actions>
-                <v-btn @click="remove(show.id)">yes</v-btn>
-                <v-spacer/>
-                <v-btn @click="confirmDelete = false">no</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-list-tile>
-      </v-list>
+              <v-card>
+                <v-card-text>
+                  Delete this showtime?
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn @click="remove(props.item.id)">yes</v-btn>
+                  <v-spacer/>
+                  <v-btn @click="confirmDelete = false">no</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </template>
+          <template slot="no-data">
+            <v-alert
+              :value="true"
+              color="error"
+              icon="warning">
+              Sorry, nothing to display here.
+            </v-alert>
+          </template>
+        </v-data-table>
+      </v-card>
     </v-flex>
   </v-layout>
 </template>
@@ -242,146 +204,120 @@
 import SysAdminController from 'Controllers/system-admin.controller';
 import TheaterController from 'Controllers/theaters.controller';
 import ShowtimeController from 'Controllers/showtimes.controller';
-import MovieController from 'Controllers/movies.controller';
 import { Movie } from 'Models/movie.model';
 import { Showtime } from 'Models/showtime.model';
 import { mapGetters } from 'vuex';
 
 export default {
   data: () => ({
-    valid: true,
-    loading: false,
     search: '',
     movies: [],
-    movie: new Movie(),
     confirmDelete: false,
-    deletingShowtime: 0,
-    editingShowtime: new Showtime(),
+    showtimeToDelete: 0,
     theaterId: 0,
-    createDialogBool: false,
     showtime: new Showtime(),
-    modal: false,
     time: null,
-    showtimes: [],
-    showShowtimes: false,
-    movieName: '',
-    editDialog: false,
-    showTable: false,
-    repertoire: []
+    repertoire: [],
+    kind: '',
+    dialog: false,
+    editedIndex: -1,
+    filtered: false
   }),
   computed: {
-    filteredMovies() {
-      if (!_.isEmpty(this.search)) {
-        return this.movies.filter((i) => {
-          return i.title.toLowerCase().includes(_.trim(this.search.toLowerCase()));
-        });
-      }
-      return this.movies;
-    },
     ...mapGetters([
       'activeUser',
       'headers'
-    ])
+    ]),
+    formTitle() {
+      return this.editedIndex === -1 ? 'New ' + this.kind : 'Edit ' + this.kind;
+    }
   },
   mounted() {
     this.getTheaterAndMovies();
   },
   methods: {
-    createDialog(movie) {
-      this.createDialogBool = true;
-      this.showtime.movie = movie.id;
-    },
-    create() {
-      this.showtime.time = this.time;
-      this.createDialogBool = false;
-      ShowtimeController.create(this.showtime)
-        .then((response) => {
-          this.$alert.success('Successfully added!');
-        })
-        .catch((response) => {
-          this.$alert.error('Error occurred.');
-        });
-    },
-    opetDialog() {
-      this.showDialog = true;
-    },
-    clear() {
+    create(movie) {
+      this.dialog = true;
       this.showtime = new Showtime();
+      this.time = null;
+      this.showtime.movie = movie.id;
+      this.editedIndex = -1;
+    },
+    save() {
+      this.dialog = false;
+      this.showtime.time = this.time;
+      if (this.editedIndex === -1) {
+        ShowtimeController.create(this.showtime)
+          .then((response) => {
+            this.$alert.success('Successfully added!');
+            this.getRepertoire();
+          })
+          .catch((response) => {
+            this.$alert.error('Error occurred.');
+          });
+      } else {
+        let data = _.reduce(this.showtime, (result, value, key) => {
+          if (!_.isEmpty(value) || (key === 'price' && value !== null)) {
+            result[key] = value;
+          }
+          return result;
+        }, {});
+        ShowtimeController.update(data, this.showtime.id).then((response) => {
+          this.showtime = new Showtime(response.data);
+          this.$alert.success('Settings successfully saved');
+          this.getRepertoire();
+        }).catch(() => {
+          this.$alert.error('Error while saving settings');
+        });
+      }
     },
     getTheaterAndMovies() {
-      this.loading = true;
       SysAdminController.getTheater(this.activeUser.id)
         .then((response) => {
           this.theaterId = response.data.id;
+          if (response.data.kind === 'm') {
+            this.kind = 'Movie';
+          } else {
+            this.kind = 'Play';
+          }
           this.getMovies();
-          this.loading = false;
+          this.getRepertoire();
         })
         .catch((response) => {
-          this.loading = false;
           this.$alert.error('Error occurred.');
         });
     },
     getMovies(id = this.theaterId) {
-      this.loading = true;
       SysAdminController.getMovies(id)
         .then((response) => {
           this.movies = response.data;
-          this.loading = false;
         })
         .catch((response) => {
-          this.loading = false;
-          this.$alert.error('Error occurred.');
-        });
-    },
-    show(movieId) {
-      this.showTable = false;
-      MovieController.getShowtimes(movieId)
-        .then((response) => {
-          this.showtimes = _.map(response.data, x => new Showtime(x));
-          this.showShowtimes = true;
-        })
-        .catch((resposne) => {
           this.$alert.error('Error occurred.');
         });
     },
     deleteButton(id) {
       this.confirmDelete = true;
-      this.deletingShowtime = id;
+      this.showtimeToDelete = id;
     },
     remove() {
       this.confirmDelete = false;
-      ShowtimeController.destroy(this.deletingShowtime)
+      ShowtimeController.destroy(this.showtimeToDelete)
         .then((response) => {
           this.$alert.success('Successfully deleted!');
+          this.getRepertoire();
         })
         .catch((response) => {
           this.$alert.error('Error occurred.');
         });
     },
-    editButton(showId) {
-      this.editingShowtime = this.showtimes.find((element) => {
-        return element.id === showId;
-      });
-      this.editDialog = true;
+    editButton(showtimeData) {
+      this.showtime = new Showtime(showtimeData);
+      this.time = this.showtime.time;
+      this.editedIndex = 1;
+      this.dialog = true;
     },
-    edit() {
-      let data = _.reduce(this.editingShowtime, (result, value, key) => {
-        if (!_.isEmpty(value)) {
-          result[key] = value;
-        }
-        return result;
-      }, {});
-      ShowtimeController.update(data, this.editingShowtime.id).then((response) => {
-        this.editDialog = false;
-        this.editingShowtime = new Showtime(response.data);
-        this.$alert.success('Settings successfully saved');
-      }).catch(() => {
-        this.$alert.error('Error while saving settings');
-      });
-    },
-    showRepertoire() {
-      this.showTable = true;
-      this.showShowtimes = false;
+    getRepertoire() {
       TheaterController.getRepertoire(this.theaterId)
         .then((response) => {
           this.repertoire = response.data;
@@ -394,6 +330,20 @@ export default {
       return this.movies.find((element) => {
         return element.id === id;
       });
+    },
+    filter(id) {
+      TheaterController.getRepertoire(this.theaterId)
+        .then((response) => {
+          this.filtered = true;
+          this.repertoire = response.data.filter(s => s['movie'] === id);
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
+    removeFilter() {
+      this.getRepertoire();
+      this.filtered = false;
     }
   }
 };
