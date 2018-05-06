@@ -204,7 +204,6 @@
 import SysAdminController from 'Controllers/system-admin.controller';
 import TheaterController from 'Controllers/theaters.controller';
 import ShowtimeController from 'Controllers/showtimes.controller';
-import { Movie } from 'Models/movie.model';
 import { Showtime } from 'Models/showtime.model';
 import { mapGetters } from 'vuex';
 
