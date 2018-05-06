@@ -86,7 +86,9 @@ export default {
       theater: {
         name: '',
         address: '',
-        kind: 'cinema'
+        kind: 'cinema',
+        theateradmins: [],
+        fanzoneadmins: []
       },
       selected_admins: null
     };
@@ -109,7 +111,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           const theater = this.theater;
-          theater.admins = _.map(this.selected_admins, 'id');
+          theater.theateradmins = _.map(this.selected_admins, 'id');
 
           SystemAdminController.registerTheater(theater)
             .then((response) => {

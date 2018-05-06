@@ -7,7 +7,10 @@ import {
   props,
   reservations,
   systemAdmin,
-  repertoire
+  repertoire,
+  ticketsOnSale,
+  showtimes,
+  movies
 } from './modules';
 
 Vue.use(Vuex);
@@ -19,7 +22,10 @@ const storeData = {
     props,
     reservations,
     systemAdmin,
-    repertoire
+    repertoire,
+    ticketsOnSale,
+    showtimes,
+    movies
   }
 };
 

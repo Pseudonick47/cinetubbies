@@ -1,6 +1,6 @@
 const state = {
-  headers: [
-    { text: 'Movie', sortable: false, value: 'movie' },
+  showtimeHeaders: [
+    { text: 'Movie', sortable: false },
     { text: 'Auditorium', sortable: false },
     { text: 'Date', sortable: false },
     { text: 'Time', sortable: false },
@@ -9,7 +9,7 @@ const state = {
 };
 
 const getters = {
-  headers: (state) => state.headers
+  showtimeHeaders: (state) => state.showtimeHeaders
 };
 
 export {

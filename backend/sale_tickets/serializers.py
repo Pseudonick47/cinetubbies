@@ -1,0 +1,23 @@
+from rest_framework import serializers
+
+from .models import TicketOnSale
+from showtimes.models import Showtime
+from theaters.models import Theater
+
+class TicketOnSaleSerializer(serializers.Serializer):
+  id = serializers.IntegerField(read_only=True)
+  theater = serializers.PrimaryKeyRelatedField(queryset=Theater.objects.all(),allow_null=False)
+  showtime = serializers.PrimaryKeyRelatedField(queryset=Showtime.objects.all(),allow_null=False)
+  seat = serializers.IntegerField(required=True)
+  discount = serializers.IntegerField(required=True)
+
+  def create(self, validated_data):
+    ticket = TicketOnSale.objects.create(**validated_data)
+    ticket.save()
+    return ticket
+
+  def update(self, ticket, validated_data):
+    for k, v in validated_data.items():
+      setattr(ticket, k, v)
+    ticket.save()
+    return ticket

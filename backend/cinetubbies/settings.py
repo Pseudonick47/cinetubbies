@@ -45,7 +45,8 @@ INSTALLED_APPS = [
   'media_upload',
   'fan_zone',
   'showtimes',
-  'reservations'
+  'reservations',
+  'sale_tickets'
 ]
 
 MIDDLEWARE = [

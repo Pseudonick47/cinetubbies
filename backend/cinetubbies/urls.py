@@ -15,7 +15,8 @@ urlpatterns = [
     path('media/', include('media_upload.urls')),
     path('props/', include('fan_zone.urls')),
     path('showtimes/', include('showtimes.urls')),
-    path('reservations/', include('reservations.urls'))
+    path('reservations/', include('reservations.urls')),
+    path('sale/', include('sale_tickets.urls'))
   ])),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

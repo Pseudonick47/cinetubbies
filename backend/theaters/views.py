@@ -24,6 +24,7 @@ from .serializers import AdministrationSerializer
 from .permissions import IsResponsibleForTheater
 from movies.serializers import MovieSerializer
 from showtimes.serializers import ShowtimeSerializer
+from sale_tickets.serializers import TicketOnSaleSerializer
 
 
 class PublicAPI(ViewSet):
@@ -86,6 +87,12 @@ class PublicAPI(ViewSet):
       for s in showtime_list:
         showtimes.append(s)
     return Response(ShowtimeSerializer(showtimes, many=True).data)
+  
+  @action(detail=True)
+  def get_tickets_on_sale(self, request, pk=None):
+    theater = get_object_or_404(Theater, id=pk)
+    tickets = theater.tickets_on_sale.all()
+    return Response(TicketOnSaleSerializer(tickets, many=True).data)
 
 class RestrictedAPI(ViewSet):
   permission_classes = [
