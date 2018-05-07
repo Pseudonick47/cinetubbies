@@ -8,7 +8,7 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.response import Response
-from .permissions import IsThisTheaterAdminOrReadOnly
+from .permissions import IsThisTheaterAdminOrReadOnly, IsSelfOrReadOnly
 from django.shortcuts import get_object_or_404
 
 class TicketOnSaleViewSet(viewsets.ModelViewSet):
