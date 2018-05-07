@@ -67,8 +67,12 @@
         </v-list-tile>
         <v-list-tile
           v-for="theater in filteredTheaters"
-          :key="theater.id" >
-          <v-list-tile-content>
+          :key="theater.id"
+          class="cinema-list-item"
+        >
+          <v-list-tile-content
+            @click="goToCinema(theater.id)"
+          >
             <v-list-tile-title>{{ theater.name }}, <i>{{ theater.address }}<i/></i></v-list-tile-title>
             <v-list-tile-sub-title><i>rating: </i>{{ theater.rating }}/5</v-list-tile-sub-title>
             <v-list-tile-sub-title><i>votes: </i>{{ theater.voters_count }}

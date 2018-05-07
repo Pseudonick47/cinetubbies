@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
 from .models import TicketOnSale
+from .models import Booking
 from showtimes.models import Showtime
 from theaters.models import Theater
+from authentication.models import User
 
 class TicketOnSaleSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -20,4 +22,23 @@ class TicketOnSaleSerializer(serializers.Serializer):
     for k, v in validated_data.items():
       setattr(ticket, k, v)
     ticket.save()
+    return ticket
+
+
+class BookingSerializer(serializers.Serializer):
+  id = serializers.IntegerField(read_only=True)
+  showtime = serializers.PrimaryKeyRelatedField(queryset=Showtime.objects.all(), allow_null=True)
+  user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=False)
+  discount = serializers.IntegerField(required=False)
+  price = serializers.IntegerField(required=False)
+  seat = serializers.IntegerField(required=False)
+
+  def create(self, validated_data):
+    booking = Booking.objects.create(**validated_data)
+    booking.save()
+    return booking
+
+  def update(self, ticket, validated_data):
+    [setattr(booking, k, v) for k, v in validated_data.items()]
+    booking.save()
     return ticket
