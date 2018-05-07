@@ -1,7 +1,8 @@
 import Axios from 'axios';
 
 const ENDPOINTS = {
-  TICKETS: 'sale/'
+  TICKETS: 'sale/',
+  BOOK_TICKET: 'booking/'
 };
 
 export default {
@@ -16,5 +17,8 @@ export default {
   },
   update(data, id) {
     return Axios.put(`${ENDPOINTS.TICKETS}${id}/`, data);
+  },
+  bookTicket(data) {
+    return Axios.post(`${ENDPOINTS.TICKETS}${ENDPOINTS.BOOK_TICKET}`, data);
   }
 };

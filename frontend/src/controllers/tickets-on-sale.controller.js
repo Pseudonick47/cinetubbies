@@ -12,5 +12,8 @@ export default {
   },
   update(data, id) {
     return TicketsOnSaleApiService.update(data, id);
+  },
+  bookTicket(data) {
+    return TicketsOnSaleApiService.bookTicket(data);
   }
 };

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
   'django.contrib.staticfiles',
   'corsheaders',
   'authentication',
+  'cinetubbies',
   'theaters',
   'movies',
   'media_upload',

@@ -3,6 +3,7 @@
     <v-parallax
       src="http://arab-culture.info/wp-content/uploads/2018/02/1-68.jpg"
       height="400"
+      class="paralax-kill-margins"
     >
       <v-layout
         column
@@ -12,7 +13,10 @@
         <h4 class="white--text title-text-shadow">{{ theater.rating }} ★</h4>
       </v-layout>
     </v-parallax>
-    <v-layout row>
+    <v-layout
+      row
+      class="my-3"
+    >
       <v-flex>
         <v-list
           two-line
@@ -73,10 +77,12 @@
               <td>{{ getShowtime(props.item.showtime).time }}</td>
               <td>{{ getShowtime(props.item.showtime).price }}</td>
               <td>{{ props.item.discount }}</td>
-              <td>
+              <td class="justify-center layout px-0">
                 <v-btn
+                  icon
+                  class="mx-0"
                 >
-                  book
+                  <v-icon color="teal">weekend</v-icon>
                 </v-btn>
               </td>
             </template>

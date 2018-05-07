@@ -17,13 +17,13 @@
       class="my-3"
     >
       <v-flex md5>
-        <h3>Title:{{ movie.title }}</h3>
-        <h3>Director: {{ movie.director }}</h3>
-        <h3>Genre: {{ movie.genre }}</h3>
-        <h3>Duration: {{ movie.duration }}</h3>
-        <h3>Actors: {{ movie.actors }}</h3>
-        <h3>Description: {{ movie.description }}</h3>
-        <h3>Rating: {{ movie.rating }}</h3>
+        <h3>Title:</h3><p>{{ movie.title }}</p>
+        <h3>Director:</h3> <p>{{ movie.director }}</p>
+        <h3>Genre:</h3> <p>{{ movie.genre }}</p>
+        <h3>Duration:</h3> <p>{{ movie.duration }}</p>
+        <h3>Actors:</h3><p>{{ movie.actors }}</p>
+        <h3>Description:</h3><p>{{ movie.description }}</p>
+        <h3>Rating:</h3> <p>{{ movie.rating || 'Not rated' }}</p>
       </v-flex>
 
       <v-flex md3>
@@ -54,24 +54,41 @@
               <v-btn
                 icon
                 class="mx-0"
-                @click="addFriend(props.item.id)">
+                @click="openSeatsDialog(props.item.id)">
                 <v-icon color="teal">weekend</v-icon>
               </v-btn>
+            </td>
+          </template>
+          <template slot="no-results">
+            <td class="text-xs-center">
+              No showtimes for selected date
             </td>
           </template>
         </v-data-table>
       </v-flex>
     </v-layout>
+    <book-ticket-dialog
+      v-if="showBookDialog"
+      :show.sync="showBookDialog"
+      :showtime-id="selectedShowtimeId"
+      @cancel="closeBookingDialog"
+      @book-ticket="bookTicket"
+    />
   </div>
 </template>
 
 <script>
 import * as _ from 'lodash';
+import BookTicketDialog from 'Components/Theaters/BookTicketDialog.component';
 import MovieController from 'Controllers/movies.controller';
+import TicketsOnSaleController from 'Controllers/tickets-on-sale.controller';
 import { Movie } from 'Models/movie.model';
 
 export default {
   name: 'Movie',
+  components: {
+    BookTicketDialog
+  },
   props: {
     theaterId: {
       type: String,
@@ -84,6 +101,8 @@ export default {
   },
   data() {
     return {
+      showBookDialog: false,
+      selectedShowtimeId: -1,
       selectedDate: null,
       movie: {},
       showtimes: []
@@ -104,6 +123,26 @@ export default {
     this.getShowtimes(this.movieId);
   },
   methods: {
+    openSeatsDialog(showtimeId) {
+      this.selectedShowtimeId = showtimeId;
+      this.showBookDialog = true;
+    },
+    closeBookingDialog() {
+      this.showBookDialog = false;
+    },
+    bookTicket(choosenSeats) {
+      TicketsOnSaleController.bookTicket({
+        choosenSeats,
+        showtime: this.selectedShowtimeId
+      })
+        .then((response) => {
+          this.$alert.success('Ticket successfully booked');
+        })
+        .catch(() => {
+          this.$alert.error('Error occurred.');
+        });
+      this.showBookDialog = false;
+    },
     getMovie(id) {
       MovieController.retrieve(id)
         .then((response) => {
