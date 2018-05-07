@@ -4,7 +4,7 @@ from showtimes.models import Showtime
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-from .permissions import IsCreatorOrReadOnly
+from .permissions import IsThisTheaterAdminOrReadOnly
 from django.shortcuts import get_object_or_404
 
 class ShowtimeViewSet(viewsets.ModelViewSet):
@@ -13,7 +13,7 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
   """
   queryset = Showtime.objects.all()
   serializer_class = ShowtimeSerializer
-  permission_classes = [IsCreatorOrReadOnly]
+  permission_classes = [IsThisTheaterAdminOrReadOnly]
 
   def create(self, request):
     serializer = ShowtimeSerializer(data=request.data, partial=True)

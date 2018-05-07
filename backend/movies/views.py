@@ -5,7 +5,7 @@ from movies.models import Movie
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-from .permissions import IsCreatorOrReadOnly
+from .permissions import IsThisTheaterAdminCreatorOrReadOnly
 from authentication.models import TheaterAdmin
 from django.shortcuts import get_object_or_404
 
@@ -15,7 +15,7 @@ class MovieViewSet(viewsets.ModelViewSet):
   """
   queryset = Movie.objects.all()
   serializer_class = MovieSerializer
-  permission_classes = [IsCreatorOrReadOnly]
+  permission_classes = [IsThisTheaterAdminCreatorOrReadOnly]
 
   # create new movie
   def create(self, request):
@@ -32,6 +32,8 @@ class MovieViewSet(viewsets.ModelViewSet):
   # delete movie
   def destroy(self, request, pk=None):
     movie = get_object_or_404(Movie, pk=pk)
+    if len(movie.showtimes.all()) > 0:
+      return Response({'message': 'Movie cannot be deleted.'}, status=403)
     self.check_object_permissions(request, movie)
     movie.delete()
     return Response({'message': 'Movie successfully deleted'})

@@ -287,7 +287,7 @@ export default {
           this.getMovies();
         })
         .catch((response) => {
-          this.$alert.error('Error occurred.');
+          this.$alert.error('Error occurred.  Tip:Movie cannot be deleted if there are showtimes for it.');
         });
     }
   }

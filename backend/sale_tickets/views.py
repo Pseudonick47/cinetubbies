@@ -4,7 +4,7 @@ from .models import TicketOnSale
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-# from .permissions import IsCreatorOrReadOnly
+from .permissions import IsThisTheaterAdminOrReadOnly
 from django.shortcuts import get_object_or_404
 
 class TicketOnSaleViewSet(viewsets.ModelViewSet):
@@ -13,7 +13,7 @@ class TicketOnSaleViewSet(viewsets.ModelViewSet):
   """
   queryset = TicketOnSale.objects.all()
   serializer_class = TicketOnSaleSerializer
-  # permission_classes = [IsCreatorOrReadOnly]
+  permission_classes = [IsThisTheaterAdminOrReadOnly]
 
   def create(self, request):
     serializer = TicketOnSaleSerializer(data=request.data, partial=True)
@@ -22,13 +22,9 @@ class TicketOnSaleViewSet(viewsets.ModelViewSet):
     serializer.save()
     return Response(serializer.data)
 
-  # def list(self, request):
-  #   tickets = TicketOnSale.objects.all()
-  #   return Response(TicketOnSaleSerializer(tickets, many=True).data)
-
   def destroy(self, request, pk=None):
     ticket = get_object_or_404(TicketOnSale, pk=pk)
-    # self.check_object_permissions(request, ticket)
+    self.check_object_permissions(request, ticket)
     ticket.delete()
     return Response({'message': 'Ticket successfully deleted'})
 
@@ -38,7 +34,7 @@ class TicketOnSaleViewSet(viewsets.ModelViewSet):
 
   def update(self, request, pk=None):
     ticket = get_object_or_404(TicketOnSale, id=pk)
-    # self.check_object_permissions(request, ticket)
+    self.check_object_permissions(request, ticket)
     serializer = TicketOnSaleSerializer(ticket, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()

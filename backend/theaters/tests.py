@@ -233,7 +233,7 @@ class TheaterAPITests(APITestCase):
     self.assertTrue(update_theater['name'] == response.data['name'])
     self.assertTrue(Theater.objects.get(pk=2).name == update_theater['name'])
 
-    # attempt put on a theater that is not theater admins responsibility;
+    # attempt put on a theater that is not theater admin's responsibility;
     # should fail
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1',
