@@ -49,7 +49,6 @@
       class="pt-2"
     >
       <v-container
-        class="content-container"
         fluid
       >
         <router-view/>
