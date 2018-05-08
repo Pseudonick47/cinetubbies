@@ -46,7 +46,8 @@ class PublicSerializer(serializers.Serializer):
     queryset=Image.objects.all(),
     allow_null=True,
     write_only=True,
-    source='image'
+    source='image',
+    required=False
   )
   image = ImageSerializer(
     read_only=True
