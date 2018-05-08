@@ -274,3 +274,148 @@ class TicketOnSaleAPITests(APITestCase):
     self.login(self.test_theater_admin2)
     response = self.put(update_ticket, '1')
     self.assertEqual(response.status_code, 403)
+
+
+
+
+class BookingAPITests(APITestCase):
+
+  def setUp(self):
+    serializer = TheaterAdminSerializer(data=self.test_theater_admin)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+    serializer = UserSerializer(data=self.test_user)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+    serializer = AdministrationSerializer(data=self.test_theater)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+    serializer = MovieSerializer(data=self.test_movie)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+    serializer = ShowtimeSerializer(data=self.test_showtime)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
+  test_theater_admin = {
+    'username': 'admin2',
+    'password': '123456',
+    'email': 'admin2@test.com',
+    'role': 'cinema_admin',
+    'theater': '',
+  }
+
+  test_fan_zone_admin = {
+    'username': 'admin3',
+    'password': '123456',
+    'email': 'admin3@test.com',
+    'role': 'fan_zone_admin',
+    'theater': '',
+  }
+
+  test_user = {
+    'username': 'username',
+    'password': '123456',
+    'phone': '123',
+    'city': 'city'
+  }
+
+  test_movie = {
+    'title': 'title',
+    'genre': 'genre',
+    'theater': 1
+  }
+
+  test_showtime = {
+    'auditorium': 'Sala 2',
+    'date': '2018-05-10',
+    'time': '15:00',
+    'price': 300,
+    'movie': 1
+  }
+
+  test_theater = {
+    'name': 'theater1',
+    'address': 'some street',
+    'kind': 'p',
+    'theateradmins': [1],
+    'fanzoneadmins': [2],
+  }
+
+  valid_data = [
+    {
+      'showtime': 1,
+      'chosen_seats': [1, 3, 4]
+    },
+    {
+      'showtime': 1,
+      'chosen_seats': [2, 1]
+    },
+    {
+      'showtime': 1,
+      'chosen_seats': [1]
+    },
+  ]
+
+  invalid_data = [
+    {
+      'showtime': '',
+      'chosen_seats': [1, 3, 4]
+    },
+    {
+      'showtime': 'arst',
+      'chosen_seats': [2, 1]
+    },
+    {
+    },
+    {
+      'chosen_seats': []
+    },
+  ]
+
+  def book(self, booking_data):
+    return self.client.post(
+      path='http://localhost:8000/api/sale/booking/',
+      data = booking_data,
+      format='json'
+    )
+
+  def login(self, user):
+    response = self.client.post(
+      path='http://localhost:8000/api/auth/login/',
+      data = {
+        'username': user['username'],
+        'password': user['password']
+      },
+      format='json'
+    )
+    self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
+
+  def test_create(self):
+    response = self.book(self.valid_data[0])
+    self.assertEqual(response.status_code, 401)
+
+    self.login(self.test_user)
+    for test_case_data in self.valid_data:
+      response = self.book(test_case_data)
+      self.assertEqual(response.status_code, 200)
+      for key in ['id', 'showtime', 'user', 'discount', 'price', 'seat']:
+        self.assertIn(key, response.data)
+
+    for test_case_data in self.invalid_data:
+      response = self.book(test_case_data)
+      self.assertEqual(response.status_code, 400)

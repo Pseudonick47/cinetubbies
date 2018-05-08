@@ -14,7 +14,7 @@ class TicketOnSale(models.Model):
 
 class Booking(models.Model):
   id = models.AutoField(primary_key=True)
-  showtime = models.ForeignKey(Showtime, on_delete=models.SET_NULL, null=True, related_name='bookings')
+  showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, null=False, related_name='bookings')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
   discount = models.IntegerField(default=0)
   # price = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=300)

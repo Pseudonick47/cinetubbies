@@ -59,7 +59,7 @@ class BookingViewSet(viewsets.ViewSet):
 
   def create(self, request):
     request.data['user'] = request.user.id
-    serializer = BookingSerializer(data=request.data, partial=True)
+    serializer = BookingSerializer(data=request.data)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
     serializer.save()

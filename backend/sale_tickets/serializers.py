@@ -27,7 +27,7 @@ class TicketOnSaleSerializer(serializers.Serializer):
 
 class BookingSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
-  showtime = serializers.PrimaryKeyRelatedField(queryset=Showtime.objects.all(), allow_null=True)
+  showtime = serializers.PrimaryKeyRelatedField(queryset=Showtime.objects.all(), allow_null=False)
   user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=False)
   discount = serializers.IntegerField(required=False)
   price = serializers.IntegerField(required=False)
