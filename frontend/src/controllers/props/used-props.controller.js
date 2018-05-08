@@ -4,47 +4,86 @@ import * as Service from 'Api/props/used-props.service';
 
 export default {
 
-  fetchPage(num, page, payload) {
+  fetchPageForAll(num, page, payload) {
     const { user, category } = payload;
 
     if (user && category) {
-      return Service.props.fetchByUserAndCategory(num, page, user, category);
+      return Service.props.fetchByUserAndCategoryAll(num, page, user, category);
     } else if (user) {
-      return Service.props.fetchByUser(num, page, user);
+      return Service.props.fetchByUserAll(num, page, user);
     } else if (category) {
-      return Service.props.fetchByCategory(num, page, category);
+      return Service.props.fetchByCategoryAll(num, page, category);
     }
 
-    return Service.props.fetch(num, page);
+    return Service.props.fetchAll(num, page);
+  },
+
+  fetchPage(num, page, payload) {
+    const { user, category, approved } = payload;
+    if (user && category) {
+      return Service.props.fetchByUserAndCategory(num, page, user, category, approved);
+    } else if (user) {
+      return Service.props.fetchByUser(num, page, user, approved);
+    } else if (category) {
+      return Service.props.fetchByCategory(num, page, category, approved);
+    }
+
+    return Service.props.fetch(num, page, approved);
   },
 
   requestPage(page, payload = {}) {
     // TODO: page caching
     const num = 9;
 
-    this.fetchPage(num, page, payload).then((response) => {
-      store.commit('props/used/setProps', response.data);
-    });
+    if (payload.all) {
+      this.fetchPageForAll(num, page, payload).then((response) => {
+        store.commit('props/used/setProps', response.data);
+      });
+    } else {
+      this.fetchPage(num, page, payload).then((response) => {
+        store.commit('props/used/setProps', response.data);
+      });
+    }
   },
 
-  fetchCount(payload) {
+  fetchCountForAll(payload) {
     const { user, category } = payload;
 
     if (user && category) {
-      return Service.count.fetchByUserAndCategory(user, category);
+      return Service.count.fetchByUserAndCategoryAll(user, category);
     } else if (user) {
-      return Service.count.fetchByUser(user);
+      return Service.count.fetchByUserAll(user);
     } else if (category) {
-      return Service.count.fetchByCategory(category);
+      return Service.count.fetchByCategoryAll(category);
     }
 
-    return Service.count.fetch();
+    return Service.count.fetchAll();
+  },
+
+  fetchCount(payload) {
+    const { user, category, approved } = payload;
+
+    if (user && category) {
+      return Service.count.fetchByUserAndCategory(user, category, approved);
+    } else if (user) {
+      return Service.count.fetchByUser(user, approved);
+    } else if (category) {
+      return Service.count.fetchByCategory(category, approved);
+    }
+
+    return Service.count.fetch(approved);
   },
 
   requestCount(payload = {}) {
-    this.fetchCount(payload).then((response) => {
-      store.commit('props/used/setCount', response.data);
-    });
+    if (payload.all) {
+      this.fetchCountForAll(payload).then((response) => {
+        store.commit('props/used/setCount', response.data);
+      });
+    } else {
+      this.fetchCount(payload).then((response) => {
+        store.commit('props/used/setCount', response.data);
+      });
+    }
   },
 
   postProp(data) {

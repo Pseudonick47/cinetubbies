@@ -191,7 +191,7 @@ import UsedProp from 'Components/FanZone/UsedProp.component';
 import UsedPropDetail from 'Components/FanZone/UsedPropDetail.component';
 import CategoriesController from 'Controllers/props/categories.controller';
 import OfficialPropsController from 'Controllers/props/official-props.controller';
-import UsedPropsController from 'Controllers/props/used-props.controller';
+// import UsedPropsController from 'Controllers/props/used-props.controller';
 
 import * as _ from 'lodash';
 
@@ -227,9 +227,6 @@ export default {
       rootCategories: 'roots',
       categoryPath: 'path'
     }),
-    props() {
-
-    },
     pageCount() {
       return _.ceil(_.divide(this.count, this.entriesPerPage));
     }

@@ -14,6 +14,7 @@ import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 import SystemAdminRewards from 'Components/SystemAdmin/Rewards.component';
 import FanZoneHome from 'Components/FanZone/Home.component';
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
+import PendingProps from 'Components/FanZoneAdmin/PendingProps.component';
 import Showtimes from 'Components/Showtimes/Showtimes.component';
 import AdminHome from 'Components/CinemaAdmin/AdminHome.component';
 import Reports from 'Components/CinemaAdmin/Reports.component';
@@ -103,6 +104,14 @@ export const routes = [
     path: '/admin/fan-zone',
     name: 'admin-fan-zone',
     component: FanZoneAdminHome,
+    meta: {
+      fanZoneAdmin: true
+    }
+  },
+  {
+    path: '/admin/fan-zone/pending',
+    name: 'admin-fan-zone-pending',
+    component: PendingProps,
     meta: {
       fanZoneAdmin: true
     }

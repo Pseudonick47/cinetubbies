@@ -6,20 +6,36 @@ const USED = 'used/';
 const COUNT = 'count';
 
 const props = {
-  fetch(num, page) {
-    return Axios.get(`${PROPS}${USED}?num=${num}&page=${page}`);
+  fetch(num, page, approved) {
+    return Axios.get(`${PROPS}${USED}?num=${num}&page=${page}&approved=${approved}`);
   },
 
-  fetchByUser(num, page, user) {
-    return Axios.get(`${USER}${user}/${PROPS}?num=${num}&page=${page}`);
+  fetchAll(num, page) {
+    return Axios.get(`${PROPS}${USED}?num=${num}&page=${page}&all=true`);
   },
 
-  fetchByCategory(num, page, category) {
-    return Axios.get(`${PROPS}${USED}?num=${num}&page=${page}&category=${category}`);
+  fetchByUser(num, page, user, approved) {
+    return Axios.get(`${USER}${user}/${PROPS}?num=${num}&page=${page}&approved=${approved}`);
   },
 
-  fetchByUserAndCategory(num, page, user, category) {
-    return Axios.get(`${USER}${user}/${PROPS}?num=${num}&page=${page}&category=${category}`);
+  fetchByUserAll(num, page, user) {
+    return Axios.get(`${USER}${user}/${PROPS}?num=${num}&page=${page}&all=true`);
+  },
+
+  fetchByCategory(num, page, category, approved) {
+    return Axios.get(`${PROPS}${USED}?num=${num}&page=${page}&category=${category}&approved=${approved}`);
+  },
+
+  fetchByCategoryAll(num, page, category) {
+    return Axios.get(`${PROPS}${USED}?num=${num}&page=${page}&category=${category}&all=true`);
+  },
+
+  fetchByUserAndCategory(num, page, user, category, approved) {
+    return Axios.get(`${USER}${user}/${PROPS}?num=${num}&page=${page}&category=${category}&approved=${approved}`);
+  },
+
+  fetchByUserAndCategoryAll(num, page, user, category) {
+    return Axios.get(`${USER}${user}/${PROPS}?num=${num}&page=${page}&category=${category}&all=true`);
   },
 
   post(data) {
@@ -28,20 +44,36 @@ const props = {
 };
 
 const count = {
-  fetch() {
-    return Axios.get(`${PROPS}${USED}${COUNT}`);
+  fetch(approved) {
+    return Axios.get(`${PROPS}${USED}${COUNT}?approved=${approved}`);
   },
 
-  fetchByUser(user) {
-    return Axios.get(`${USER}${user}/${PROPS}${COUNT}`);
+  fetchAll() {
+    return Axios.get(`${PROPS}${USED}${COUNT}&all=true`);
   },
 
-  fetchByCategory(category) {
-    return Axios.get(`${PROPS}/${USED}${COUNT}?category=${category}`);
+  fetchByUser(user, approved) {
+    return Axios.get(`${USER}${user}/${PROPS}${COUNT}?approved=${approved}`);
   },
 
-  fetchByUserAndCategory(user, category) {
-    return Axios.get(`${USER}${user}/${PROPS}${COUNT}?category=${category}`);
+  fetchByUserAll(user) {
+    return Axios.get(`${USER}${user}/${PROPS}${COUNT}?all=true`);
+  },
+
+  fetchByCategory(category, approved) {
+    return Axios.get(`${PROPS}${USED}${COUNT}?category=${category}&approved=${approved}`);
+  },
+
+  fetchByCategoryAll(category) {
+    return Axios.get(`${PROPS}${USED}${COUNT}?category=${category}&all=true`);
+  },
+
+  fetchByUserAndCategory(user, category, approved) {
+    return Axios.get(`${USER}${user}/${PROPS}${COUNT}?category=${category}&approved=${approved}`);
+  },
+
+  fetchByUserAndCategoryAll(user, category) {
+    return Axios.get(`${USER}${user}/${PROPS}${COUNT}?category=${category}&all=true`);
   }
 };
 

@@ -19,13 +19,6 @@
               clipped
             >
               <h1 class="pa-3 prop-info-highlight">My Props</h1>
-              <v-btn
-                flat
-                block
-                @click="dialog=true"
-              >
-                New Prop
-              </v-btn>
               <v-expansion-panel class="elevation-0">
                 <v-expansion-panel-content
                   hide-actions
@@ -107,32 +100,7 @@
                             class="prop-info-item"
                             primary-title
                           >
-                            <v-layout
-                              row
-                              wrap
-                              justify-space-between
-                              pr-3
-                            >
-                              <div class="display-1">{{ prop.title }}</div>
-                              <v-icon
-                                v-if="!prop.approved && prop.pendingApproval"
-                                class="prop-info-highlight"
-                              >
-                                hourglass_empty
-                              </v-icon>
-                              <v-icon
-                                v-else-if="!prop.approved && !prop.pendingApproval"
-                                class="prop-info-highlight"
-                              >
-                                report
-                              </v-icon>
-                              <v-icon
-                                v-else
-                                class="prop-info-highlight"
-                              >
-                                done_all
-                              </v-icon>
-                            </v-layout>
+                            <div class="display-1 pr-3">{{ prop.title }}</div>
                           </v-card-title>
                         </v-layout>
                         <v-divider class="prop-info-divider mt-1 mb-3"/>
@@ -170,13 +138,13 @@
                                 class="prop-info-highlight"
                                 flat
                               >
-                                Edit
+                                Approve
                               </v-btn>
                               <v-btn
                                 class="prop-info-highlight"
                                 flat
                               >
-                                Remove
+                                Reject
                               </v-btn>
                             </v-layout>
                           </v-card-actions>
@@ -210,34 +178,24 @@
         />
       </v-layout>
     </v-container>
-    <used-prop-dialog
-      v-if="dialog"
-      @close="dialog=false"
-    />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 
 import Categories from 'Components/FanZone/Categories.component';
-import UsedPropDialog from 'Components/User/UsedPropDialog.component';
 
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/used-props.controller';
 
 export default {
-  name: 'UserProps',
+  name: 'PendingProps',
   components: {
-    UsedPropDialog,
     Categories
   },
   data() {
     return {
       drawer: true,
-      dialog: false,
-      approved: true,
-      pendingApproval: false,
-      submited: true,
       entriesPerPage: 10,
       page: 1
     };
@@ -260,19 +218,18 @@ export default {
   },
   watch: {
     page() {
-      PropsController.requestPage(this.page, { user: this.user.id, all: true });
+      PropsController.requestPage(this.page, { approved: false });
     }
   },
   beforeMount() {
     CategoriesController.requestCategories();
-    PropsController.requestCount({ user: this.user.id, all: true });
-    PropsController.requestPage(this.page, { user: this.user.id, all: true });
+    PropsController.requestCount({ approved: false });
+    PropsController.requestPage(this.page, { approved: false });
   },
   methods: {
     categorySelected(id) {
       const payload = {
-        user: this.user.id,
-        all: true
+        approved: false
       };
 
       if (id !== -1) {

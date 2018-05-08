@@ -26,7 +26,7 @@ class PublicAPI(ViewSet):
   def count(self, request, *args, **kwargs):
     queryset = UsedProp.objects.all()
 
-    user_id = kwargs.pop('user_id')
+    user_id = kwargs.pop('user_id', None)
     if user_id:
       get_object_or_404(User, pk=user_id)
       queryset = queryset.filter(owner_id=user_id)
@@ -35,13 +35,22 @@ class PublicAPI(ViewSet):
     if category_id:
       get_object_or_404(Category, pk=category_id)
       queryset = queryset.filter(category_id=category_id)
+
+    all = request.GET.get('all')
+    if not all:
+      approved = request.GET.get('approved')
+      if approved is not None:
+        queryset = queryset.filter(approved=approved=='true')
+      else:
+        queryset = queryset.filter(approved=True)
+
 
     return Response(data=queryset.count())
 
   def list(self, request, *args, **kwargs):
     queryset = UsedProp.objects.all()
 
-    user_id = kwargs.pop('user_id')
+    user_id = kwargs.pop('user_id', None)
     if user_id:
       get_object_or_404(User, pk=user_id)
       queryset = queryset.filter(owner_id=user_id)
@@ -51,11 +60,13 @@ class PublicAPI(ViewSet):
       get_object_or_404(Category, pk=category_id)
       queryset = queryset.filter(category_id=category_id)
 
-    approved = request.GET.get('approved')
-    if approved is not None:
-      queryset = queryset.filter(approved=approved)
-    else:
-      queryset = queryset.filter(approved=True)
+    all = request.GET.get('all')
+    if not all:
+      approved = request.GET.get('approved')
+      if approved is not None:
+        queryset = queryset.filter(approved=approved=='true')
+      else:
+        queryset = queryset.filter(approved=True)
 
     num = request.GET.get('num') or 10
     paginator = Paginator(queryset.order_by('title'), num)
@@ -67,7 +78,7 @@ class PublicAPI(ViewSet):
   def retrieve(self, request, *args, **kwargs):
     prop_id = kwargs.pop('pk')
 
-    user_id = kwargs.pop('user_id')
+    user_id = kwargs.pop('user_id', None)
     if user_id:
       user = get_object_or_404(User, user_id)
 
