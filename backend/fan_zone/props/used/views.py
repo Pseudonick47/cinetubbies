@@ -110,7 +110,6 @@ class MemberAPI(ViewSet):
     serializer = MemberSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    print(serializer.data)
     return Response(data=serializer.data)
 
   def destroy(self, request, *args, **kwargs):
@@ -154,7 +153,7 @@ class RestrictedAPI(ViewSet):
         data={{'message': 'Prop already reviewed.'}},
         status=status.HTTP_409_CONFLICT
       )
-    print(request.data['approve'])
+
     prop.approved = request.data['approve']
     prop.pending_approval = False
     prop.save()

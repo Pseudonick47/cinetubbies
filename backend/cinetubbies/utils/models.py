@@ -20,7 +20,6 @@ class OptimisticLockingModel(models.Model):
         pass
 
       self.version += 1
-      print(self.__dict__)
       super().save(*args, **kwargs)
 
   class Meta:

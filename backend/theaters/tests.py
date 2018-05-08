@@ -3,8 +3,7 @@ from copy import deepcopy
 from rest_framework.test import APITestCase
 
 from authentication.models import User
-from authentication.serializers import FanZoneAdminSerializer
-from authentication.serializers import SystemAdminSerializer
+from authentication.serializers import AdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 
 from .models import Theater
@@ -34,7 +33,6 @@ class TheaterAPITests(APITestCase):
     'password': '123456',
     'email': 'admin3@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
   }
 
   test_system_admin = {
@@ -48,34 +46,33 @@ class TheaterAPITests(APITestCase):
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [3],
+    'admins': [1],
   }
 
   def setUp(self):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
   def test_create(self):
@@ -83,8 +80,7 @@ class TheaterAPITests(APITestCase):
       'name': 'theater2',
       'address': 'some street',
       'kind': 'm',
-      'theateradmins': [1],
-      'fanzoneadmins': [3],
+      'admins': [1],
     }
 
     # attempt post as a user; should fail
@@ -188,13 +184,12 @@ class TheaterAPITests(APITestCase):
       'name': 'theater1',
       'address': 'some street',
       'kind': 'p',
-      'theateradmins': [1],
-      'fanzoneadmins': [3],
+      'admins': [1],
     }
 
     serializer = AdministrationSerializer(data=new_theater)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     update_theater = {
@@ -352,20 +347,20 @@ class TheaterAPITests(APITestCase):
     # attempt put as a system admin; should pass
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1/admins/',
-      data = { 'theateradmins': [2] },
+      data = { 'admins': [2] },
       format='json'
     )
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
-    self.assertTrue(response.data['theateradmins'] == [2])
+    self.assertTrue(response.data['admins'] == [2])
     self.assertTrue(
-      list(Theater.objects.get(pk=1).theateradmins.all())[0].id == 2
+      list(Theater.objects.get(pk=1).admins.all())[0].id == 2
     )
 
     # set theater admin to a non-existing user; should fail
     response = self.client.put(
       path='http://localhost:8000/api/theaters/1/admins/',
-      data = { 'theateradmins': [99] },
+      data = { 'admins': [99] },
       format='json'
     )
     self.assertTrue(response.status_code, 400)
@@ -427,7 +422,7 @@ class TheaterAPITests(APITestCase):
     new_theater = deepcopy(self.test_theater)
     serializer = AdministrationSerializer(data=new_theater)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     response = self.client.get('http://localhost:8000/api/theaters/count')

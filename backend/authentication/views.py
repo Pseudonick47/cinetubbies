@@ -24,17 +24,16 @@ from .models import USER
 from .permissions import IsAdmin
 from .permissions import IsSelfOrReadOnly
 from .permissions import IsSystemAdmin
-# from .serializers import FanZoneAdminSerializer
 from .serializers import FriendSerializer
-from .serializers import SystemAdminSerializer
+from .serializers import AdminSerializer
 from .serializers import TheaterAdminSerializer
-from .serializers import UserSerializer
+from .serializers import AdminSerializer
 from .utils import auth
 
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
-  serializer_class = UserSerializer
+  serializer_class = AdminSerializer
   permission_classes = [IsSelfOrReadOnly]
 
   @action(detail=False)
@@ -43,10 +42,10 @@ class UserViewSet(viewsets.ModelViewSet):
     if not user.is_authenticated:
       return Response({'message': 'You are not logged in'}, status=401)
     user = User.objects.get(id=user.id)
-    return Response(UserSerializer(user).data)
+    return Response(AdminSerializer(user).data)
 
   def create(self, request):
-    serializer = UserSerializer(data=request.data, partial=True)
+    serializer = AdminSerializer(data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
     user = serializer.save()
@@ -61,7 +60,7 @@ class UserViewSet(viewsets.ModelViewSet):
   def partial_update(self, request, pk=None):
     user = User.objects.get(id=pk)
     self.check_object_permissions(request, user)
-    serializer = UserSerializer(user, data=request.data, partial=True)
+    serializer = AdminSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
 
@@ -148,7 +147,7 @@ class SystemAdminViewSet(viewsets.ViewSet):
     if all_admins:
       # user requested all admins of the same role
       admins = User.objects.filter(role=role)
-      return Response(data=SystemAdminSerializer(admins, many=True).data)
+      return Response(data=AdminSerializer(admins, many=True).data)
 
     # return paginated results
     num = request.GET.get('num')
@@ -156,20 +155,16 @@ class SystemAdminViewSet(viewsets.ViewSet):
     page = request.GET.get('page')
     admins = paginator.get_page(page if page else 1)
 
-    return Response(data=SystemAdminSerializer(admins, many=True).data)
+    return Response(data=AdminSerializer(admins, many=True).data)
 
   def create(self, request):
     pwd = auth.generate_password()
-    # request.data['password'] = pwd
-    request.data['password'] = '123456'
+    request.data['password'] = pwd
 
     if request.data['role'] == THEATER_ADMIN[0]:
       serializer = TheaterAdminSerializer(data=request.data, partial=True)
-    elif request.data['role'] == FAN_ZONE_ADMIN[0]:
-      # serializer = FanZoneAdminSerializer(data=request.data, partial=True)
-      serializer = UserSerializer(data=request.data, partial=True)
     else:
-      serializer = SystemAdminSerializer(data=request.data, partial=True)
+      serializer = AdminSerializer(data=request.data, partial=True)
 
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()

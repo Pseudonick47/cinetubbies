@@ -6,7 +6,7 @@ export default {
   requestPage(page, payload = {}) {
     // TODO: page caching
     const num = 9;
-    console.log(Service);
+
     if (payload.category) {
       Service.props.fetchByCategory(num, page, payload.category).then((response) => {
         store.commit('props/setProps', response.data);

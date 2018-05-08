@@ -206,7 +206,6 @@ export default {
       this.close();
     },
     submit() {
-      console.log('here');
       this.$validator.validateAll().then((result) => {
         if (result) {
           const fd = new FormData();
@@ -217,7 +216,7 @@ export default {
               this.prop.categoryId = this.selectedCategory.id;
               this.prop.imageId = response.data.id;
               this.prop.ownerId = this.user.id;
-              console.log(this.prop);
+
               PropsController.postProp(this.prop)
                 .then((response) => {
                   this.$alert.success('Used prop successfully created.');

@@ -3,7 +3,7 @@ import copy
 from rest_framework import serializers
 
 from authentication.models import User
-from authentication.serializers import UserSerializer
+from authentication.serializers import AdminSerializer
 
 from cinetubbies.utils.func import update
 
@@ -16,7 +16,7 @@ from .models import UsedProp
 
 
 class PublicSerializer(PropSerializer):
-  owner = UserSerializer(
+  owner = AdminSerializer(
     read_only=True,
   )
   category = CategorySerializer(

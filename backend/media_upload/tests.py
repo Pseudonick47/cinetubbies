@@ -6,7 +6,7 @@ from PIL import Image as PILImage
 from rest_framework.request import Request
 from rest_framework.test import APITestCase
 
-from authentication.serializers import SystemAdminSerializer
+from authentication.serializers import AdminSerializer
 
 from .serializers import ImageSerializer
 
@@ -45,9 +45,9 @@ class ImageAPITestCase(APITestCase):
   tmp_img_path = None
 
   def setUp(self):
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     image = open(os.path.join(self.media, 'theater.jpg'), 'rb')

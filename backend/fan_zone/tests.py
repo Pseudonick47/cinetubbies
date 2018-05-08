@@ -3,10 +3,8 @@ from django.test import TestCase
 # Create your tests here.
 from rest_framework.test import APITestCase
 
-from authentication.models import FanZoneAdmin
-from authentication.serializers import FanZoneAdminSerializer
 from authentication.serializers import TheaterAdminSerializer
-from authentication.serializers import SystemAdminSerializer
+from authentication.serializers import AdminSerializer
 
 from theaters.serializers import AdministrationSerializer as TheaterSerializer
 
@@ -134,7 +132,7 @@ class AdminCategoryAPI(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -144,7 +142,7 @@ class AdminCategoryAPI(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -246,15 +244,13 @@ class PublicOfficialPropAPI(APITestCase):
     'password': '123456',
     'email': 'admin2@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
   }
 
   test_theater = {
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [2]
+    'admins': [1],
   }
 
   test_category_1 = {
@@ -293,7 +289,7 @@ class PublicOfficialPropAPI(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -388,7 +384,6 @@ class RestrictedOfficialPropAPITests(APITestCase):
     'password': '123456',
     'email': 'admin2@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
   }
 
   test_fan_zone_admin_2 = {
@@ -410,16 +405,15 @@ class RestrictedOfficialPropAPITests(APITestCase):
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [2]
+    'theater': [1],
+    'admins': [1]
   }
 
   test_theater_2 = {
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [3]
+    'admins': [1],
   }
 
   test_category_1 = {
@@ -478,17 +472,17 @@ class RestrictedOfficialPropAPITests(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin_2)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin_2)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -572,10 +566,6 @@ class RestrictedOfficialPropAPITests(APITestCase):
     response = self.delete(2)
     self.assertEqual(response.status_code, 200)
 
-    self.login(self.test_fan_zone_admin_2)
-    response = self.delete(1)
-    self.assertEqual(response.status_code, 403)
-
     serializer = RestrictedOfficialPropSerializer(data=test_prop_2)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
@@ -621,11 +611,6 @@ class RestrictedOfficialPropAPITests(APITestCase):
     self.login(self.test_theater_admin)
     response = self.put(2, test_prop_2)
     self.assertEqual(response.status_code, 403)
-
-    self.login(self.test_fan_zone_admin_2)
-    response = self.put(2, test_prop_2)
-    self.assertEqual(response.status_code, 403)
-    self.assertTrue(response.data)
 
     self.login(self.test_fan_zone_admin)
     response = self.put(2, test_prop_2)

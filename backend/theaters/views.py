@@ -116,9 +116,9 @@ class AdministrationAPI(ViewSet):
   def update(self, request, pk=None):
     theater = get_object_or_404(Theater, pk=pk)
     admins = [
-      get_object_or_404(TheaterAdmin, pk=pk) for pk in request.data['theateradmins']
+      get_object_or_404(TheaterAdmin, pk=pk) for pk in request.data['admins']
     ]
-    theater.theateradmins.set(admins)
+    theater.admins.set(admins)
     theater.save()
     return Response(data=AdministrationSerializer(theater).data)
 

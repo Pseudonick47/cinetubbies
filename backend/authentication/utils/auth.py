@@ -4,7 +4,7 @@ import string
 
 from django.core.mail import send_mail
 
-from authentication.serializers import UserSerializer
+from authentication.serializers import AdminSerializer
 
 
 CHAR_SET = string.digits + string.ascii_letters
@@ -12,7 +12,7 @@ CHAR_SET = string.digits + string.ascii_letters
 def jwt_response_payload_handler(token, user=None, request=None):
   return {
     'token': token,
-    'user': UserSerializer(user, context={'request': request}).data
+    'user': AdminSerializer(user, context={'request': request}).data
   }
 
 def send_email(mail_subject, mail_from, mail_to, mail_message):

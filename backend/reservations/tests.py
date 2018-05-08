@@ -1,8 +1,7 @@
 from rest_framework.test import APITestCase
 
-from authentication.serializers import FanZoneAdminSerializer
+from authentication.serializers import AdminSerializer
 from authentication.serializers import TheaterAdminSerializer
-from authentication.serializers import SystemAdminSerializer
 
 class RewardScaleAPITests(APITestCase):
 
@@ -11,7 +10,6 @@ class RewardScaleAPITests(APITestCase):
     'password': '123456',
     'email': 'admin2@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
   }
 
   test_theater_admin = {
@@ -41,7 +39,7 @@ class RewardScaleAPITests(APITestCase):
     self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
 
   def setUp(self):
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -51,7 +49,7 @@ class RewardScaleAPITests(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
