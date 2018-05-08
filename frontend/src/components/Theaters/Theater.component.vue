@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-parallax
-      src="http://arab-culture.info/wp-content/uploads/2018/02/1-68.jpg"
+      :src="theater.image.path"
       height="400"
       class="paralax-kill-margins"
     >

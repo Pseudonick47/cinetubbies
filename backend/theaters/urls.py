@@ -27,7 +27,7 @@ get_theaters = PublicAPI.as_view({
   'get': 'get_theaters'
 })
 
-rating = PublicAPI.as_view({
+update_rating = PublicAPI.as_view({
   'post': 'update_rating'
 })
 
@@ -91,8 +91,8 @@ urlpatterns = [
     view=include(prop_urls),
   ),
   path(
-    route='rating',
-    view=rating,
+    route='<int:pk>/rating',
+    view=update_rating,
     name='rating'
   ),
   path(

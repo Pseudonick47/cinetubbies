@@ -1,7 +1,45 @@
 <template>
   <div>
+    <v-dialog
+      v-model="showRatingDialog"
+      max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Please rate us!</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout
+              column>
+              <v-flex>
+                Theater
+                <star-rating
+                  :max-rating="5"
+                  :star-size="20"
+                  inactive-color="#cc99ff"
+                  active-color="#9900cc"
+                  @rating-selected="setTheaterRating($event)"
+                />
+              </v-flex>
+              <v-flex>
+                Movie
+                <star-rating
+                  :max-rating="5"
+                  :star-size="20"
+                  inactive-color="#cc99ff"
+                  active-color="#9900cc"
+                  @rating-selected="setMovieRating($event)"
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-btn @click="showRatingDialog=false">close</v-btn>
+        <v-btn @click="showRatingDialog=false">ok</v-btn>
+      </v-card>
+    </v-dialog>
     <v-parallax
-      src="http://blog.hdwallsource.com/wp-content/uploads/2017/05/fast-and-furious-8-logo-wallpaper-61267-63082-hd-wallpapers.jpg"
+      :src="movie.image.path"
       class="paralax-kill-margins"
     >
       <v-layout
@@ -81,13 +119,16 @@
 import * as _ from 'lodash';
 import BookTicketDialog from 'Components/Theaters/BookTicketDialog.component';
 import MovieController from 'Controllers/movies.controller';
+import TheaterController from 'Controllers/system-admin.controller';
 import TicketsOnSaleController from 'Controllers/tickets-on-sale.controller';
 import { Movie } from 'Models/movie.model';
+import StarRating from 'vue-star-rating';
 
 export default {
   name: 'Movie',
   components: {
-    BookTicketDialog
+    BookTicketDialog,
+    StarRating
   },
   props: {
     theaterId: {
@@ -105,7 +146,8 @@ export default {
       selectedShowtimeId: -1,
       selectedDate: null,
       movie: {},
-      showtimes: []
+      showtimes: [],
+      showRatingDialog: false
     };
   },
   computed: {
@@ -137,6 +179,7 @@ export default {
       })
         .then((response) => {
           this.$alert.success('Ticket successfully booked');
+          this.showRatingDialog = true;
         })
         .catch(() => {
           this.$alert.error('Error occurred.');
@@ -160,7 +203,28 @@ export default {
         .catch(() => {
           this.$alert.error('Error occurred.');
         });
+    },
+    setTheaterRating(rating) {
+      const data = { 'rating': rating };
+      TheaterController.updateRating(data, this.theaterId)
+        .then((response) => {
+          this.$alert.success('Thank you!');
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
+    setMovieRating(rating) {
+      const data = { 'rating': rating, 'id': this.movieId };
+      MovieController.updateRating(data, this.movieId)
+        .then((response) => {
+          this.$alert.success('Thank you!');
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
     }
+
   }
 };
 </script>

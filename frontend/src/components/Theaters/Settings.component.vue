@@ -23,6 +23,13 @@
           <span>Types: cinema, theater</span>
         </v-tooltip>
       </v-chip>
+      <v-card>
+        <v-card-media
+          v-if="theater.image"
+          :src="theater.image.path"
+          height="200px"
+        />
+      </v-card>
       <form>
         <v-text-field
           v-model="theater.name"
@@ -36,6 +43,13 @@
           v-model="theater.description"
           label="Description"
         />
+        <v-layout row>
+          <span>Theater image:</span>
+          <v-divider/>
+          <input
+            type="file"
+            @change="imageSelected"
+        ></v-layout>
         <v-btn @click="confirmSubmit = true">submit</v-btn>
       </form>
       <v-dialog
@@ -121,6 +135,7 @@ import { Theater } from 'Models/theater.model';
 import { Showtime } from 'Models/showtime.model';
 import { TicketOnSale } from 'Models/ticket-on-sale.model';
 import { Movie } from 'Models/movie.model';
+import MediaService from 'Api/media-upload.service';
 
 export default {
   name: 'TheaterSettings',
@@ -131,7 +146,8 @@ export default {
     theater: new Theater(),
     repertoire: [],
     tickets: [],
-    movies: []
+    movies: [],
+    selectedImage: null
   }),
   computed: {
     ...mapGetters([
@@ -144,6 +160,9 @@ export default {
     this.loadTheater();
   },
   methods: {
+    imageSelected(event) {
+      this.selectedImage = event.target.files[0];
+    },
     loadTheater() {
       this.loading = true;
       SysAdminController.getTheater(this.activeUser.id)
@@ -187,11 +206,19 @@ export default {
       }, {});
       this.$validator.validateAll().then((result) => {
         if (result) {
-          SysAdminController.update(data, this.theater.id).then((response) => {
-            this.$alert.success('Settings successfully saved');
-          }).catch(() => {
-            this.$alert.error('Error while saving settings');
-          });
+          const fd = new FormData();
+          fd.append('kind', 't');
+          fd.append('data', this.selectedImage, this.selectedImage.name);
+          MediaService.postImage(fd)
+            .then((response) => {
+              data['image_id'] = response.data.id;
+              SysAdminController.update(data, this.theater.id)
+                .then((response) => {
+                  this.$alert.success('Successfully saved');
+                });
+            }).catch(() => {
+              this.$alert.error('Error while saving settings');
+            });
           return;
         }
         this.$alert.error('Error while saving settings');
