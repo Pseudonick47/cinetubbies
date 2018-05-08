@@ -13,6 +13,10 @@ from rest_framework.viewsets import ViewSet
 from .models import Voting
 from django.db.models import Avg
 
+from media_upload.defaults import DEFAULT_MOVIE_IMAGE
+from media_upload.models import Image
+from media_upload.models import MOVIE_IMAGE
+
 class RestrictedAPI(ViewSet):
   """
   API endpoint that allows movies to be viewed or edited.
@@ -26,7 +30,16 @@ class RestrictedAPI(ViewSet):
     serializer = MovieSerializer(data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
-    serializer.save()
+    movie = serializer.save()
+    
+    if not movie.image:
+      image = Image.objects.create(
+        data = DEFAULT_MOVIE_IMAGE,
+        kind = MOVIE_IMAGE[0]
+      )
+      movie.image = image
+      movie.save()
+
     return Response(serializer.data)
 
   def list(self, request):

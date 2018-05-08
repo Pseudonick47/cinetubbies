@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Movie, Theater
+from media_upload.models import Image
+from media_upload.serializers import ImageSerializer
 
 class MovieSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -13,6 +15,16 @@ class MovieSerializer(serializers.Serializer):
   voters_count = serializers.IntegerField(required=False, source='get_voters_count')
   rating = serializers.DecimalField(required=False, source='get_avg_rating', max_digits=2, decimal_places=1)
   all_votes = serializers.DictField(required=False, source='get_all_votings', child=serializers.IntegerField())
+  image_id = serializers.PrimaryKeyRelatedField(
+    queryset=Image.objects.all(),
+    allow_null=True,
+    write_only=True,
+    source='image',
+    required=False
+  )
+  image = ImageSerializer(
+    read_only=True
+  )
 
   def create(self, validated_data):
     movie = Movie.objects.create(**validated_data)

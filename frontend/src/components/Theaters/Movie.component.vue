@@ -39,7 +39,7 @@
       </v-card>
     </v-dialog>
     <v-parallax
-      src="http://blog.hdwallsource.com/wp-content/uploads/2017/05/fast-and-furious-8-logo-wallpaper-61267-63082-hd-wallpapers.jpg"
+      :src="movie.image.path"
       class="paralax-kill-margins"
     >
       <v-layout

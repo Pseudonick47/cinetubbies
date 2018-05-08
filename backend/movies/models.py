@@ -13,6 +13,7 @@ class Movie(models.Model):
   description = models.CharField(max_length=255, blank=True)
   theater = models.ForeignKey(Theater, on_delete=models.PROTECT, null=True, related_name='movies')
   voters = models.ManyToManyField(User, through='Voting', related_name='movie_voters')
+  image = models.ForeignKey(to="media_upload.Image", on_delete=models.SET_NULL, related_name='+', null=True)
 
   def get_all_votings(self):
     all_votes = {}

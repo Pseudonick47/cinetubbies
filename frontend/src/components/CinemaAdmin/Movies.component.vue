@@ -84,6 +84,19 @@
                   label="Description"
                 />
               </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4>
+                <v-layout row>
+                  <span>Movie image:</span>
+                  <v-divider/>
+                  <input
+                    type="file"
+                    @change="imageSelected"
+                ></v-layout>
+
+              </v-flex>
             </v-layout>
           </v-container>
         </v-card-text>
@@ -184,6 +197,7 @@ import TheaterController from 'Controllers/system-admin.controller';
 import { Movie } from 'Models/movie.model';
 import { mapGetters } from 'vuex';
 import ChangeInfoDialog from './ChangeInfo.component';
+import MediaService from 'Api/media-upload.service';
 
 export default {
   components: {
@@ -198,7 +212,8 @@ export default {
     theaterId: 0,
     dialog: false,
     editedIndex: -1,
-    kind: ''
+    kind: '',
+    selectedImage: null
   }),
   computed: {
     ...mapGetters([
@@ -213,6 +228,9 @@ export default {
     this.getTheaterAndMovies();
   },
   methods: {
+    imageSelected(event) {
+      this.selectedImage = event.target.files[0];
+    },
     create(movie) {
       this.dialog = true;
       this.movie = new Movie(movie);
@@ -222,14 +240,23 @@ export default {
       this.dialog = false;
       if (this.editedIndex === -1) {
         this.movie.theater = this.theaterId;
-        MoviesController.create(this.movie
-        ).then((response) => {
-          this.$alert.success('Successfully added!');
-
-          this.getMovies();
-        }).catch((response) => {
-          this.$alert.error('Error while saving.');
-        });
+        const fd = new FormData();
+        fd.append('kind', 'm');
+        fd.append('data', this.selectedImage, this.selectedImage.name);
+        MediaService.postImage(fd)
+          .then((response) => {
+            this.movie.image_id = response.data.id;
+            MoviesController.create(this.movie)
+              .then((response) => {
+                this.$alert.success('Successfully saved');
+                this.getMovies();
+              })
+              .catch((response) => {
+                this.$alert.error('Error while saving.');
+              });
+          }).catch(() => {
+            this.$alert.error('Error while saving settings');
+          });
       } else {
         let data = _.reduce(this.movie, (result, value, key) => {
           if (!_.isEmpty(value)) {
@@ -237,14 +264,24 @@ export default {
           }
           return result;
         }, {});
-        MoviesController.update(data, this.movie.id).then((response) => {
-          this.movie = new Movie(response.data);
-          this.$alert.success('Settings successfully saved');
-
-          this.getMovies();
-        }).catch(() => {
-          this.$alert.error('Error while saving settings');
-        });
+        const fd = new FormData();
+        fd.append('kind', 'm');
+        fd.append('data', this.selectedImage, this.selectedImage.name);
+        MediaService.postImage(fd)
+          .then((response) => {
+            data['image_id'] = response.data.id;
+            MoviesController.update(data, this.movie.id)
+              .then((response) => {
+                this.movie = new Movie(response.data);
+                this.$alert.success('Settings successfully saved');
+                this.getMovies();
+              })
+              .catch((response) => {
+                this.$alert.error('Error while saving settings');
+              });
+          }).catch(() => {
+            this.$alert.error('Error while saving settings');
+          });
       }
     },
     editButton(movieData) {

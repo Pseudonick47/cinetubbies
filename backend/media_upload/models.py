@@ -8,10 +8,12 @@ from .utils.func import unique_name
 
 OFFICIAL_PROP_IMAGE = ('o', 'Official Prop Image')
 THEATER_IMAGE = ('t', 'Theater Image')
+MOVIE_IMAGE = ('m', 'Movie Image')
 
 IMAGE_KIND = (
   OFFICIAL_PROP_IMAGE,
-  THEATER_IMAGE
+  THEATER_IMAGE,
+  MOVIE_IMAGE
 )
 
 
@@ -27,12 +29,20 @@ def theaters_dir():
     'theaters', str(now.year), str(now.month), str(now.day)
   )
 
+def movies_dir():
+  now = datetime.datetime.now()
+  return os.path.join(
+    'movies', str(now.year), str(now.month), str(now.day)
+  )
+
 def generate_image_path(instance, filename):
   dir = ''
   if instance.kind == OFFICIAL_PROP_IMAGE[0]:
     dir = official_props_dir()
   elif instance.kind == THEATER_IMAGE[0]:
     dir = theaters_dir()
+  elif instance.kind == MOVIE_IMAGE[0]:
+    dir = movies_dir()
 
   return os.path.join('images', dir, unique_name(filename))
 
