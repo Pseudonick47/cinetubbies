@@ -22,18 +22,22 @@ class PublicSerializer(PropSerializer):
   category = CategorySerializer(
     read_only=True,
   )
-  post_date = serializers.DateField(
-    read_only=True,
-  )
   expiration_date = serializers.DateField(
     required=True,
     allow_null=False,
   )
+  approved = serializers.BooleanField(
+    read_only=True,
+  )
+  pending_approval = serializers.BooleanField(
+    read_only=True,
+  )
+
 
   def to_representation(self, obj):
     ret = super().to_representation(obj)
-    ret['postDate'] = ret.pop('post_date')
     ret['expirationDate'] = ret.pop('expiration_date')
+    ret['pendingApproval'] = ret.pop('pending_approval')
     return ret
 
 
@@ -67,17 +71,3 @@ class MemberSerializer(PublicSerializer):
     prop = update(prop, **validated_data)
     prop.save()
     return prop
-
-
-class RestrictedSerializer(PublicSerializer):
-  approved = serializers.BooleanField(
-    read_only=True,
-  )
-  pending_approval = serializers.BooleanField(
-    read_only=True,
-  )
-
-  def to_representation(self, obj):
-    ret = super().to_representation(obj)
-    ret['pendingApproval'] = ret.pop('pending_approval')
-    return ret

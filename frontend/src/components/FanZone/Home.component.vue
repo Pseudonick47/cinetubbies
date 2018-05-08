@@ -90,24 +90,10 @@
                   </v-layout>
                 </v-card>
               </v-layout>
-              <v-layout
-                v-for="i in 3"
-                :key="i"
-                class="props-row"
-                row
-              >
+              <v-layout class="props-row">
                 <v-flex
-                  xs12
-                  sm6
-                  md4
-                  lg3
-                  xl3
-                  pa-3
-                  @click="dialog=true"
-                >
-                  <used-prop @click="dialog=true"/>
-                </v-flex>
-                <v-flex
+                  v-for="prop in props"
+                  :key="prop.id"
                   xs12
                   sm6
                   md4
@@ -115,51 +101,17 @@
                   xl3
                   pa-3
                 >
-                  <used-prop />
+                  <prop
+                    :info="prop"
+                  />
                 </v-flex>
-                <v-flex
-                  xs12
-                  sm6
-                  md4
-                  lg3
-                  xl3
-                  pa-3
-                >
-                  <used-prop />
-                </v-flex>
-                <v-flex
-                  xs12
-                  sm6
-                  md4
-                  lg3
-                  xl3
-                  pa-3
-                >
-                  <used-prop />
-                </v-flex>
-                <!-- <v-flex
-                  v-for="entry in entries"
-                  :key="entry.id"
-                  xs12
-                  sm6
-                  md4
-                  lg4
-                  xl4
-                  pa-3
-                > -->
-                <!-- <official-prop
-                  :info="entry"
-                /> -->
-                <!-- </v-flex> -->
               </v-layout>
             </v-container>
             <v-container
               id="pagination"
               style="display: flex; flex-direction: column; align-items: center;"
             >
-              <v-layout
-
-              >
+              <v-layout>
                 <v-pagination
                   :length="pageCount"
                   :total-visible="7"
@@ -186,12 +138,11 @@
 import { mapGetters } from 'vuex';
 
 import Categories from 'Components/FanZone/Categories.component';
-import OfficialProp from 'Components/FanZone/OfficialProp.component';
-import UsedProp from 'Components/FanZone/UsedProp.component';
+import Prop from 'Components/FanZone/Prop.component';
 import UsedPropDetail from 'Components/FanZone/UsedPropDetail.component';
+
 import CategoriesController from 'Controllers/props/categories.controller';
-import OfficialPropsController from 'Controllers/props/official-props.controller';
-// import UsedPropsController from 'Controllers/props/used-props.controller';
+import PropsController from 'Controllers/props/props.controller';
 
 import * as _ from 'lodash';
 
@@ -199,8 +150,7 @@ export default {
   name: 'FanZoneHome',
   components: {
     Categories,
-    OfficialProp,
-    UsedProp,
+    Prop,
     UsedPropDetail
   },
   data() {
@@ -209,19 +159,14 @@ export default {
       dialog: false,
       entriesPerPage: 9,
       page: 1,
-      theater: 2,
       showOfficialProps: true,
       showUsedProps: false
     };
   },
   computed: {
-    ...mapGetters('props/official/', {
-      officialProps: 'all',
-      officialPropCount: 'count'
-    }),
-    ...mapGetters('props/used/', {
-      usedProps: 'all',
-      usedPropCount: 'count'
+    ...mapGetters('props/', {
+      props: 'all',
+      count: 'count'
     }),
     ...mapGetters('props/categories/', {
       rootCategories: 'roots',
@@ -233,22 +178,22 @@ export default {
   },
   watch: {
     page() {
-      OfficialPropsController.requestPage(this.page);
+      PropsController.requestPage(this.page);
     }
   },
   beforeMount() {
     CategoriesController.requestCategories();
-    OfficialPropsController.requestCount();
-    OfficialPropsController.requestPage(this.page);
+    PropsController.requestCount();
+    PropsController.requestPage(this.page);
   },
   methods: {
     categorySelected(id) {
       if (id === -1) {
-        OfficialPropsController.requestCount();
-        OfficialPropsController.requestPage(this.page);
+        PropsController.requestCount();
+        PropsController.requestPage(this.page);
       } else {
-        OfficialPropsController.requestCount({ category: id });
-        OfficialPropsController.requestPage(this.page, { category: id });
+        PropsController.requestCount({ category: id });
+        PropsController.requestPage(this.page, { category: id });
       }
     }
   }

@@ -17,7 +17,6 @@ class UsedProp(Prop, OptimisticLockingModel):
     on_delete=models.PROTECT,
     related_name='usedprops'
   )
-  post_date = models.DateField(auto_now_add=True)
   expiration_date = models.DateField()
   approved = models.BooleanField(default=False)
   pending_approval = models.BooleanField(default=True)

@@ -1,4 +1,4 @@
-import { OfficialProp } from 'Models/props/official-prop.model';
+import { Prop } from 'Models/prop.model';
 
 const namespaced = true;
 
@@ -15,7 +15,7 @@ const getters = {
 
 const mutations = {
   setProps(state, props) {
-    state.props = _.map(props, p => new OfficialProp(p));
+    state.props = _.map(props, p => new Prop(p));
   },
 
   setCount(state, count) {

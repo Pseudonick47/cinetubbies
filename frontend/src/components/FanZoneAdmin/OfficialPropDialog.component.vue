@@ -164,7 +164,7 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import { OfficialProp } from 'Models/props/official-prop.model';
+import { Prop } from 'Models/prop.model';
 import PropsController from 'Controllers/props/official-props.controller';
 import MediaService from 'Api/media-upload.service';
 
@@ -173,7 +173,7 @@ export default {
   data() {
     return {
       show: true,
-      prop: new OfficialProp(),
+      prop: new Prop(),
       selectedCategory: null,
       selectedImage: null
     };

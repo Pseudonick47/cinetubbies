@@ -23,7 +23,7 @@ class UsedProp(BaseManageView):
 
 count_used_props = PublicAPI.as_view({'get' : 'count'})
 
-approve_prop = RestrictedAPI.as_view({'put': 'update'})
+review_prop = RestrictedAPI.as_view({'put': 'review'})
 
 
 urlpatterns = [
@@ -43,8 +43,8 @@ urlpatterns = [
     name='used-prop'
   ),
   path(
-    route='<int:pk>/approve',
-    view=UsedProps.as_view(),
-    name='approve-used-prop'
+    route='<int:pk>/review',
+    view=review_prop,
+    name='review-prop'
   ),
 ]

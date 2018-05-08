@@ -126,10 +126,6 @@ class AdminViewSet(viewsets.ViewSet):
       theater = TheaterAdmin.objects.get(pk=pk).theater
       return Response(data=TheaterSerializer(theater).data)
 
-    elif user.role == FAN_ZONE_ADMIN[0]:
-      theater = FanZoneAdmin.objects.get(pk=pk).theater
-      return Response(data=TheaterSerializer(theater).data)
-
     else:
       return Response(
         data={'message': 'system admin isn\'t assossiated with any theater'},

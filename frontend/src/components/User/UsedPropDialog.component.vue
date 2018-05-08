@@ -158,7 +158,7 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import { UsedProp } from 'Models/props/used-prop.model';
+import { Prop } from 'Models/prop.model';
 import PropsController from 'Controllers/props/used-props.controller';
 import MediaService from 'Api/media-upload.service';
 
@@ -167,7 +167,7 @@ export default {
   data() {
     return {
       show: true,
-      prop: new UsedProp(),
+      prop: new Prop(),
       selectedCategory: null,
       selectedImage: null,
       showImage: 'https://dhs1n389ze6jv.cloudfront.net/img/product-thumb/1518384418b7e5afe78228c751029fa6e1b9063b87.png'

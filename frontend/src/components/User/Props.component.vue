@@ -71,130 +71,18 @@
               justify-center
               mb-4
             >
-              <v-card
-                class="prop-info-card grow-card"
-                color="black"
-              >
-                <v-container pa-0>
-                  <v-layout
-                    row
-                    wrap
-                  >
-                    <v-flex
-                      xs12
-                      sm12
-                      md4
-                      pl-4
-                    >
-                      <v-card-media
-                        :src="prop.image.path"
-                        contain
-                        height="100%"
-                        style="-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.5)));"
-                      />
-                    </v-flex>
-                    <v-flex
-                      xs12
-                      sm12
-                      md8
-                    >
-                      <v-container class="prop-info-body">
-                        <v-layout
-                          row
-                          wrap
-                        >
-                          <v-card-title
-                            class="prop-info-item"
-                            primary-title
-                          >
-                            <v-layout
-                              row
-                              wrap
-                              justify-space-between
-                              pr-3
-                            >
-                              <div class="display-1">{{ prop.title }}</div>
-                              <v-icon
-                                v-if="!prop.approved && prop.pendingApproval"
-                                class="prop-info-highlight"
-                              >
-                                hourglass_empty
-                              </v-icon>
-                              <v-icon
-                                v-else-if="!prop.approved && !prop.pendingApproval"
-                                class="prop-info-highlight"
-                              >
-                                report
-                              </v-icon>
-                              <v-icon
-                                v-else
-                                class="prop-info-highlight"
-                              >
-                                done_all
-                              </v-icon>
-                            </v-layout>
-                          </v-card-title>
-                        </v-layout>
-                        <v-divider class="prop-info-divider mt-1 mb-3"/>
-                        <v-layout
-                          class="prop-info-item"
-                          row
-                          wrap
-                          px-4
-                          py-1
-                          mb-0
-                        >
-                          <div class="subheading">
-                            <p style="text-align: justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tempor felis at mollis blandit. Etiam quam dui, pharetra ac ligula ut, varius venenatis metus. Curabitur eget efficitur nisi. Proin commodo efficitur tortor vel vulputate. Nam ipsum dolor, pulvinar at vehicula sit amet, porttitor a nisi. Donec congue tristique justo ac fringilla.</p>
-                          </div>
-                          <div
-                            class="caption grey--text"
-                            style="width: 100%"
-                          >
-                            <p class="text-xs-right">Expiration date: {{ prop.expirationDate }}</p>
-                          </div>
-                        </v-layout>
-                        <v-layout
-                          row
-                          wrap
-                        >
-                          <v-card-actions
-                            class="prop-info-item"
-                          >
-                            <v-layout
-                              row
-                              wrap
-                              justify-end
-                            >
-                              <v-btn
-                                class="prop-info-highlight"
-                                flat
-                              >
-                                Edit
-                              </v-btn>
-                              <v-btn
-                                class="prop-info-highlight"
-                                flat
-                              >
-                                Remove
-                              </v-btn>
-                            </v-layout>
-                          </v-card-actions>
-                        </v-layout>
-                      </v-container>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-card>
+              <used-prop
+                :info="prop"
+                :actions="['edit', 'remove']"
+                status
+              />
             </v-layout>
           </v-container>
           <v-container
             id="pagination"
             style="display: flex; flex-direction: column; align-items: center;"
           >
-            <v-layout
-
-            >
+            <v-layout>
               <v-pagination
                 :length="pageCount"
                 :total-visible="7"
@@ -219,6 +107,8 @@
 <script>
 import { mapGetters } from 'vuex';
 
+import UsedProp from 'Components/FanZone/UsedProp.component';
+
 import Categories from 'Components/FanZone/Categories.component';
 import UsedPropDialog from 'Components/User/UsedPropDialog.component';
 
@@ -228,6 +118,7 @@ import PropsController from 'Controllers/props/used-props.controller';
 export default {
   name: 'UserProps',
   components: {
+    UsedProp,
     UsedPropDialog,
     Categories
   },

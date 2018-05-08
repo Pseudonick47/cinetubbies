@@ -11,6 +11,7 @@ class Prop(models.Model):
     related_name='+',
     null=True
   )
+  post_date = models.DateField(auto_now_add=True)
 
   class Meta:
     abstract = True

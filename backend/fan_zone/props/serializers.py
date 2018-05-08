@@ -26,8 +26,16 @@ class PropSerializer(serializers.Serializer):
   image = ImageSerializer(
     read_only=True
   )
+  post_date = serializers.DateField(
+    read_only=True,
+  )
 
   def to_internal_value(self, data):
     d = copy.deepcopy(data)
     d['image_id'] = d.pop('imageId')
     return super().to_internal_value(d)
+
+  def to_representation(self, obj):
+    ret = super().to_representation(obj)
+    ret['postDate'] = ret.pop('post_date')
+    return ret

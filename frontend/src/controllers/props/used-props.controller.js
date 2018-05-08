@@ -88,5 +88,9 @@ export default {
 
   postProp(data) {
     return Service.props.post(data);
+  },
+
+  reviewProp(id, data) {
+    return Service.props.review(id, data);
   }
 };

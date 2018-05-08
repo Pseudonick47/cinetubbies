@@ -1,7 +1,10 @@
+import distutils
+
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
@@ -11,13 +14,14 @@ from rest_framework.viewsets import ViewSet
 from authentication.models import User
 from authentication.permissions import IsFanZoneOrSystemAdmin
 
+from cinetubbies.utils.models import ObjectLocked
+
 from fan_zone.categories.models import Category
 
 from .models import UsedProp
 from .permissions import IsOwner
 from .serializers import MemberSerializer
 from .serializers import PublicSerializer
-from .serializers import RestrictedSerializer
 
 
 class PublicAPI(ViewSet):
@@ -40,7 +44,7 @@ class PublicAPI(ViewSet):
     if not all:
       approved = request.GET.get('approved')
       if approved is not None:
-        queryset = queryset.filter(approved=approved=='true')
+        queryset = queryset.filter(approved=distutils.util.strtobool(approved))
       else:
         queryset = queryset.filter(approved=True)
 
@@ -64,7 +68,7 @@ class PublicAPI(ViewSet):
     if not all:
       approved = request.GET.get('approved')
       if approved is not None:
-        queryset = queryset.filter(approved=approved=='true')
+        queryset = queryset.filter(approved=distutils.util.strtobool(approved))
       else:
         queryset = queryset.filter(approved=True)
 
@@ -133,12 +137,26 @@ class MemberAPI(ViewSet):
 class RestrictedAPI(ViewSet):
   permission_classes = [IsAuthenticated, IsFanZoneOrSystemAdmin]
 
-  def update(self, request, *args, **kwargs):
+  @action(detail=True)
+  def review(self, request, *args, **kwargs):
+    if 'approve' not in request.data:
+      return Response(
+        data={'message': 'Request must contain approve field.'},
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
     prop_id = kwargs.pop('pk')
 
-    prop = get_object_or_404(UsedProp, pk=prop_id)
-    prop.approved = True
+    try:
+      prop = get_object_or_404(UsedProp, pk=prop_id)
+    except ObjectLocked:
+      return Response(
+        data={{'message': 'Prop already reviewed.'}},
+        status=status.HTTP_409_CONFLICT
+      )
+    print(request.data['approve'])
+    prop.approved = request.data['approve']
     prop.pending_approval = False
     prop.save()
 
-    return Response(data=RestrictedSerializer(prop).data)
+    return Response(data=MemberSerializer(prop).data)

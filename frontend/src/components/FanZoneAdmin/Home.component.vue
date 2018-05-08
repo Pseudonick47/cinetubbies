@@ -39,8 +39,9 @@
           xl4
           pa-3
         >
-          <official-prop
+          <used-prop
             :info="entry"
+            :actions="['accept', 'reject']"
           />
         </v-flex>
       </v-layout>
@@ -64,7 +65,7 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import OfficialProp from 'Components/FanZone/OfficialProp.component';
+import UsedProp from 'Components/FanZone/UsedProp.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
 
 import SystemAdminController from 'Controllers/system-admin.controller';
@@ -74,7 +75,7 @@ import PropsController from 'Controllers/props/official-props.controller';
 export default {
   name: 'FanZoneAdminHome',
   components: {
-    OfficialProp,
+    UsedProp,
     OfficialPropDialog
   },
   data() {

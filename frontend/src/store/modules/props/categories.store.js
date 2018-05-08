@@ -1,4 +1,4 @@
-import { Category } from 'Models/props/category.model';
+import { Category } from 'Models/category.model';
 
 const namespaced = true;
 

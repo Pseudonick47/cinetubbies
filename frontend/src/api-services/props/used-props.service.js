@@ -40,6 +40,10 @@ const props = {
 
   post(data) {
     return Axios.post(`${PROPS}${USED}`, data);
+  },
+
+  review(id, data) {
+    return Axios.put(`${PROPS}${USED}${id}/review`, data);
   }
 };
 
