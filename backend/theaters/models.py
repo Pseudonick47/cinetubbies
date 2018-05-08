@@ -21,6 +21,7 @@ class Theater(models.Model):
     max_length=1, choices=THEATER_KIND
   )
   voters = models.ManyToManyField(User, through='Voting', related_name='voters')
+  image = models.ForeignKey(to="media_upload.Image", on_delete=models.SET_NULL, related_name='+', null=True)
 
   def get_all_votings(self):
     all_votes = {}

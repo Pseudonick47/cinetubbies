@@ -5,17 +5,21 @@ from movies.models import Movie
 from rest_framework import viewsets
 from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
-from .permissions import IsThisTheaterAdminCreatorOrReadOnly
+from .permissions import IsThisTheaterAdminOrReadOnly
+from rest_framework.permissions import AllowAny
 from authentication.models import TheaterAdmin
 from django.shortcuts import get_object_or_404
+from rest_framework.viewsets import ViewSet
+from .models import Voting
+from django.db.models import Avg
 
-class MovieViewSet(viewsets.ModelViewSet):
+class RestrictedAPI(ViewSet):
   """
   API endpoint that allows movies to be viewed or edited.
   """
   queryset = Movie.objects.all()
   serializer_class = MovieSerializer
-  permission_classes = [IsThisTheaterAdminCreatorOrReadOnly]
+  permission_classes = [IsThisTheaterAdminOrReadOnly]
 
   # create new movie
   def create(self, request):
@@ -55,6 +59,12 @@ class MovieViewSet(viewsets.ModelViewSet):
     movie = get_object_or_404(Movie, id=pk)
     showtimes = movie.showtimes.all()
     return Response(ShowtimeSerializer(showtimes, many=True).data)
+
+class PublicAPI(ViewSet):
+
+  queryset = Movie.objects.all()
+  serializer_class = MovieSerializer
+  permission_classes = [AllowAny]
 
   @action(detail=True)
   def update_rating(self, request, pk=None):
