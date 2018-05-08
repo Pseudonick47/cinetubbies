@@ -66,7 +66,7 @@ class BookingViewSet(viewsets.ViewSet):
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):
-    booking = get_object_or_404(TicketOnSale, pk=pk)
-    self.check_object_permissions(request, ticket)
-    ticket.delete()
-    return Response({'message': 'Ticket successfully deleted'})
+    booking = get_object_or_404(Booking, id=pk)
+    self.check_object_permissions(request, booking)
+    booking.delete()
+    return Response({'message': 'Booking successfully deleted'})

@@ -296,6 +296,11 @@ class BookingAPITests(APITestCase):
       print(serializer.errors)
     serializer.save()
 
+    serializer = UserSerializer(data=self.test_user2)
+    if not serializer.is_valid():
+      print(serializer.errors)
+    serializer.save()
+
     serializer = AdministrationSerializer(data=self.test_theater)
     if not serializer.is_valid():
       print(serializer.errors)
@@ -329,6 +334,13 @@ class BookingAPITests(APITestCase):
 
   test_user = {
     'username': 'username',
+    'password': '123456',
+    'phone': '123',
+    'city': 'city'
+  }
+
+  test_user2 = {
+    'username': 'username2',
     'password': '123456',
     'phone': '123',
     'city': 'city'
@@ -387,10 +399,16 @@ class BookingAPITests(APITestCase):
     },
   ]
 
-  def book(self, booking_data):
+  def book_create(self, booking_data):
     return self.client.post(
       path='http://localhost:8000/api/sale/booking/',
       data = booking_data,
+      format='json'
+    )
+
+  def book_delete(self, id):
+    return self.client.delete(
+      path=f'http://localhost:8000/api/sale/booking/{id}/',
       format='json'
     )
 
@@ -406,16 +424,40 @@ class BookingAPITests(APITestCase):
     self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
 
   def test_create(self):
-    response = self.book(self.valid_data[0])
+    response = self.book_create(self.valid_data[0])
     self.assertEqual(response.status_code, 401)
 
     self.login(self.test_user)
     for test_case_data in self.valid_data:
-      response = self.book(test_case_data)
+      response = self.book_create(test_case_data)
       self.assertEqual(response.status_code, 200)
       for key in ['id', 'showtime', 'user', 'discount', 'price', 'seat']:
         self.assertIn(key, response.data)
 
     for test_case_data in self.invalid_data:
-      response = self.book(test_case_data)
+      response = self.book_create(test_case_data)
       self.assertEqual(response.status_code, 400)
+
+  def test_delete(self):
+    self.login(self.test_user)
+    for test_case_data in self.valid_data:
+      response = self.book_create(test_case_data)
+
+    self.client.credentials(HTTP_AUTHORIZATION='')
+
+    response = self.book_delete(1)
+    self.assertEqual(response.status_code, 401)
+
+    self.login(self.test_user)
+
+    response = self.book_delete(1)
+    self.assertEqual(response.status_code, 200)
+
+    response = self.book_delete(1)
+    self.assertEqual(response.status_code, 404)
+
+    self.client.credentials(HTTP_AUTHORIZATION='')
+    self.login(self.test_user2)
+
+    response = self.book_delete(2)
+    self.assertEqual(response.status_code, 403)
