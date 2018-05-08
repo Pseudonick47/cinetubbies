@@ -1,3 +1,5 @@
+import ImageHelper from '@/helpers/image-helper';
+
 const THEATER_KIND = {
   CINEMA: 'm',
   THEATER: 'p'
@@ -10,6 +12,10 @@ export class Theater {
     this.kind = '';
     this.description = '';
     _.assignWith(this, data);
+
+    if (this.image) {
+      this.image.path = ImageHelper.getAbsolutePath(this.image.path);
+    }
   }
 
   isCinema() {

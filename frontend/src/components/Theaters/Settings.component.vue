@@ -23,6 +23,13 @@
           <span>Types: cinema, theater</span>
         </v-tooltip>
       </v-chip>
+      <v-card>
+        <v-card-media
+          v-if="theater.image"
+          :src="theater.image.path"
+          height="200px"
+        />
+      </v-card>
       <form>
         <v-text-field
           v-model="theater.name"
@@ -36,11 +43,13 @@
           v-model="theater.description"
           label="Description"
         />
-        <input
-          class="img-button"
-          type="file"
-          @change="imageSelected"
-        >
+        <v-layout row>
+          <span>Theater image:</span>
+          <v-divider/>
+          <input
+            type="file"
+            @change="imageSelected"
+        ></v-layout>
         <v-btn @click="confirmSubmit = true">submit</v-btn>
       </form>
       <v-dialog
