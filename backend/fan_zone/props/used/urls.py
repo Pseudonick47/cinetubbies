@@ -21,6 +21,8 @@ class UsedProp(BaseManageView):
     'PUT': MemberAPI.as_view({'put': 'update'}),
   }
 
+count_used_props = PublicAPI.as_view({'get' : 'count'})
+
 approve_prop = RestrictedAPI.as_view({'put': 'update'})
 
 
@@ -29,6 +31,11 @@ urlpatterns = [
     route='',
     view=UsedProps.as_view(),
     name='used-props'
+  ),
+  path(
+    route='count',
+    view=count_used_props,
+    name='count-used-props'
   ),
   path(
     route='<int:pk>',

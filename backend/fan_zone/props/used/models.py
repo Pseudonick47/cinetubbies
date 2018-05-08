@@ -12,7 +12,12 @@ class UsedProp(Prop, OptimisticLockingModel):
     null=False,
     related_name='usedprops'
   )
-  post_date = models.DateTimeField(auto_now_add=True)
-  expiration_date = models.DateTimeField()
+  category = models.ForeignKey(
+    to='fan_zone.Category',
+    on_delete=models.PROTECT,
+    related_name='usedprops'
+  )
+  post_date = models.DateField(auto_now_add=True)
+  expiration_date = models.DateField()
   approved = models.BooleanField(default=False)
   pending_approval = models.BooleanField(default=True)

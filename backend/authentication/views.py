@@ -14,7 +14,7 @@ from rest_framework_jwt.settings import api_settings
 
 from theaters.serializers import PublicSerializer as TheaterSerializer
 
-from .models import FanZoneAdmin
+# from .models import FanZoneAdmin
 from .models import FAN_ZONE_ADMIN
 from .models import Friendship
 from .models import TheaterAdmin
@@ -24,7 +24,7 @@ from .models import USER
 from .permissions import IsAdmin
 from .permissions import IsSelfOrReadOnly
 from .permissions import IsSystemAdmin
-from .serializers import FanZoneAdminSerializer
+# from .serializers import FanZoneAdminSerializer
 from .serializers import FriendSerializer
 from .serializers import SystemAdminSerializer
 from .serializers import TheaterAdminSerializer
@@ -164,12 +164,14 @@ class SystemAdminViewSet(viewsets.ViewSet):
 
   def create(self, request):
     pwd = auth.generate_password()
-    request.data['password'] = pwd
+    # request.data['password'] = pwd
+    request.data['password'] = '123456'
 
     if request.data['role'] == THEATER_ADMIN[0]:
       serializer = TheaterAdminSerializer(data=request.data, partial=True)
     elif request.data['role'] == FAN_ZONE_ADMIN[0]:
-      serializer = FanZoneAdminSerializer(data=request.data, partial=True)
+      # serializer = FanZoneAdminSerializer(data=request.data, partial=True)
+      serializer = UserSerializer(data=request.data, partial=True)
     else:
       serializer = SystemAdminSerializer(data=request.data, partial=True)
 

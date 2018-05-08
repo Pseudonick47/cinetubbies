@@ -69,20 +69,20 @@ class TheaterAdmin(User):
   theater = models.ForeignKey(
     to='theaters.Theater',
     on_delete=models.SET_NULL,
-    related_name='theateradmins',
+    related_name='admins',
     null=True,
   )
 
   def __str__(self):
     return serialize('json', [self])[1:-1]
 
-class FanZoneAdmin(User):
-  theater = models.ForeignKey(
-    to='theaters.Theater',
-    on_delete=models.SET_NULL,
-    related_name='fanzoneadmins',
-    null=True,
-  )
+# class FanZoneAdmin(User):
+#   theater = models.ForeignKey(
+#     to='theaters.Theater',
+#     on_delete=models.SET_NULL,
+#     related_name='fanzoneadmins',
+#     null=True,
+#   )
 
-  def __str__(self):
-    return serialize('json', [self])[1:-1]
+#   def __str__(self):
+#     return serialize('json', [self])[1:-1]

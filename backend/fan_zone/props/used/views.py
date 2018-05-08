@@ -28,7 +28,7 @@ class PublicAPI(ViewSet):
 
     user_id = kwargs.pop('user_id')
     if user_id:
-      get_object_or_404(User, user_id)
+      get_object_or_404(User, pk=user_id)
       queryset = queryset.filter(owner_id=user_id)
 
     category_id = request.GET.get('category')
@@ -43,7 +43,7 @@ class PublicAPI(ViewSet):
 
     user_id = kwargs.pop('user_id')
     if user_id:
-      get_object_or_404(User, user_id)
+      get_object_or_404(User, pk=user_id)
       queryset = queryset.filter(owner_id=user_id)
 
     category_id = request.GET.get('category')
@@ -54,6 +54,8 @@ class PublicAPI(ViewSet):
     approved = request.GET.get('approved')
     if approved is not None:
       queryset = queryset.filter(approved=approved)
+    else:
+      queryset = queryset.filter(approved=True)
 
     num = request.GET.get('num') or 10
     paginator = Paginator(queryset.order_by('title'), num)
@@ -93,7 +95,7 @@ class MemberAPI(ViewSet):
     serializer = MemberSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-
+    print(serializer.data)
     return Response(data=serializer.data)
 
   def destroy(self, request, *args, **kwargs):

@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 
 from theaters.models import Theater
 
-from .models import FanZoneAdmin
+# from .models import FanZoneAdmin
 from .models import ROLES
 from .models import TheaterAdmin
 from .models import User
@@ -126,21 +126,21 @@ class TheaterAdminSerializer(UserSerializer):
     theater_admin.theater.set(theater)
     return super.update(theater_admin, validated_data)
 
-class FanZoneAdminSerializer(UserSerializer):
-  theater = serializers.PrimaryKeyRelatedField(
-    queryset=Theater.objects.all(),
-    allow_null=True
-  )
-  phone = None
-  city = None
+# class FanZoneAdminSerializer(UserSerializer):
+#   theater = serializers.PrimaryKeyRelatedField(
+#     queryset=Theater.objects.all(),
+#     allow_null=True
+#   )
+#   phone = None
+#   city = None
 
-  def create(self, validated_data):
-    admin = FanZoneAdmin(**validated_data)
-    admin.set_password(validated_data['password'])
-    admin.save()
-    return admin
+#   def create(self, validated_data):
+#     admin = FanZoneAdmin(**validated_data)
+#     admin.set_password(validated_data['password'])
+#     admin.save()
+#     return admin
 
-  def update(self, fan_zone_admin, validated_data):
-    theater = get_object_or_404(Theater, pk=validated_data['theater'])
-    fan_zone_admin.theater.set(theater)
-    return super.update(fan_zone_admin, validated_data)
+#   def update(self, fan_zone_admin, validated_data):
+#     theater = get_object_or_404(Theater, pk=validated_data['theater'])
+#     fan_zone_admin.theater.set(theater)
+#     return super.update(fan_zone_admin, validated_data)

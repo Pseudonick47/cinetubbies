@@ -24,8 +24,8 @@ class PublicAPI(ViewSet):
     return Response(data=ImageSerializer(image).data)
 
 
-class RestrictedAPI(ViewSet):
-  permission_classes = [IsAuthenticated, IsAdmin]
+class MemberAPI(ViewSet):
+  permission_classes = [IsAuthenticated]
 
   def create(self, request):
     serializer = ImageSerializer(data=request.data)

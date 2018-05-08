@@ -7,9 +7,11 @@ from .utils.func import unique_name
 
 
 OFFICIAL_PROP_IMAGE = ('o', 'Official Prop Image')
+USED_PROP_IMAGE = ('u', 'Official Prop Image')
 
 IMAGE_KIND = (
   OFFICIAL_PROP_IMAGE,
+  USED_PROP_IMAGE
 )
 
 

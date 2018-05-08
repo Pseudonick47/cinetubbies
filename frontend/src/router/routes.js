@@ -6,6 +6,7 @@ import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/CinemaAdmin/Movies.component';
 import Settings from 'Components/User/Settings.component';
 import Profile from 'Components/User/Profile.component';
+import UserProps from 'Components/User/Props.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import Theater from 'Components/Theaters/Theater.component';
 import Movie from 'Components/Theaters/Movie.component';
@@ -70,6 +71,14 @@ export const routes = [
     path: '/user/profile',
     name: 'user-profile',
     component: Profile,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/user/props',
+    name: 'user-props',
+    component: UserProps,
     meta: {
       logged: true
     }

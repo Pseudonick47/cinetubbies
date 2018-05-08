@@ -22,7 +22,7 @@ from .models import OfficialProp
 from .serializers import PublicSerializer
 from .serializers import RestrictedSerializer
 
-from .permissions import IsResponsible
+# from .permissions import IsResponsible
 
 
 class PublicAPI(ViewSet):
@@ -65,7 +65,8 @@ class PublicAPI(ViewSet):
     return Response(data=queryset.count())
 
 class RestrictedAPI(ViewSet):
-  permission_classes = [IsAuthenticated, IsFanZoneOrSystemAdmin, IsResponsible]
+  # permission_classes = [IsAuthenticated, IsFanZoneOrSystemAdmin, IsResponsible]
+  permission_classes = [IsAuthenticated, IsFanZoneOrSystemAdmin]
 
   def create(self, request, theater_pk=None):
     serializer = RestrictedSerializer(data=request.data)

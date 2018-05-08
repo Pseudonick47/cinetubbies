@@ -7,6 +7,9 @@ from authentication.serializers import UserSerializer
 
 from cinetubbies.utils.func import update
 
+from fan_zone.categories.serializers import PublicSerializer as \
+                                            CategorySerializer
+from fan_zone.categories.models import Category
 from fan_zone.props.serializers import PropSerializer
 
 from .models import UsedProp
@@ -16,11 +19,15 @@ class PublicSerializer(PropSerializer):
   owner = UserSerializer(
     read_only=True,
   )
-  post_date = serializers.DateTimeField(
+  category = CategorySerializer(
     read_only=True,
   )
-  expiration_date = serializers.DateTimeField(
+  post_date = serializers.DateField(
     read_only=True,
+  )
+  expiration_date = serializers.DateField(
+    required=True,
+    allow_null=False,
   )
 
   def to_representation(self, obj):
@@ -32,15 +39,25 @@ class PublicSerializer(PropSerializer):
 
 class MemberSerializer(PublicSerializer):
   owner_id = serializers.PrimaryKeyRelatedField(
-    queryset=User,
+    queryset=User.objects.all(),
     write_only=True,
     required=True,
     allow_null=False,
+    source='owner'
+  )
+  category_id = serializers.PrimaryKeyRelatedField(
+    queryset=Category.objects.all(),
+    write_only=True,
+    required=True,
+    allow_null=False,
+    source='category'
   )
 
   def to_internal_value(self, data):
     d = copy.deepcopy(data)
     d['owner_id'] = d.pop('ownerId')
+    d['category_id'] = d.pop('categoryId')
+    d['expiration_date'] = d.pop('expirationDate')
     return super().to_internal_value(d)
 
   def create(self, validated_data):
