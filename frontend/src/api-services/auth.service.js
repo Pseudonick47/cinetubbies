@@ -5,7 +5,8 @@ const ENDPOINTS = {
   LOGIN: 'login/',
   REGISTER: 'register/',
   CHANGE_PASSWORD: 'change-password/',
-  LOGOUT: 'logout/'
+  LOGOUT: 'logout/',
+  ME: 'me/'
 };
 
 export default {
@@ -23,5 +24,9 @@ export default {
 
   logout() {
     return Axios.post(PREFIX + ENDPOINTS.LOGOUT);
+  },
+
+  fetchActiveUser() {
+    return Axios.get(PREFIX + ENDPOINTS.ME);
   }
 };

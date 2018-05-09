@@ -2,7 +2,7 @@ from rest_framework import permissions
 from authentication.models import TheaterAdmin
 from movies.models import Movie
 
-class IsCreatorOrReadOnly(permissions.BasePermission):
+class IsThisTheaterAdminOrReadOnly(permissions.BasePermission):
   def has_permission(self, request, view):
     if request.method in permissions.SAFE_METHODS:
       return True

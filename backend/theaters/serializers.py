@@ -5,6 +5,9 @@ from cinetubbies.utils.func import update
 from authentication.models import FanZoneAdmin
 from authentication.models import TheaterAdmin
 
+from media_upload.models import Image
+from media_upload.serializers import ImageSerializer
+
 from .models import Theater
 from .models import THEATER_KIND
 
@@ -38,6 +41,16 @@ class PublicSerializer(serializers.Serializer):
   all_votes = serializers.DictField(
     source='get_all_votings',
     child=serializers.IntegerField()
+  )
+  image_id = serializers.PrimaryKeyRelatedField(
+    queryset=Image.objects.all(),
+    allow_null=True,
+    write_only=True,
+    source='image',
+    required=False
+  )
+  image = ImageSerializer(
+    read_only=True
   )
 
 class RestrictedSerializer(PublicSerializer):

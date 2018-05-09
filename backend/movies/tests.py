@@ -273,7 +273,7 @@ class MovieAPITests(APITestCase):
     self.assertTrue(update_movie['title'] == response.data['title'])
     self.assertTrue(Movie.objects.get(pk=1).title == update_movie['title'])
 
-    # attempt put on a movie that is not theater admins responsibility; fail
+    # attempt put on a movie that is not theater admin's responsibility; fail
     self.login(self.test_theater_admin2)
     response = self.put(update_movie, '1')
     self.assertEqual(response.status_code, 403)

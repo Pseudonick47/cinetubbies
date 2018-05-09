@@ -4,8 +4,22 @@
     sm5
     pa-4
   >
+    <v-card>
+      <v-card-media
+        v-if="user.image"
+        :src="user.getImagePath()"
+        height="200px"
+      />
+    </v-card>
     <h1>User settings</h1>
     <form>
+      <v-layout row>
+        <span>Profile picture:</span>
+        <v-divider/>
+        <input
+          type="file"
+          @change="imageSelected"
+      ></v-layout>
       <v-text-field
         v-model="user.first_name"
         label="First Name"
@@ -57,6 +71,7 @@
 <script>
 import UsersController from 'Controllers/users.controller';
 import { mapGetters } from 'vuex';
+import MediaService from 'Api/media-upload.service';
 
 var moment = require('moment');
 
@@ -64,17 +79,17 @@ export default {
   name: 'UserSettings',
 
   data: () => ({
-    user: {}
+    selectedImage: null
   }),
   computed: {
-    ...mapGetters([
-      'activeUser'
-    ])
-  },
-  mounted() {
-    this.user = _.cloneDeep(this.activeUser);
+    ...mapGetters({
+      user: 'activeUser'
+    })
   },
   methods: {
+    imageSelected(event) {
+      this.selectedImage = event.target.files[0];
+    },
     submit() {
       let data = _.reduce(this.user, (result, value, key) => {
         if (!_.isEmpty(value)) {
@@ -87,14 +102,28 @@ export default {
       }
       this.$validator.validateAll().then((result) => {
         if (result) {
-          UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {
-            this.$alert.success('Settings successfully saved');
-          }).catch(() => {
-            this.$alert.error('Error while saving settings');
-          });
-          return;
+          if (this.selectedImage === null) {
+            UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {
+              this.$alert.success('Settings successfully saved');
+            }).catch(() => {
+              this.$alert.error('Error while saving settings');
+            });
+          } else {
+            const fd = new FormData();
+            fd.append('kind', 'u');
+            fd.append('data', this.selectedImage, this.selectedImage.name);
+            MediaService.postImage(fd)
+              .then((response) => {
+                data['image_id'] = response.data.id;
+                UsersController.updateUserProfile(data, this.activeUser.id)
+                  .then((response) => {
+                    this.$alert.success('Settings successfully saved');
+                  });
+              }).catch(() => {
+                this.$alert.error('Error while saving settings');
+              });
+          }
         }
-        this.$alert.error('Error while saving settings');
       });
     }
   }

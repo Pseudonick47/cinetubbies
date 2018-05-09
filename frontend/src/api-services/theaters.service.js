@@ -23,8 +23,8 @@ export default {
     return Axios.get(`${PREFIX}all`);
   },
 
-  updateRating(data) {
-    return Axios.post(`${PREFIX}rating`, data);
+  updateRating(data, id) {
+    return Axios.post(`${PREFIX}${id}/rating`, data);
   },
 
   // returns theater whose admin is passed through parameter
@@ -42,6 +42,10 @@ export default {
 
   getRepertoire(data) {
     return Axios.get(`${PREFIX}${data}/repertoire`);
+  },
+
+  getTicketsOnSale(data) {
+    return Axios.get(`${PREFIX}${data}/tickets-on-sale`);
   }
 
 };

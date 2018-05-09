@@ -36,4 +36,8 @@ export class User {
   updateUser(data) {
     _.assignWith(this, data);
   }
+
+  getImagePath() {
+    return this.image.path;
+  }
 }

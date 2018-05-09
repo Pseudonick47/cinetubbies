@@ -9,5 +9,9 @@ export default {
 
   getRepertoire(id) {
     return TheatersApiService.getRepertoire(id);
+  },
+
+  getTicketsOnSale(id) {
+    return TheatersApiService.getTicketsOnSale(id);
   }
 };

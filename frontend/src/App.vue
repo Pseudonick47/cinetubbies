@@ -49,13 +49,11 @@
       class="pt-2"
     >
       <v-container
-        class="content-container"
         fluid
       >
         <router-view/>
       </v-container>
     </v-content>
-    <v-footer app/>
   </v-app>
 </template>
 
@@ -89,9 +87,10 @@ export default {
         ],
         'cinema_admin': [
           { icon: 'home', text: 'Home', path: '/admin-home' },
-          { icon: 'edit', text: 'Manage movies/plays', path: '/movies' },
-          { icon: 'add', text: 'Manage show times', path: '/showtimes' },
-          { icon: 'build', text: 'Manage theater info', path: '/theater/settings' },
+          { icon: 'edit', text: 'Movies, Plays', path: '/movies' },
+          { icon: 'edit', text: 'Showtimes', path: '/showtimes' },
+          { icon: 'edit', text: 'Tickets on sale', path: '/tickets-on-sale' },
+          { icon: 'build', text: 'Theater info', path: '/theater/settings' },
           { icon: 'list', text: 'Reports', path: '/reports' },
           { icon: 'person', text: 'Account settings', path: '/user/settings' }
         ],

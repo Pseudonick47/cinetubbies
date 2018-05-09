@@ -77,8 +77,8 @@ export default {
     return TheatersService.getTheaters();
   },
 
-  updateRating(data) {
-    return TheatersService.updateRating(data);
+  updateRating(data, id) {
+    return TheatersService.updateRating(data, id);
   },
 
   getTheater(data) {
