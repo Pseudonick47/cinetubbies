@@ -30,6 +30,7 @@ class User(AbstractUser):
   city = models.CharField(max_length=30, blank=True)
   friendships = models.ManyToManyField('self', through='Friendship', symmetrical=False)
   first_login = models.BooleanField(default=True)
+  image = models.ForeignKey(to="media_upload.Image", on_delete=models.SET_NULL, related_name='+', null=True)
 
   def is_admin(self):
     return self.role in [admin[0] for admin in ADMIN_ROLES]

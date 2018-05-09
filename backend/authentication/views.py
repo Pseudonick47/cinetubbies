@@ -31,6 +31,9 @@ from .serializers import TheaterAdminSerializer
 from .serializers import UserSerializer
 from .utils import auth
 
+from media_upload.defaults import DEFAULT_USER_IMAGE
+from media_upload.models import Image
+from media_upload.models import USER_IMAGE
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
@@ -56,16 +59,36 @@ class UserViewSet(viewsets.ModelViewSet):
     payload = jwt_payload_handler(user)
     token = jwt_encode_handler(payload)
     auth.send_verification_mail(user, 'token')
+
+    if not user.image:
+      image = Image.objects.create(
+        data = DEFAULT_USER_IMAGE,
+        kind = USER_IMAGE[0]
+      )
+      user.image = image
+      user.save()
+
     return Response(auth.jwt_response_payload_handler(token, user))
 
   def partial_update(self, request, pk=None):
+    print("EEEEEEEEEEEEEEEEEEEEEEee", request.data)
     user = User.objects.get(id=pk)
     self.check_object_permissions(request, user)
     serializer = UserSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
 
-    serializer.save()
+    user = serializer.save()
+
+    if not user.image:
+      print("NEMOJ UCI")
+      image = Image.objects.create(
+        data = DEFAULT_USER_IMAGE,
+        kind = USER_IMAGE[0]
+      )
+      user.image = image
+      user.save()
+    print("RRRRRRRRRRRREEEEEEEEEEEEEEESSPONSE", serializer.data)
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):

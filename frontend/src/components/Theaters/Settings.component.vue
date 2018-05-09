@@ -206,22 +206,27 @@ export default {
       }, {});
       this.$validator.validateAll().then((result) => {
         if (result) {
-          const fd = new FormData();
-          fd.append('kind', 't');
-          fd.append('data', this.selectedImage, this.selectedImage.name);
-          MediaService.postImage(fd)
-            .then((response) => {
-              data['image_id'] = response.data.id;
-              SysAdminController.update(data, this.theater.id)
-                .then((response) => {
-                  this.$alert.success('Successfully saved');
-                });
-            }).catch(() => {
-              this.$alert.error('Error while saving settings');
-            });
-          return;
+          if (this.selectedImage === null) {
+            SysAdminController.update(data, this.theater.id)
+              .then((response) => {
+                this.$alert.success('Successfully saved');
+              });
+          } else {
+            const fd = new FormData();
+            fd.append('kind', 't');
+            fd.append('data', this.selectedImage, this.selectedImage.name);
+            MediaService.postImage(fd)
+              .then((response) => {
+                data['image_id'] = response.data.id;
+                SysAdminController.update(data, this.theater.id)
+                  .then((response) => {
+                    this.$alert.success('Successfully saved');
+                  });
+              }).catch(() => {
+                this.$alert.error('Error while saving settings');
+              });
+          }
         }
-        this.$alert.error('Error while saving settings');
       });
     },
     getMovie(id) {
