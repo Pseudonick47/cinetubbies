@@ -97,7 +97,7 @@ export default {
         ],
         'fan_zone_admin': [
           { icon: 'home', text: 'Home', path: '/home' },
-          { icon: 'shopping_cart', text: 'Official Props', path: '/admin/fan-zone' },
+          { icon: 'shopping_cart', text: 'Official Props', path: '/admin/fan-zone/home' },
           { icon: 'shopping_cart', text: 'Pending Props', path: '/admin/fan-zone/pending' }
         ],
         'user': [

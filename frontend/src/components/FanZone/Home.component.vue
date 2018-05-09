@@ -97,8 +97,8 @@
                   xs12
                   sm6
                   md4
-                  lg3
-                  xl3
+                  lg4
+                  xl4
                   pa-3
                 >
                   <prop

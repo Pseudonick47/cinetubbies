@@ -101,17 +101,17 @@ export const routes = [
     }
   },
   {
-    path: '/admin/fan-zone',
-    name: 'admin-fan-zone',
-    component: FanZoneAdminHome,
+    path: '/admin/fan-zone/pending',
+    name: 'admin-fan-zone-pending',
+    component: PendingProps,
     meta: {
       fanZoneAdmin: true
     }
   },
   {
-    path: '/admin/fan-zone/pending',
-    name: 'admin-fan-zone-pending',
-    component: PendingProps,
+    path: '/admin/fan-zone/home',
+    name: 'admin-fan-zone',
+    component: FanZoneAdminHome,
     meta: {
       fanZoneAdmin: true
     }

@@ -165,7 +165,7 @@ export default {
 
           PropsController.requestCount({ approved: false });
           PropsController.requestPage(this.page, { approved: false });
-        })
+        });
     }
   }
 };

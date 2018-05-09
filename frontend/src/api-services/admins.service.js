@@ -15,7 +15,7 @@ export default {
 
   fetchCount(role) {
     if (role) {
-      return Axios.get(`${PREFIX}count/?role=${role}`);
+      return Axios.get(`${PREFIX}count?role=${role}`);
     } else {
       return Axios.get(`${PREFIX}count`);
     }

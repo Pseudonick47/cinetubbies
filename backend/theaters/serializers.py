@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from cinetubbies.utils.func import update
 
-# from authentication.models import FanZoneAdmin
 from authentication.models import TheaterAdmin
+from authentication.models import User
 
 from .models import Theater
 from .models import THEATER_KIND
@@ -55,15 +55,9 @@ class AdministrationSerializer(RestrictedSerializer):
     queryset=TheaterAdmin.objects.all(),
     many=True
   )
-  # fanzoneadmins = serializers.PrimaryKeyRelatedField(
-  #   queryset=FanZoneAdmin.objects.all(),
-  #   many=True
-  # )
 
   def create(self, validated_data):
     admins = validated_data.pop('admins')
-    # fanzoneadmins = validated_data.pop('fanzoneadmins')
     theater = Theater.objects.create(**validated_data)
     theater.admins.set(admins)
-    # theater.fanzoneadmins.set(fanzoneadmins)
     return theater

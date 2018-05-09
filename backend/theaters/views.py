@@ -31,6 +31,10 @@ class PublicAPI(ViewSet):
   permission_classes = [AllowAny]
 
   def list(self, request):
+    all = request.GET.get('all')
+    if all:
+      return Response(data=PublicSerializer(self.queryset, many=True).data)
+
     num = request.GET.get('num')
     paginator = Paginator(self.queryset.order_by('name'), num if num else 10)
     page = request.GET.get('page')

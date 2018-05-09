@@ -8,7 +8,7 @@
       <v-card-title>
         <span class="headline">New Official Prop</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text py-0>
         <v-form ref="form">
           <v-container
             fluid
@@ -42,6 +42,18 @@
                   name="category"
                   label="Category"
                   item-text="path"
+                  autocomplete
+                  return-object
+                  required
+                />
+                <v-select
+                  v-validate="'required'"
+                  :items="theaters"
+                  v-model="selectedTheater"
+                  :error-messages="errors.collect('theater')"
+                  name="theater"
+                  label="Theater/Cinema"
+                  item-text="name"
                   autocomplete
                   return-object
                   required
@@ -113,7 +125,7 @@
             </v-layout>
             <v-layout
               row
-              mt-3
+              mt-1
             >
               <v-text-field
                 v-model="prop.description"
@@ -166,6 +178,7 @@ import { mapGetters } from 'vuex';
 
 import { Prop } from 'Models/prop.model';
 import PropsController from 'Controllers/props/official-props.controller';
+import TheatersController from 'Controllers/theaters.controller';
 import MediaService from 'Api/media-upload.service';
 
 export default {
@@ -175,7 +188,8 @@ export default {
       show: true,
       prop: new Prop(),
       selectedCategory: null,
-      selectedImage: null
+      selectedImage: null,
+      selectedTheater: null
     };
   },
   computed: {
@@ -183,8 +197,12 @@ export default {
       categories: 'leafs'
     }),
     ...mapGetters({
-      admin: 'activeUser'
+      theaters: 'systemAdmin/data'
     })
+  },
+  beforeMount() {
+    console.log(TheatersController);
+    TheatersController.requestAllTheaters();
   },
   methods: {
     imageSelected(event) {
@@ -207,8 +225,8 @@ export default {
           MediaService.postImage(fd)
             .then((response) => {
               this.prop.category = this.selectedCategory.id;
-              this.prop.image_id = response.data.id;
-              this.prop.theater = this.admin.theater.id;
+              this.prop.imageId = response.data.id;
+              this.prop.theater = this.selectedTheater.id;
 
               PropsController.postProp(this.prop)
                 .then((response) => {
