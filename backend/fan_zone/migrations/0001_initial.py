@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('media_upload', '0002_auto_20180507_0859'),
+        ('media_upload', '0002_auto_20180508_1550'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('theaters', '0005_auto_20180427_1617'),
     ]

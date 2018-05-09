@@ -209,7 +209,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           const fd = new FormData();
-          fd.append('kind', 'u');
+          fd.append('kind', 'z');
           fd.append('data', this.selectedImage, this.selectedImage.name);
           MediaService.postImage(fd)
             .then((response) => {

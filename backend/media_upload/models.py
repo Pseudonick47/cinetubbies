@@ -7,7 +7,7 @@ from .utils.func import unique_name
 
 
 OFFICIAL_PROP_IMAGE = ('o', 'Official Prop Image')
-USED_PROP_IMAGE = ('z', 'Official Prop Image')
+USED_PROP_IMAGE = ('z', 'Used Prop Image')
 THEATER_IMAGE = ('t', 'Theater Image')
 MOVIE_IMAGE = ('m', 'Movie Image')
 USER_IMAGE = ('u', 'User Image')

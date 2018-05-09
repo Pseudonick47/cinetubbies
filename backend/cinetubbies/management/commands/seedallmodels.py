@@ -1,14 +1,18 @@
 from django.core.management.base import BaseCommand
 
 from authentication.serializers import UserSerializer
-from authentication.serializers import FanZoneAdminSerializer
-from authentication.serializers import SystemAdminSerializer
+from authentication.serializers import AdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 
 from theaters.serializers import AdministrationSerializer
 from movies.serializers import MovieSerializer
 from showtimes.serializers import ShowtimeSerializer
 from theaters.serializers import PublicSerializer
+
+from fan_zone.categories.serializers import AdministrationSerializer as CategorySerializer
+from fan_zone.props.official.serializers import RestrictedSerializer as OPropSerializer
+from fan_zone.props.used.serializers import MemberSerializer as UPropSerializer
+
 import sys
 
 class Command(BaseCommand):
@@ -18,14 +22,12 @@ class Command(BaseCommand):
     try:
       seed()
       self.stdout.write(self.style.SUCCESS('DB seed finished successfully'))
-    except:
-      self.stdout.write(self.style.ERROR('DB seed failed'))
-
-
+    except Exception as e:
+      self.stdout.write(self.style.ERROR('DB seed failed \n' + str(e)))
 
 def seed():
   for admin in system_admins:
-    serializer = SystemAdminSerializer(data=admin)
+    serializer = AdminSerializer(data=admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -37,7 +39,7 @@ def seed():
     serializer.save()
 
   for admin in fan_zone_admins:
-    serializer = FanZoneAdminSerializer(data=admin)
+    serializer =AdminSerializer(data=admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -47,7 +49,6 @@ def seed():
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
-
 
   for theater in theaters:
     serializer = AdministrationSerializer(data=theater)
@@ -63,6 +64,24 @@ def seed():
 
   for showtime in showtimes:
     serializer = ShowtimeSerializer(data=showtime, partial=True)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  for category in categories:
+    serializer = CategorySerializer(data=category, partial=True)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  for prop in officialprops:
+    serializer = OPropSerializer(data=prop, partial=True)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  for prop in usedprops:
+    serializer = UPropSerializer(data=prop, partial=True)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -138,15 +157,13 @@ theaters = [
     'name': 'Theater first',
     'address': 'Boulevard of Broken Dreams',
     'kind': 'p',
-    'theateradmins': [3],
-    'fanzoneadmins': [4],
+    'admins': [3],
   },
   {
     'name': 'Theater second',
     'address': 'Highway to Hell',
     'kind': 'p',
-    'theateradmins': [2],
-    'fanzoneadmins': [4],
+    'admins': [2],
   }
 ]
 
@@ -197,5 +214,98 @@ showtimes = [
     'time': '12:45:00',
     'price': 200,
     'movie': 1
+  }
+]
+
+categories = [
+  {
+    'name': 'cat',
+    'supercategory': None
+  },
+  {
+    'name': 'subcat1',
+    'supercategory': 1
+  },
+  {
+    'name': 'subcat1',
+    'supercategory': 1
+  },
+  {
+    'name': 'subsubcat1',
+    'supercategory': 3
+  },
+  {
+    'name': 'cat2',
+    'supercategory': None
+  },
+  {
+    'name': 'subcat3',
+    'supercategory': 5
+  }
+]
+
+officialprops = [
+  {
+    'title': 'Prop1',
+    'description': 'some profound text here',
+    'category': 3,
+    'quantity': 2,
+    'price': 99.9,
+    'theater': 1,
+    'imageId': None
+  },
+  {
+    'title': 'Prop2',
+    'description': 'some profound text here',
+    'category': 3,
+    'quantity': 2,
+    'price': 99.9,
+    'theater': 1,
+    'imageId': None
+  },
+  {
+    'title': 'Prop3',
+    'description': 'some profound text here',
+    'category': 3,
+    'quantity': 2,
+    'price': 99.9,
+    'theater': 1,
+    'imageId': None
+  },
+  {
+    'title': 'Prop4',
+    'description': 'some profound text here',
+    'category': 3,
+    'quantity': 10,
+    'price': 99.9,
+    'theater': 1,
+    'imageId': None
+  },
+]
+
+usedprops = [
+  {
+    'title': 'Prop1',
+    'description': 'some profound text here',
+    'ownerId': 5,
+    'categoryId': 1,
+    'imageId': None,
+    'expirationDate': '2018-06-01'
+  },
+  {
+    'title': 'Prop2',
+    'description': 'some profound text here',
+    'ownerId': 5,
+    'categoryId': 1,
+    'imageId': None,
+    'expirationDate': '2018-06-01'
+  },
+  {
+    'title': 'Prop3',
+    'description': 'some profound text here',
+    'ownerId': 6,
+    'categoryId': 1,
+    'imageId': None,
+    'expirationDate': '2018-06-01'
   }
 ]

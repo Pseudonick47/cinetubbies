@@ -16,6 +16,9 @@ from authentication.permissions import IsFanZoneOrSystemAdmin
 
 from cinetubbies.utils.models import ObjectLocked
 
+from media_upload.defaults import DEFAULT_PROP_IMAGE
+from media_upload.models import USED_PROP_IMAGE
+
 from fan_zone.categories.models import Category
 
 from .models import UsedProp
@@ -110,7 +113,16 @@ class MemberAPI(ViewSet):
   def create(self, request, *args, **kwargs):
     serializer = MemberSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    prop = serializer.save()
+
+    if not prop.image:
+      image = Image.objects.create(
+        data = DEFAULT_PROP_IMAGE,
+        kind = USED_PROP_IMAGE[0]
+      )
+      prop.image = image
+      prop.save()
+
     return Response(data=serializer.data)
 
   def destroy(self, request, *args, **kwargs):

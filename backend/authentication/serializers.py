@@ -85,6 +85,8 @@ class UserSerializer(serializers.Serializer):
     required=False
   )
   image = ImageSerializer(
+    required=False,
+    allow_null=True
   )
 
   def create(self, validated_data):
