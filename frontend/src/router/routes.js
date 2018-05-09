@@ -16,7 +16,6 @@ import FanZoneHome from 'Components/FanZone/Home.component';
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
 import PendingProps from 'Components/FanZoneAdmin/PendingProps.component';
 import Showtimes from 'Components/Showtimes/Showtimes.component';
-import AdminHome from 'Components/CinemaAdmin/AdminHome.component';
 import Reports from 'Components/CinemaAdmin/Reports.component';
 import TicketsOnSale from 'Components/CinemaAdmin/TicketsOnSale.component';
 
@@ -149,14 +148,6 @@ export const routes = [
     path: '/showtimes',
     name: 'showtimes',
     component: Showtimes,
-    meta: {
-      cinemaAdmin: true
-    }
-  },
-  {
-    path: '/admin-home',
-    name: 'adminHome',
-    component: AdminHome,
     meta: {
       cinemaAdmin: true
     }

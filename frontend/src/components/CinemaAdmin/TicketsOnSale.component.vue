@@ -16,8 +16,13 @@
                 sm6
                 md4>
                 <v-text-field
+                  v-validate="'required'"
                   v-model.number="showtimeTicket['seat']"
+                  :error-messages="errors.collect('seat')"
+                  :min="1"
                   label="Seat"
+                  data-vv-name="seat"
+                  required
                   type="number"/>
               </v-flex>
               <v-flex
@@ -25,8 +30,14 @@
                 sm6
                 md4>
                 <v-text-field
+                  v-validate="'required'"
                   v-model="showtimeTicket['discount']"
+                  :error-messages="errors.collect('discount')"
+                  :min="1"
+                  :max="100"
                   label="Discount"
+                  data-vv-name="discount"
+                  required
                   type="number"/>
               </v-flex>
             </v-layout>
@@ -188,33 +199,39 @@ export default {
       this.editedIndex = -1;
     },
     save() {
-      this.dialog = false;
-      if (this.editedIndex === -1) {
-        this.showtimeTicket['theater'] = this.theaterId;
-        this.showtimeTicket['showtime'] = this.showtimeTicket['id'];
-        TicketOnSaleController.create(this.showtimeTicket)
-          .then((response) => {
-            this.$alert.success('Successfully added!');
-            this.getTickets();
-          })
-          .catch((response) => {
-            this.$alert.error('Error occurred.');
-          });
-      } else {
-        let data = _.reduce(this.showtimeTicket, (result, value, key) => {
-          if (!_.isEmpty(value)) {
-            result[key] = value;
-          }
-          return result;
-        }, {});
-        TicketOnSaleController.update(data, this.showtimeTicket.id).then((response) => {
+      this.$validator.validateAll().then((result) => {
+        if (result) {
           this.dialog = false;
-          this.showtimeTicket = new TicketOnSale(response.data);
-          this.$alert.success('Settings successfully saved');
-        }).catch(() => {
-          this.$alert.error('Error while saving settings');
-        });
-      }
+          if (this.editedIndex === -1) {
+            this.showtimeTicket['theater'] = this.theaterId;
+            this.showtimeTicket['showtime'] = this.showtimeTicket['id'];
+            TicketOnSaleController.create(this.showtimeTicket)
+              .then((response) => {
+                this.$alert.success('Successfully added!');
+                this.getTickets();
+              })
+              .catch((response) => {
+                this.$alert.error('Error occurred.');
+              });
+          } else {
+            let data = _.reduce(this.showtimeTicket, (result, value, key) => {
+              if (!_.isEmpty(value)) {
+                result[key] = value;
+              }
+              return result;
+            }, {});
+            TicketOnSaleController.update(data, this.showtimeTicket.id).then((response) => {
+              this.dialog = false;
+              this.showtimeTicket = new TicketOnSale(response.data);
+              this.$alert.success('Settings successfully saved');
+            }).catch(() => {
+              this.$alert.error('Error while saving settings');
+            });
+          }
+        } else {
+          this.$alert.error('Please fill all required fields correctly.');
+        }
+      });
     },
     getTheater() {
       SysAdminController.getTheater(this.activeUser.id)

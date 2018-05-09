@@ -1,10 +1,10 @@
 const state = {
   showtimeHeaders: [
-    { text: 'Movie', sortable: false },
+    { text: 'Show', sortable: false },
     { text: 'Auditorium', sortable: false },
     { text: 'Date', sortable: false },
     { text: 'Time', sortable: false },
-    { text: 'Price(din)', sortable: false }
+    { text: 'Price($)', sortable: false }
   ]
 };
 

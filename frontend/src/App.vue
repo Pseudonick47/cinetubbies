@@ -86,11 +86,10 @@ export default {
           { icon: 'star', text: 'Rewarding scale', path: '/admin/system/rewards' }
         ],
         'cinema_admin': [
-          { icon: 'home', text: 'Home', path: '/admin-home' },
-          { icon: 'edit', text: 'Movies, Plays', path: '/movies' },
+          { icon: 'build', text: 'Theater', path: '/theater/settings' },
+          { icon: 'edit', text: 'Theater shows', path: '/movies' },
           { icon: 'edit', text: 'Showtimes', path: '/showtimes' },
           { icon: 'edit', text: 'Tickets on sale', path: '/tickets-on-sale' },
-          { icon: 'build', text: 'Theater info', path: '/theater/settings' },
           { icon: 'list', text: 'Reports', path: '/reports' },
           { icon: 'person', text: 'Account settings', path: '/user/settings' }
         ],
