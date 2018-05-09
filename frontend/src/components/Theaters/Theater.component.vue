@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-parallax
-      :src="theater.image.path"
+      :src="theater.image ? theater.image.path : 'http://www.nshronika.rs/wp-content/uploads/2015/11/arena-sala5-01.jpg'"
       height="400"
       class="paralax-kill-margins"
     >

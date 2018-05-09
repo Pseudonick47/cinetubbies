@@ -103,7 +103,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           if (this.selectedImage === null) {
-            UsersController.updateUserProfile(data, this.activeUser.id).then((response) => {
+            UsersController.updateUserProfile(data, this.user.id).then((response) => {
               this.$alert.success('Settings successfully saved');
             }).catch(() => {
               this.$alert.error('Error while saving settings');
@@ -115,7 +115,7 @@ export default {
             MediaService.postImage(fd)
               .then((response) => {
                 data['image_id'] = response.data.id;
-                UsersController.updateUserProfile(data, this.activeUser.id)
+                UsersController.updateUserProfile(data, this.user.id)
                   .then((response) => {
                     this.$alert.success('Settings successfully saved');
                   });

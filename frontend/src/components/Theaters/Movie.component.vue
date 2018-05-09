@@ -39,7 +39,7 @@
       </v-card>
     </v-dialog>
     <v-parallax
-      :src="movie.image.path"
+      :src="movie.image ? movie.image.path : 'https://img00.deviantart.net/3a09/i/2017/216/0/4/avengers__infinity_war_wallpaper_by_beyondityart-dbiwtto.jpg'"
       class="paralax-kill-margins"
     >
       <v-layout

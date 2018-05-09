@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import config from './../config';
 
 const USER_ROLES = {
   ADMIN: 'admin',
@@ -38,6 +39,6 @@ export class User {
   }
 
   getImagePath() {
-    return this.image.path;
+    return config.getHostName() + this.image.path;
   }
 }

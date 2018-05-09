@@ -75,12 +75,13 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer = AdminSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
-
-    image = Image.objects.get(
-      id=request.data['image_id']
-    )
-    user.image = image
-    user.save()
+    user = serializer.save()
+    if 'image_id' in request.data:
+      image = Image.objects.get(
+        id=request.data['image_id']
+      )
+      user.image = image
+      user.save()
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):
