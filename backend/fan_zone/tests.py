@@ -620,6 +620,153 @@ class RestrictedOfficialPropAPITests(APITestCase):
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
 
+
+class PublicUsedAPI(APITestCase):
+
+  test_user = {
+    'username': 'user',
+    'password': '123456',
+    'email': 'user@test.com',
+    'role': 'user',
+  }
+
+  test_theater_admin = {
+    'username': 'admin',
+    'password': '123456',
+    'email': 'admin@test.com',
+    'role': 'cinema_admin',
+    'theater': '',
+  }
+
+  test_fan_zone_admin = {
+    'username': 'admin2',
+    'password': '123456',
+    'email': 'admin2@test.com',
+    'role': 'fan_zone_admin',
+  }
+
+  test_theater = {
+    'name': 'theater1',
+    'address': 'some street',
+    'kind': 'p',
+    'admins': [1],
+  }
+
+  test_category_1 = {
+    'name': 'cat',
+    'supercategory': None
+  }
+
+  test_category_2 = {
+    'name': 'cat2',
+    'supercategory': None
+  }
+
+  test_prop_1 = {
+    'title': 'Prop1',
+    'description': 'some profound text here',
+    'ownerId': 1,
+    'categoryId': 1,
+    'imageId': None,
+    'expirationDate': '2018-06-01'
+  }
+
+  test_prop_2 = {
+    'title': 'Prop2',
+    'description': 'some profound text here',
+    'ownerId': 1,
+    'categoryId': 2,
+    'imageId': None,
+    'expirationDate': '2018-06-06'
+  }
+
+  def setUp(self):
+    serializer = TheaterAdminSerializer(data=self.test_theater_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = TheaterSerializer(data=self.test_theater)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AdminCategorySerializer(data=self.test_category_1)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AdminCategorySerializer(data=self.test_category_2)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = MemberUsedPropSerializer(data=self.test_prop_1)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = MemberUsedPropSerializer(data=self.test_prop_2)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  def test_list(self):
+    response = self.client.get(path='http://localhost:8000/api/props/used/?all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.data)
+    self.assertEqual(len(response.data), 2)
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/?category=1&all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.data)
+    self.assertEqual(len(response.data), 1)
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/?category=2&all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.data)
+    self.assertEqual(len(response.data), 1)
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/?category=99&all=true')
+    self.assertEqual(response.status_code, 404)
+
+    UsedProp.objects.all().delete()
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/?all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(response.data)
+
+  def test_count(self):
+    response = self.client.get(path='http://localhost:8000/api/props/used/count?all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.data)
+    self.assertEqual(response.data, 2)
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/count?category=1&all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.data)
+    self.assertEqual(response.data, 1)
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/count?category=1&all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.data)
+    self.assertEqual(response.data, 1)
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/count?category=99&all=true')
+    self.assertEqual(response.status_code, 404)
+
+    UsedProp.objects.all().delete()
+
+    response = self.client.get(path='http://localhost:8000/api/props/used/count?all=true')
+    self.assertEqual(response.status_code, 200)
+    self.assertFalse(response.data)
+
+
 class MemberUsedPropAPITests(APITestCase):
 
   test_user = {
@@ -823,32 +970,163 @@ class MemberUsedPropAPITests(APITestCase):
   #   response = self.delete(99)
   #   self.assertEqual(response.status_code, 404)
 
-  def test_update(self):
-    test_prop_2 = {
-      'title': 'Prop2',
-      'description': 'some profound text here',
-      'ownerId': 1,
-      'categoryId': 2,
-      'imageId': None,
-      'expirationDate': '2018-06-01'
-    }
+  # def test_update(self):
+  #   test_prop_2 = {
+  #     'title': 'Prop2',
+  #     'description': 'some profound text here',
+  #     'ownerId': 1,
+  #     'categoryId': 2,
+  #     'imageId': None,
+  #     'expirationDate': '2018-06-01'
+  #   }
 
-    serializer = MemberUsedPropSerializer(data=test_prop_2)
+  #   serializer = MemberUsedPropSerializer(data=test_prop_2)
+  #   if not serializer.is_valid():
+  #     raise Exception(serializer.errors)
+  #   serializer.save()
+
+  #   response = self.put(2, test_prop_2)
+  #   self.assertEqual(response.status_code, 401)
+
+  #   self.login(self.test_theater_admin)
+  #   response = self.put(2, test_prop_2)
+  #   self.assertEqual(response.status_code, 403)
+
+  #   self.login(self.test_fan_zone_admin)
+  #   response = self.put(2, test_prop_2)
+  #   self.assertEqual(response.status_code, 403)
+
+  #   self.login(self.test_user)
+  #   response = self.put(2, test_prop_2)
+  #   self.assertEqual(response.status_code, 200)
+
+class RestrictedUsedPropAPITests(APITestCase):
+
+  test_user = {
+    'username': 'user',
+    'password': '123456',
+    'email': 'user@test.com',
+    'role': 'user',
+  }
+
+  test_theater_admin = {
+    'username': 'admin',
+    'password': '123456',
+    'email': 'admin@test.com',
+    'role': 'cinema_admin',
+    'theater': '',
+  }
+
+  test_fan_zone_admin = {
+    'username': 'admin2',
+    'password': '123456',
+    'email': 'admin2@test.com',
+    'role': 'fan_zone_admin',
+  }
+
+  test_system_admin = {
+    'username': 'sysadmin',
+    'password': '123456',
+    'role': 'admin',
+    'email': 'sysadmin@test.com',
+  }
+
+  test_theater = {
+    'name': 'theater1',
+    'address': 'some street',
+    'kind': 'p',
+    'admins': [2],
+  }
+
+  test_category = {
+    'name': 'cat',
+    'supercategory': None
+  }
+
+  test_prop = {
+    'title': 'Prop1',
+    'description': 'some profound text here',
+    'ownerId': 1,
+    'categoryId': 1,
+    'imageId': None,
+    'expirationDate': '2018-06-01'
+  }
+
+  def login(self, user):
+    response = self.client.post(
+      path='http://localhost:8000/api/auth/login/',
+      data = {
+        'username': user['username'],
+        'password': user['password']
+      },
+      format='json'
+    )
+    self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
+
+
+  def put(self, id, data):
+    return self.client.put(
+      path="http://localhost:8000/api/props/used/" + str(id) + "/review",
+      data=data,
+      format='json'
+    )
+
+  def setUp(self):
+    serializer = AdminSerializer(data=self.test_user)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    # response = self.put(2, test_prop_2)
-    # self.assertEqual(response.status_code, 401)
+    serializer = TheaterAdminSerializer(data=self.test_theater_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
 
-    self.login(self.test_theater_admin)
-    response = self.put(2, test_prop_2)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AdminSerializer(data=self.test_system_admin)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = TheaterSerializer(data=self.test_theater)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AdminCategorySerializer(data=self.test_category)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = MemberUsedPropSerializer(data=self.test_prop)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  def test_update(self):
+    data = {
+      'approve': True
+    }
+
+    response = self.put(1, data)
+    self.assertEqual(response.status_code, 401)
+
+    self.login(self.test_user)
+    response = self.put(1, data)
     self.assertEqual(response.status_code, 403)
 
-    # self.login(self.test_fan_zone_admin)
-    # response = self.put(2, test_prop_2)
-    # self.assertEqual(response.status_code, 403)
+    self.login(self.test_theater_admin)
+    response = self.put(1, data)
+    self.assertEqual(response.status_code, 403)
 
-    # self.login(self.test_user)
-    # response = self.put(2, test_prop_2)
-    # self.assertEqual(response.status_code, 200)
+    self.login(self.test_fan_zone_admin)
+    response = self.put(1, data)
+    self.assertEqual(response.status_code, 200)
+
+    self.login(self.test_system_admin)
+    response = self.put(1, data)
+    self.assertEqual(response.status_code, 200)

@@ -25,6 +25,7 @@ from .serializers import PublicSerializer
 
 
 class PublicAPI(ViewSet):
+  permission_classes = [AllowAny]
 
   @action(detail=False)
   def count(self, request, *args, **kwargs):
