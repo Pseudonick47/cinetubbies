@@ -92,8 +92,8 @@
               </v-layout>
               <v-layout class="props-row">
                 <v-flex
-                  v-for="prop in props"
-                  :key="prop.id"
+                  v-for="(prop, i) in props"
+                  :key="i"
                   xs12
                   sm6
                   md4
