@@ -30,7 +30,9 @@ export default {
 
     if (userData) {
       this.setAuthHeader();
-      store.commit('auth', userData);
+      AuthApiService.fetchActiveUser().then((freshUserData) => {
+        store.commit('auth', freshUserData);
+      });
     }
   },
 

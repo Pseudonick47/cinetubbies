@@ -3,9 +3,7 @@ import store from 'Store';
 
 export default {
   updateUserProfile(data, id) {
-    console.log('kontr', JSON.stringify(data));
     return UsersApiService.updateUserProfile(data, id).then(({ data }) => {
-      console.log('odgovor neki', JSON.stringify(data));
       store.commit('updateActiveUser', data);
       localStorage.setItem('user', JSON.stringify(data));
     });

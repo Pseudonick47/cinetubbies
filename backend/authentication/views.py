@@ -71,24 +71,17 @@ class UserViewSet(viewsets.ModelViewSet):
     return Response(auth.jwt_response_payload_handler(token, user))
 
   def partial_update(self, request, pk=None):
-    print("EEEEEEEEEEEEEEEEEEEEEEee", request.data)
     user = User.objects.get(id=pk)
     self.check_object_permissions(request, user)
     serializer = UserSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
 
-    user = serializer.save()
-
-    if not user.image:
-      print("NEMOJ UCI")
-      image = Image.objects.create(
-        data = DEFAULT_USER_IMAGE,
-        kind = USER_IMAGE[0]
-      )
-      user.image = image
-      user.save()
-    print("RRRRRRRRRRRREEEEEEEEEEEEEEESSPONSE", serializer.data)
+    image = Image.objects.get(
+      id=request.data['image_id']
+    )
+    user.image = image
+    user.save()
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):
