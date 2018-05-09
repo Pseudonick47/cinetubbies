@@ -11,7 +11,8 @@ from .models import ROLES
 from .models import TheaterAdmin
 from .models import User
 from .models import USER
-
+from media_upload.models import Image
+from media_upload.serializers import ImageSerializer
 
 class FriendSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -22,7 +23,6 @@ class FriendSerializer(serializers.Serializer):
   birth_date = serializers.DateTimeField(required=False)
   phone = serializers.CharField(max_length=30, allow_blank=False)
   city = serializers.CharField(max_length=30, allow_blank=False)
-
 
 class UserSerializer(serializers.Serializer):
   id = serializers.IntegerField(read_only=True)
@@ -76,6 +76,15 @@ class UserSerializer(serializers.Serializer):
   friends = serializers.ListField(
     read_only=True,
     child = FriendSerializer(),
+  )
+  image_id = serializers.PrimaryKeyRelatedField(
+    queryset=Image.objects.all(),
+    allow_null=True,
+    write_only=True,
+    source='image',
+    required=False
+  )
+  image = ImageSerializer(
   )
 
   def create(self, validated_data):

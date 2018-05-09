@@ -25,5 +25,8 @@ export default {
   },
   getShowtimes(data) {
     return Axios.get(`${ENDPOINTS.MOVIES}${data}/showtimes`);
+  },
+  updateRating(data, id) {
+    return Axios.post(`${ENDPOINTS.MOVIES}${id}/rating`, data);
   }
 };

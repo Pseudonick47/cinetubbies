@@ -1,8 +1,9 @@
 <template>
   <div>
     <v-parallax
-      src="http://arab-culture.info/wp-content/uploads/2018/02/1-68.jpg"
+      :src="theater.image.path"
       height="400"
+      class="paralax-kill-margins"
     >
       <v-layout
         column
@@ -12,7 +13,10 @@
         <h4 class="white--text title-text-shadow">{{ theater.rating }} ★</h4>
       </v-layout>
     </v-parallax>
-    <v-layout row>
+    <v-layout
+      row
+      class="my-3"
+    >
       <v-flex>
         <v-list
           two-line
@@ -41,6 +45,53 @@
           </v-list-tile>
         </v-list>
       </v-flex>
+      <v-flex
+        xs-12
+        offset-lg1
+      >
+        <v-card>
+          <v-card-title>
+            Tickets on sale:
+            <v-spacer/>
+            <v-btn
+              @click="showTicketsOnSale = !showTicketsOnSale"
+            >
+              <span v-if="!showTicketsOnSale">Show</span>
+              <span v-else>Hide</span>
+            </v-btn>
+          </v-card-title>
+          <v-data-table
+            v-show="showTicketsOnSale"
+            :items="ticketsOnSale"
+            :headers="ticketsHeaders"
+            item-key="date"
+            class="elevation-1"
+          >
+            <template
+              slot="items"
+              slot-scope="props">
+              <td>{{ getMovie(getShowtime(props.item.showtime).movie).title }}</td>
+              <td>{{ getShowtime(props.item.showtime).auditorium }} </td>
+              <td>{{ props.item.seat }} </td>
+              <td>{{ getShowtime(props.item.showtime).date }}</td>
+              <td>{{ getShowtime(props.item.showtime).time }}</td>
+              <td>{{ getShowtime(props.item.showtime).price }}</td>
+              <td>{{ props.item.discount }}</td>
+              <td class="justify-center layout px-0">
+                <v-btn
+                  icon
+                  class="mx-0"
+                >
+                  <v-icon color="teal">weekend</v-icon>
+                </v-btn>
+              </td>
+            </template>
+            <template slot="no-data">
+              Sorry, nothing to display here.
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-flex>
     </v-layout>
   </div>
 </template>
@@ -49,6 +100,9 @@
 import TheaterController from 'Controllers/system-admin.controller';
 import TheController from 'Controllers/theaters.controller';
 import { Theater } from 'Models/theater.model';
+import { Showtime } from 'Models/showtime.model';
+import { TicketOnSale } from 'Models/ticket-on-sale.model';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Theater',
@@ -60,10 +114,12 @@ export default {
   },
   data() {
     return {
-      loading: false,
       search: '',
       movies: [],
-      theater: {}
+      theater: {},
+      ticketsOnSale: [],
+      showTicketsOnSale: false,
+      repertoire: []
     };
   },
   computed: {
@@ -74,11 +130,16 @@ export default {
         });
       }
       return this.movies;
-    }
+    },
+    ...mapGetters([
+      'ticketsHeaders'
+    ])
   },
   mounted() {
     this.getTheater(this.theaterId);
     this.getMovies(this.theaterId);
+    this.getRepertoire(this.theaterId);
+    this.getTicketsOnSale(this.theaterId);
   },
   methods: {
     goToMovie(id) {
@@ -88,10 +149,8 @@ export default {
       TheController.retrieveTheater(id)
         .then((response) => {
           this.theater = new Theater(response.data);
-          this.loading = false;
         })
         .catch(() => {
-          this.loading = false;
           this.$alert.error('Error occurred.');
         });
     },
@@ -99,12 +158,38 @@ export default {
       TheaterController.getMovies(id)
         .then((response) => {
           this.movies = response.data;
-          this.loading = false;
         })
         .catch((response) => {
-          this.loading = false;
           this.$alert.error('Error occurred.');
         });
+    },
+    getRepertoire(id) {
+      TheController.getRepertoire(id)
+        .then((response) => {
+          this.repertoire = _.map(response.data, x => new Showtime(x));
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
+    getTicketsOnSale(id) {
+      TheController.getTicketsOnSale(id)
+        .then((response) => {
+          this.ticketsOnSale = _.map(response.data, x => new TicketOnSale(x));
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
+    getMovie(id) {
+      return this.movies.find((element) => {
+        return element.id === id;
+      });
+    },
+    getShowtime(id) {
+      return this.repertoire.find((element) => {
+        return element.id === id;
+      });
     }
   }
 };

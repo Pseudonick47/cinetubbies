@@ -247,7 +247,7 @@ class ShowtimeAPITests(APITestCase):
     self.assertEqual(response.status_code, 200)
     self.assertTrue(response.data)
 
-    # attempt put on a showtime that is not theater admins responsibility; fail
+    # attempt put on a showtime that is not theater admin's responsibility; fail
     self.login(self.test_theater_admin2)
     response = self.put(update_showtime, '1')
     self.assertEqual(response.status_code, 403)

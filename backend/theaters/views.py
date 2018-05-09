@@ -15,6 +15,10 @@ from authentication.models import TheaterAdmin
 from authentication.permissions import IsSystemAdmin
 from authentication.permissions import IsTheaterOrSystemAdmin
 
+from media_upload.defaults import DEFAULT_THEATER_IMAGE
+from media_upload.models import Image
+from media_upload.models import THEATER_IMAGE
+
 from .models import Theater
 from .models import THEATER_KIND
 from .models import Voting
@@ -24,6 +28,7 @@ from .serializers import AdministrationSerializer
 from .permissions import IsResponsibleForTheater
 from movies.serializers import MovieSerializer
 from showtimes.serializers import ShowtimeSerializer
+from sale_tickets.serializers import TicketOnSaleSerializer
 
 
 class PublicAPI(ViewSet):
@@ -59,18 +64,18 @@ class PublicAPI(ViewSet):
     theater = Theater.objects.get(id=theater_admin.theater_id)
     return Response(data=PublicSerializer(theater).data)
 
-  @action(detail=False)
-  def update_rating(self, request):
+  @action(detail=True)
+  def update_rating(self, request, pk=None):
     vote, _ = Voting.objects.get_or_create(
       user_id=request.user.id,
-      theater_id=request.data['id']
+      theater_id=pk
     )
     vote.rating = request.data['rating']
     vote.save()
     rating = Voting.objects.filter(
-      theater_id=request.data['id']).aggregate(rating=Avg('rating')
+      theater_id=pk).aggregate(rating=Avg('rating')
     )
-    voters = len(Voting.objects.filter(theater_id=request.data['id']).all())
+    voters = len(Voting.objects.filter(theater_id=pk).all())
     data = {'rating':rating,'voters':voters}
     return Response(data)
 
@@ -90,6 +95,12 @@ class PublicAPI(ViewSet):
       for s in showtime_list:
         showtimes.append(s)
     return Response(ShowtimeSerializer(showtimes, many=True).data)
+  
+  @action(detail=True)
+  def get_tickets_on_sale(self, request, pk=None):
+    theater = get_object_or_404(Theater, id=pk)
+    tickets = theater.tickets_on_sale.all()
+    return Response(TicketOnSaleSerializer(tickets, many=True).data)
 
 class RestrictedAPI(ViewSet):
   permission_classes = [
@@ -114,7 +125,16 @@ class AdministrationAPI(ViewSet):
   def create(self, request):
     serializer = AdministrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    theater = serializer.save()
+
+    if not theater.image:
+      image = Image.objects.create(
+        data = DEFAULT_THEATER_IMAGE,
+        kind = THEATER_IMAGE[0]
+      )
+      theater.image = image
+      theater.save()
+
     return Response(data=serializer.data)
 
   def update(self, request, pk=None):

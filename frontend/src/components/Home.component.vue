@@ -67,8 +67,12 @@
         </v-list-tile>
         <v-list-tile
           v-for="theater in filteredTheaters"
-          :key="theater.id" >
-          <v-list-tile-content>
+          :key="theater.id"
+          class="cinema-list-item"
+        >
+          <v-list-tile-content
+            @click="goToCinema(theater.id)"
+          >
             <v-list-tile-title>{{ theater.name }}, <i>{{ theater.address }}<i/></i></v-list-tile-title>
             <v-list-tile-sub-title><i>rating: </i>{{ theater.rating }}/5</v-list-tile-sub-title>
             <v-list-tile-sub-title><i>votes: </i>{{ theater.voters_count }}
@@ -91,15 +95,15 @@
 </template>
 
 <script>
-import StarRating from 'vue-star-rating';
+// import StarRating from 'vue-star-rating';
 import TheatersController from 'Controllers/system-admin.controller';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
-  components: {
-    StarRating
-  },
+  // components: {
+  //   StarRating
+  // },
   data: () => ({
     loading: false,
     searchCinemas: '',
@@ -138,20 +142,20 @@ export default {
     goToCinema(id) {
       this.$router.push({ name: 'theater', params: { theaterId: id.toString() } });
     },
-    setRating(id, rating) {
-      const data = { 'rating': rating, 'id': id };
-      TheatersController.updateRating(data)
-        .then((response) => {
-          let found = this.all.find(function(element) {
-            return element.id === id;
-          });
-          found['rating'] = response.data['rating']['rating'];
-          found['voters_count'] = response.data['voters'];
-        })
-        .catch((response) => {
-          this.$alert.error('Error occurred.');
-        });
-    },
+    // setRating(id, rating) {
+    //   const data = { 'rating': rating, 'id': id };
+    //   TheatersController.updateRating(data)
+    //     .then((response) => {
+    //       let found = this.all.find(function(element) {
+    //         return element.id === id;
+    //       });
+    //       found['rating'] = response.data['rating']['rating'];
+    //       found['voters_count'] = response.data['voters'];
+    //     })
+    //     .catch((response) => {
+    //       this.$alert.error('Error occurred.');
+    //     });
+    // },
     getTheaters() {
       this.loading = true;
       TheatersController.getTheaters()

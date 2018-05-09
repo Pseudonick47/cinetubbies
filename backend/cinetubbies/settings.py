@@ -40,12 +40,14 @@ INSTALLED_APPS = [
   'django.contrib.staticfiles',
   'corsheaders',
   'authentication',
+  'cinetubbies',
   'theaters',
   'movies',
   'media_upload',
   'fan_zone',
   'showtimes',
-  'reservations'
+  'reservations',
+  'sale_tickets'
 ]
 
 MIDDLEWARE = [

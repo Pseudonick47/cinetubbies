@@ -18,11 +18,11 @@ Vue.use(Vuetify);
 Vue.prototype.router = router;
 Vue.prototype.$alert = AlertHelper;
 
-AuthController.initStoreAuth();
-
 Axios.defaults.baseURL = Config.getApiUrl();
 Axios.defaults.headers.Accept = 'application/json';
 Axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+
+AuthController.initStoreAuth();
 
 /* eslint-disable no-new */
 new Vue({
