@@ -26,6 +26,7 @@ const mutations = {
     state.activeUser = user;
   },
   updateActiveUser(state, data) {
+    console.log('store', JSON.stringify(data));
     state.activeUser.updateUser(data);
   },
   setAdminsTheater(state, theater) {

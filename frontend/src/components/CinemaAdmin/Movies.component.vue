@@ -95,7 +95,6 @@
                     type="file"
                     @change="imageSelected"
                 ></v-layout>
-
               </v-flex>
             </v-layout>
           </v-container>
@@ -240,23 +239,34 @@ export default {
       this.dialog = false;
       if (this.editedIndex === -1) {
         this.movie.theater = this.theaterId;
-        const fd = new FormData();
-        fd.append('kind', 'm');
-        fd.append('data', this.selectedImage, this.selectedImage.name);
-        MediaService.postImage(fd)
-          .then((response) => {
-            this.movie.image_id = response.data.id;
-            MoviesController.create(this.movie)
-              .then((response) => {
-                this.$alert.success('Successfully saved');
-                this.getMovies();
-              })
-              .catch((response) => {
-                this.$alert.error('Error while saving.');
-              });
-          }).catch(() => {
-            this.$alert.error('Error while saving settings');
-          });
+        if (this.selectedImage === null) {
+          MoviesController.create(this.movie)
+            .then((response) => {
+              this.$alert.success('Successfully saved');
+              this.getMovies();
+            })
+            .catch((response) => {
+              this.$alert.error('Error while saving.');
+            });
+        } else {
+          const fd = new FormData();
+          fd.append('kind', 'm');
+          fd.append('data', this.selectedImage, this.selectedImage.name);
+          MediaService.postImage(fd)
+            .then((response) => {
+              this.movie.image_id = response.data.id;
+              MoviesController.create(this.movie)
+                .then((response) => {
+                  this.$alert.success('Successfully saved');
+                  this.getMovies();
+                })
+                .catch((response) => {
+                  this.$alert.error('Error while saving.');
+                });
+            }).catch(() => {
+              this.$alert.error('Error while saving settings');
+            });
+        }
       } else {
         let data = _.reduce(this.movie, (result, value, key) => {
           if (!_.isEmpty(value)) {
@@ -264,24 +274,36 @@ export default {
           }
           return result;
         }, {});
-        const fd = new FormData();
-        fd.append('kind', 'm');
-        fd.append('data', this.selectedImage, this.selectedImage.name);
-        MediaService.postImage(fd)
-          .then((response) => {
-            data['image_id'] = response.data.id;
-            MoviesController.update(data, this.movie.id)
-              .then((response) => {
-                this.movie = new Movie(response.data);
-                this.$alert.success('Settings successfully saved');
-                this.getMovies();
-              })
-              .catch((response) => {
-                this.$alert.error('Error while saving settings');
-              });
-          }).catch(() => {
-            this.$alert.error('Error while saving settings');
-          });
+        if (this.selectedImage === null) {
+          MoviesController.update(data, this.movie.id)
+            .then((response) => {
+              this.movie = new Movie(response.data);
+              this.$alert.success('Settings successfully saved');
+              this.getMovies();
+            })
+            .catch((response) => {
+              this.$alert.error('Error while saving settings');
+            });
+        } else {
+          const fd = new FormData();
+          fd.append('kind', 'm');
+          fd.append('data', this.selectedImage, this.selectedImage.name);
+          MediaService.postImage(fd)
+            .then((response) => {
+              data['image_id'] = response.data.id;
+              MoviesController.update(data, this.movie.id)
+                .then((response) => {
+                  this.movie = new Movie(response.data);
+                  this.$alert.success('Settings successfully saved');
+                  this.getMovies();
+                })
+                .catch((response) => {
+                  this.$alert.error('Error while saving settings');
+                });
+            }).catch(() => {
+              this.$alert.error('Error while saving settings');
+            });
+        }
       }
     },
     editButton(movieData) {

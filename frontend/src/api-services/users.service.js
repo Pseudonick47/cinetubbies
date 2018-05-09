@@ -8,6 +8,7 @@ const ENDPOINTS = {
 
 export default {
   updateUserProfile(data, id) {
+    console.log('service', JSON.stringify(data));
     return Axios.patch(`${PREFIX}${ENDPOINTS.PROFILE}${id}/`, data);
   },
 
