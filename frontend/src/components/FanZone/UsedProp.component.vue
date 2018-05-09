@@ -15,6 +15,7 @@
           pl-4
         >
           <v-card-media
+            v-if="info.image"
             :src="info.image.path"
             contain
             height="100%"
