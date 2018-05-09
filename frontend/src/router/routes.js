@@ -4,7 +4,7 @@ import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/CinemaAdmin/Movies.component';
-import Settings from 'Components/User/Settings.component';
+import UserSettings from 'Components/User/Settings.component';
 import Profile from 'Components/User/Profile.component';
 import UserProps from 'Components/User/Props.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
@@ -64,7 +64,7 @@ export const routes = [
   {
     path: '/user/settings',
     name: 'user-settings',
-    component: Settings,
+    component: UserSettings,
     meta: {
       logged: true
     }
