@@ -18,6 +18,7 @@ from cinetubbies.utils.models import ObjectLocked
 
 from media_upload.defaults import DEFAULT_PROP_IMAGE
 from media_upload.models import USED_PROP_IMAGE
+from media_upload.models import Image
 
 from fan_zone.categories.models import Category
 
