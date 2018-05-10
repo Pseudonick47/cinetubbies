@@ -151,7 +151,7 @@
           <template
             slot="items"
             slot-scope="props">
-            <td>{{ `${movieTitle(props.item.movie).title}` }}</td>
+            <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
             <td>{{ `${props.item.auditorium}` }} </td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.time }}</td>
@@ -338,10 +338,19 @@ export default {
           this.$alert.error('Error occurred.');
         });
     },
-    movieTitle(id) {
-      return this.movies.find((element) => {
-        return element.id === id;
-      });
+    findObjectByKey(array, key, value) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i][key] === value) {
+          return array[i];
+        }
+      }
+      return null;
+    },
+    getObjAttr(array, id, attr) {
+      var obj = this.findObjectByKey(array, 'id', id);
+      if (obj !== null) {
+        return obj[attr];
+      }
     },
     filter(id) {
       TheaterController.getRepertoire(this.theaterId)

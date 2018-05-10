@@ -21,6 +21,7 @@
                   :error-messages="errors.collect('seat')"
                   :min="1"
                   label="Seat"
+                  hint="Seat number cannot be 0 or negative"
                   data-vv-name="seat"
                   required
                   type="number"/>
@@ -34,8 +35,9 @@
                   v-model="showtimeTicket['discount']"
                   :error-messages="errors.collect('discount')"
                   :min="1"
-                  :max="100"
+                  :max="99"
                   label="Discount"
+                  hint="Discount range: 1 - 99"
                   data-vv-name="discount"
                   required
                   type="number"/>
@@ -72,7 +74,7 @@
           <template
             slot="items"
             slot-scope="props">
-            <td> {{ getMovie(props.item.movie).title }}</td>
+            <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
             <td> {{ props.item.auditorium }}</td>
             <td> {{ props.item.date }}</td>
             <td> {{ props.item.time }}</td>
@@ -108,12 +110,12 @@
           <template
             slot="items"
             slot-scope="props">
-            <td>{{ getMovie(getShowtime(props.item.showtime).movie).title }}</td>
-            <td>{{ getShowtime(props.item.showtime).auditorium }} </td>
+            <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
             <td>{{ props.item.seat }} </td>
-            <td>{{ getShowtime(props.item.showtime).date }}</td>
-            <td>{{ getShowtime(props.item.showtime).time }}</td>
-            <td>{{ getShowtime(props.item.showtime).price }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
             <td>{{ props.item.discount }}</td>
             <td class="justify-center layout px-0">
               <v-btn
@@ -200,7 +202,7 @@ export default {
     },
     save() {
       this.$validator.validateAll().then((result) => {
-        if (result) {
+        if (result && this.showtimeTicket.seat > 0 && this.showtimeTicket.discount > 0 && this.showtimeTicket.discount < 100) {
           this.dialog = false;
           if (this.editedIndex === -1) {
             this.showtimeTicket['theater'] = this.theaterId;
@@ -292,15 +294,19 @@ export default {
       this.editedIndex = 1;
       this.dialog = true;
     },
-    getMovie(id) {
-      return this.movies.find((element) => {
-        return element.id === id;
-      });
+    findObjectByKey(array, key, value) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i][key] === value) {
+          return array[i];
+        }
+      }
+      return null;
     },
-    getShowtime(id) {
-      return this.repertoire.find((element) => {
-        return element.id === id;
-      });
+    getObjAttr(array, id, attr) {
+      var obj = this.findObjectByKey(array, 'id', id);
+      if (obj !== null) {
+        return obj[attr];
+      }
     }
   }
 };
