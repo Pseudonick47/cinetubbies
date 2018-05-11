@@ -6,7 +6,7 @@ from rest_framework.validators import UniqueValidator
 
 from theaters.models import Theater
 
-from .models import FanZoneAdmin
+# from .models import FanZoneAdmin
 from .models import ROLES
 from .models import TheaterAdmin
 from .models import User
@@ -85,6 +85,8 @@ class UserSerializer(serializers.Serializer):
     required=False
   )
   image = ImageSerializer(
+    required=False,
+    allow_null=True
   )
 
   def create(self, validated_data):
@@ -99,30 +101,16 @@ class UserSerializer(serializers.Serializer):
       user.set_password(validated_data['password'])
     user.save()
     return user
-class SystemAdminSerializer(UserSerializer):
+
+class AdminSerializer(UserSerializer):
   phone = None
   city = None
 
-  def create(self, validated_data):
-    user = User( ** validated_data)
-    user.set_password(validated_data['password'])
-    user.save()
-    return user
-
-  def update(self, user, validated_data):
-    user.__dict__.update( ** validated_data)
-    if 'password' in validated_data:
-      user.set_password(validated_data['password'])
-    user.save()
-    return user
-
-class TheaterAdminSerializer(UserSerializer):
+class TheaterAdminSerializer(AdminSerializer):
   theater = serializers.PrimaryKeyRelatedField(
     queryset=Theater.objects.all(),
     allow_null=True
   )
-  phone = None
-  city = None
 
   def create(self, validated_data):
     admin = TheaterAdmin(**validated_data)
@@ -134,22 +122,3 @@ class TheaterAdminSerializer(UserSerializer):
     theater = get_object_or_404(Theater, pk=validated_data['theater'])
     theater_admin.theater.set(theater)
     return super.update(theater_admin, validated_data)
-
-class FanZoneAdminSerializer(UserSerializer):
-  theater = serializers.PrimaryKeyRelatedField(
-    queryset=Theater.objects.all(),
-    allow_null=True
-  )
-  phone = None
-  city = None
-
-  def create(self, validated_data):
-    admin = FanZoneAdmin(**validated_data)
-    admin.set_password(validated_data['password'])
-    admin.save()
-    return admin
-
-  def update(self, fan_zone_admin, validated_data):
-    theater = get_object_or_404(Theater, pk=validated_data['theater'])
-    fan_zone_admin.theater.set(theater)
-    return super.update(fan_zone_admin, validated_data)

@@ -1,10 +1,8 @@
 from rest_framework.test import APITestCase
 
 from .models import User
-from .serializers import FanZoneAdminSerializer
-from .serializers import SystemAdminSerializer
 from .serializers import TheaterAdminSerializer
-from .serializers import UserSerializer
+from .serializers import AdminSerializer
 
 class UserAPI(APITestCase):
 
@@ -126,17 +124,17 @@ class FriendAPI(APITestCase):
     return response
 
   def setUp(self):
-    serializer = UserSerializer(data=self.test_user_1)
+    serializer = AdminSerializer(data=self.test_user_1)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = UserSerializer(data=self.test_user_2)
+    serializer = AdminSerializer(data=self.test_user_2)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = UserSerializer(data=self.test_user_3)
+    serializer = AdminSerializer(data=self.test_user_3)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -177,7 +175,6 @@ class SystemAdminAPI(APITestCase):
     'password': '123456',
     'email': 'admin2@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
   }
 
   test_theater_admin = {
@@ -222,7 +219,7 @@ class SystemAdminAPI(APITestCase):
     self.client.credentials(HTTP_AUTHORIZATION='JWT ' + response.data['token'])
 
   def setUp(self):
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -232,14 +229,14 @@ class SystemAdminAPI(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
     serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
   def test_partial_update(self):
@@ -296,7 +293,7 @@ class SystemAdminAPI(APITestCase):
       'email': 'sysadmin2@test.com',
     }
 
-    serializer = SystemAdminSerializer(data=test_system_admin2)
+    serializer = AdminSerializer(data=test_system_admin2)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -383,7 +380,7 @@ class SystemAdminAPI(APITestCase):
       'email': 'sysadmin12@test.com',
     }
 
-    serializer = SystemAdminSerializer(data=test_system_admin2)
+    serializer = AdminSerializer(data=test_system_admin2)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()

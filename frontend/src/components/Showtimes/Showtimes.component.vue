@@ -42,6 +42,7 @@
                 <v-flex>
                   <v-date-picker
                     v-model="showtime.date"
+                    :min="today"
                   />
                 </v-flex>
                 <v-flex>
@@ -150,7 +151,7 @@
           <template
             slot="items"
             slot-scope="props">
-            <td>{{ `${movieTitle(props.item.movie).title}` }}</td>
+            <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
             <td>{{ `${props.item.auditorium}` }} </td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.time }}</td>
@@ -207,6 +208,8 @@ import ShowtimeController from 'Controllers/showtimes.controller';
 import { Showtime } from 'Models/showtime.model';
 import { mapGetters } from 'vuex';
 
+var moment = require('moment');
+
 export default {
   data: () => ({
     search: '',
@@ -229,6 +232,9 @@ export default {
     ]),
     formTitle() {
       return this.editedIndex === -1 ? 'New ' + this.kind : 'Edit ' + this.kind;
+    },
+    today() {
+      return moment().format('YYYY-MM-DD');
     }
   },
   mounted() {
@@ -243,32 +249,39 @@ export default {
       this.editedIndex = -1;
     },
     save() {
-      this.dialog = false;
-      this.showtime.time = this.time;
-      if (this.editedIndex === -1) {
-        ShowtimeController.create(this.showtime)
-          .then((response) => {
-            this.$alert.success('Successfully added!');
-            this.getRepertoire();
-          })
-          .catch((response) => {
-            this.$alert.error('Error occurred.');
-          });
-      } else {
-        let data = _.reduce(this.showtime, (result, value, key) => {
-          if (!_.isEmpty(value) || (key === 'price' && value !== null)) {
-            result[key] = value;
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.dialog = false;
+          this.showtime.time = this.time;
+          if (this.editedIndex === -1) {
+            ShowtimeController.create(this.showtime)
+              .then((response) => {
+                this.$alert.success('Successfully added!');
+                this.getRepertoire();
+              })
+              .catch((response) => {
+                this.$alert.error('Error occurred.');
+              });
+          } else {
+            let data = _.reduce(this.showtime, (result, value, key) => {
+              if (!_.isEmpty(value) || (key === 'price' && value !== null)) {
+                result[key] = value;
+              }
+              return result;
+            }, {});
+            ShowtimeController.update(data, this.showtime.id)
+              .then((response) => {
+                this.showtime = new Showtime(response.data);
+                this.$alert.success('Settings successfully saved');
+                this.getRepertoire();
+              }).catch(() => {
+                this.$alert.error('Error while saving settings');
+              });
           }
-          return result;
-        }, {});
-        ShowtimeController.update(data, this.showtime.id).then((response) => {
-          this.showtime = new Showtime(response.data);
-          this.$alert.success('Settings successfully saved');
-          this.getRepertoire();
-        }).catch(() => {
-          this.$alert.error('Error while saving settings');
-        });
-      }
+        } else {
+          this.$alert.error('Please fill all required fields correctly.');
+        }
+      });
     },
     getTheaterAndMovies() {
       SysAdminController.getTheater(this.activeUser.id)
@@ -325,10 +338,19 @@ export default {
           this.$alert.error('Error occurred.');
         });
     },
-    movieTitle(id) {
-      return this.movies.find((element) => {
-        return element.id === id;
-      });
+    findObjectByKey(array, key, value) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i][key] === value) {
+          return array[i];
+        }
+      }
+      return null;
+    },
+    getObjAttr(array, id, attr) {
+      var obj = this.findObjectByKey(array, 'id', id);
+      if (obj !== null) {
+        return obj[attr];
+      }
     },
     filter(id) {
       TheaterController.getRepertoire(this.theaterId)

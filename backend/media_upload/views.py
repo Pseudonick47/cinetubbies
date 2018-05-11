@@ -24,8 +24,7 @@ class PublicAPI(ViewSet):
     return Response(data=ImageSerializer(image).data)
 
 
-class RestrictedAPI(ViewSet):
-  # quick fix, IsAdmin is missing; TODO: handle user avatars etc
+class MemberAPI(ViewSet):
   permission_classes = [IsAuthenticated]
 
   def create(self, request):

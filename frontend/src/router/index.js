@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to.name === 'home' && store.getters.isCinemaAdmin) {
-    return next({ name: 'adminHome' });
+    return next({ name: 'theater-settings' });
   }
 
   return next();

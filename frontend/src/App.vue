@@ -86,22 +86,23 @@ export default {
           { icon: 'star', text: 'Rewarding scale', path: '/admin/system/rewards' }
         ],
         'cinema_admin': [
-          { icon: 'home', text: 'Home', path: '/admin-home' },
-          { icon: 'edit', text: 'Movies, Plays', path: '/movies' },
+          { icon: 'build', text: 'Theater', path: '/theater/settings' },
+          { icon: 'edit', text: 'Theater shows', path: '/movies' },
           { icon: 'edit', text: 'Showtimes', path: '/showtimes' },
           { icon: 'edit', text: 'Tickets on sale', path: '/tickets-on-sale' },
-          { icon: 'build', text: 'Theater info', path: '/theater/settings' },
           { icon: 'list', text: 'Reports', path: '/reports' },
           { icon: 'person', text: 'Account settings', path: '/user/settings' }
         ],
         'fan_zone_admin': [
           { icon: 'home', text: 'Home', path: '/home' },
-          { icon: 'shopping_cart', text: 'Official Props', path: '/admin/fan-zone' }
+          { icon: 'shopping_cart', text: 'Official Props', path: '/admin/fan-zone/home' },
+          { icon: 'shopping_cart', text: 'Pending Props', path: '/admin/fan-zone/pending' }
         ],
         'user': [
           { icon: 'home', text: 'Home', path: '/home' },
           { icon: 'person_add', text: 'Profile', path: '/user/profile' },
           { icon: 'shopping_cart', text: 'Fan Zone', path: '/fan-zone' },
+          { icon: 'shopping_cart', text: 'My Props', path: '/user/props' },
           { icon: 'settings', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [

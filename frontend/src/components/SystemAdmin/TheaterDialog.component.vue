@@ -111,7 +111,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           const theater = this.theater;
-          theater.theateradmins = _.map(this.selected_admins, 'id');
+          theater.admins = _.map(this.selected_admins, 'id');
 
           SystemAdminController.registerTheater(theater)
             .then((response) => {

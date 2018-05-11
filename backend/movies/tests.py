@@ -2,10 +2,8 @@ from collections import Counter
 from rest_framework.test import APITestCase
 
 from authentication.models import User
-from authentication.serializers import FanZoneAdminSerializer
-from authentication.serializers import SystemAdminSerializer
 from authentication.serializers import TheaterAdminSerializer
-from authentication.serializers import UserSerializer
+from authentication.serializers import AdminSerializer
 
 from theaters.models import Theater
 from theaters.serializers import AdministrationSerializer
@@ -39,7 +37,6 @@ class MovieAPITests(APITestCase):
     'password': '123456',
     'email': 'admin3@test.com',
     'role': 'fan_zone_admin',
-    'theater': '',
   }
 
   test_system_admin = {
@@ -60,16 +57,14 @@ class MovieAPITests(APITestCase):
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [3],
+    'admins': [1],
   }
 
   test_theater2 = {
     'name': 'theater2',
     'address': 'address',
     'kind': 'm',
-    'theateradmins': [2],
-    'fanzoneadmins': [3],
+    'admins': [2],
   }
 
   test_movie = {
@@ -81,42 +76,42 @@ class MovieAPITests(APITestCase):
   def setUp(self):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = UserSerializer(data=self.test_user)
+    serializer = AdminSerializer(data=self.test_user)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = MovieSerializer(data=self.test_movie)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
   def login(self, user):
@@ -303,12 +298,12 @@ class MovieAPITests(APITestCase):
 
     serializer = ShowtimeSerializer(data=showtime1)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = ShowtimeSerializer(data=showtime2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     response = self.client.get('http://localhost:8000/api/movies/1/showtimes')

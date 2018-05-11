@@ -7,7 +7,8 @@
         slot="activator"
         color="primary"
         dark
-        class="mb-2">New {{ kind }}</v-btn>
+        class="mb-2"
+        @click="create">New {{ kind }}</v-btn>
       <v-card>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
@@ -235,76 +236,73 @@ export default {
       this.movie = new Movie(movie);
       this.editedIndex = -1;
     },
+    controllerCreate() {
+      MoviesController.create(this.movie)
+        .then((response) => {
+          this.$alert.success('Successfully saved');
+          this.getMovies();
+        })
+        .catch((response) => {
+          this.$alert.error('Error while saving.');
+        });
+    },
+    controllerUpdate(data) {
+      MoviesController.update(data, this.movie.id)
+        .then((response) => {
+          this.movie = new Movie(response.data);
+          this.$alert.success('Settings successfully saved');
+          this.getMovies();
+        })
+        .catch((response) => {
+          this.$alert.error('Error while saving settings');
+        });
+    },
     save() {
-      this.dialog = false;
-      if (this.editedIndex === -1) {
-        this.movie.theater = this.theaterId;
-        if (this.selectedImage === null) {
-          MoviesController.create(this.movie)
-            .then((response) => {
-              this.$alert.success('Successfully saved');
-              this.getMovies();
-            })
-            .catch((response) => {
-              this.$alert.error('Error while saving.');
-            });
-        } else {
-          const fd = new FormData();
-          fd.append('kind', 'm');
-          fd.append('data', this.selectedImage, this.selectedImage.name);
-          MediaService.postImage(fd)
-            .then((response) => {
-              this.movie.image_id = response.data.id;
-              MoviesController.create(this.movie)
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.dialog = false;
+          if (this.editedIndex === -1) {
+            this.movie.theater = this.theaterId;
+            if (this.selectedImage === null) {
+              this.controllerCreate();
+            } else {
+              const fd = new FormData();
+              fd.append('kind', 'm');
+              fd.append('data', this.selectedImage, this.selectedImage.name);
+              MediaService.postImage(fd)
                 .then((response) => {
-                  this.$alert.success('Successfully saved');
-                  this.getMovies();
-                })
-                .catch((response) => {
-                  this.$alert.error('Error while saving.');
-                });
-            }).catch(() => {
-              this.$alert.error('Error while saving settings');
-            });
-        }
-      } else {
-        let data = _.reduce(this.movie, (result, value, key) => {
-          if (!_.isEmpty(value)) {
-            result[key] = value;
-          }
-          return result;
-        }, {});
-        if (this.selectedImage === null) {
-          MoviesController.update(data, this.movie.id)
-            .then((response) => {
-              this.movie = new Movie(response.data);
-              this.$alert.success('Settings successfully saved');
-              this.getMovies();
-            })
-            .catch((response) => {
-              this.$alert.error('Error while saving settings');
-            });
-        } else {
-          const fd = new FormData();
-          fd.append('kind', 'm');
-          fd.append('data', this.selectedImage, this.selectedImage.name);
-          MediaService.postImage(fd)
-            .then((response) => {
-              data['image_id'] = response.data.id;
-              MoviesController.update(data, this.movie.id)
-                .then((response) => {
-                  this.movie = new Movie(response.data);
-                  this.$alert.success('Settings successfully saved');
-                  this.getMovies();
-                })
-                .catch((response) => {
+                  this.movie.image_id = response.data.id;
+                  this.controllerCreate();
+                }).catch(() => {
                   this.$alert.error('Error while saving settings');
                 });
-            }).catch(() => {
-              this.$alert.error('Error while saving settings');
-            });
+            }
+          } else {
+            let data = _.reduce(this.movie, (result, value, key) => {
+              if (!_.isEmpty(value)) {
+                result[key] = value;
+              }
+              return result;
+            }, {});
+            if (this.selectedImage === null) {
+              this.controllerUpdate(data);
+            } else {
+              const fd = new FormData();
+              fd.append('kind', 'm');
+              fd.append('data', this.selectedImage, this.selectedImage.name);
+              MediaService.postImage(fd)
+                .then((response) => {
+                  data['image_id'] = response.data.id;
+                  this.controllerUpdate(data);
+                }).catch(() => {
+                  this.$alert.error('Error while saving settings');
+                });
+            }
+          }
+        } else {
+          this.$alert.error('Please fill all required fields correctly.');
         }
-      }
+      });
     },
     editButton(movieData) {
       this.movie = new Movie(movieData);

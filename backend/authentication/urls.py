@@ -1,3 +1,4 @@
+from django.urls import include
 from django.urls import path
 
 from rest_framework_jwt.views import obtain_jwt_token
@@ -54,6 +55,7 @@ urlpatterns = [
   path('users/<int:pk>/friends/', user_friends, name='user-friends'),
   path('users/friends/<str:query>', search_friends, name='user-friends-search'),
   path('users/<int:pk>/', user, name='user'),
+  path('users/<int:user_id>/props/', include('fan_zone.props.used.urls'), name='user'),
   path('users/', users, name='users'),
   path('auth/me/', active, name='active-user'),
   path('auth/login/', obtain_jwt_token, name='login'),

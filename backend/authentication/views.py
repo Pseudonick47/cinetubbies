@@ -14,7 +14,7 @@ from rest_framework_jwt.settings import api_settings
 
 from theaters.serializers import PublicSerializer as TheaterSerializer
 
-from .models import FanZoneAdmin
+# from .models import FanZoneAdmin
 from .models import FAN_ZONE_ADMIN
 from .models import Friendship
 from .models import TheaterAdmin
@@ -24,10 +24,10 @@ from .models import USER
 from .permissions import IsAdmin
 from .permissions import IsSelfOrReadOnly
 from .permissions import IsSystemAdmin
-from .serializers import FanZoneAdminSerializer
 from .serializers import FriendSerializer
-from .serializers import SystemAdminSerializer
+from .serializers import AdminSerializer
 from .serializers import TheaterAdminSerializer
+from .serializers import AdminSerializer
 from .serializers import UserSerializer
 from .utils import auth
 
@@ -71,17 +71,22 @@ class UserViewSet(viewsets.ModelViewSet):
     return Response(auth.jwt_response_payload_handler(token, user))
 
   def partial_update(self, request, pk=None):
+
+    if not confirmed_password(request.data):
+      return Response({'message': 'Password not confirmed'}, status=400)
+
     user = User.objects.get(id=pk)
     self.check_object_permissions(request, user)
     serializer = UserSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
-
-    image = Image.objects.get(
-      id=request.data['image_id']
-    )
-    user.image = image
-    user.save()
+    user = serializer.save()
+    if 'image_id' in request.data:
+      image = Image.objects.get(
+        id=request.data['image_id']
+      )
+      user.image = image
+      user.save()
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):
@@ -142,10 +147,6 @@ class AdminViewSet(viewsets.ViewSet):
       theater = TheaterAdmin.objects.get(pk=pk).theater
       return Response(data=TheaterSerializer(theater).data)
 
-    elif user.role == FAN_ZONE_ADMIN[0]:
-      theater = FanZoneAdmin.objects.get(pk=pk).theater
-      return Response(data=TheaterSerializer(theater).data)
-
     else:
       return Response(
         data={'message': 'system admin isn\'t assossiated with any theater'},
@@ -168,7 +169,7 @@ class SystemAdminViewSet(viewsets.ViewSet):
     if all_admins:
       # user requested all admins of the same role
       admins = User.objects.filter(role=role)
-      return Response(data=SystemAdminSerializer(admins, many=True).data)
+      return Response(data=AdminSerializer(admins, many=True).data)
 
     # return paginated results
     num = request.GET.get('num')
@@ -176,7 +177,7 @@ class SystemAdminViewSet(viewsets.ViewSet):
     page = request.GET.get('page')
     admins = paginator.get_page(page if page else 1)
 
-    return Response(data=SystemAdminSerializer(admins, many=True).data)
+    return Response(data=AdminSerializer(admins, many=True).data)
 
   def create(self, request):
     pwd = auth.generate_password()
@@ -184,10 +185,8 @@ class SystemAdminViewSet(viewsets.ViewSet):
 
     if request.data['role'] == THEATER_ADMIN[0]:
       serializer = TheaterAdminSerializer(data=request.data, partial=True)
-    elif request.data['role'] == FAN_ZONE_ADMIN[0]:
-      serializer = FanZoneAdminSerializer(data=request.data, partial=True)
     else:
-      serializer = SystemAdminSerializer(data=request.data, partial=True)
+      serializer = AdminSerializer(data=request.data, partial=True)
 
     serializer.is_valid(raise_exception=True)
     admin = serializer.save()
@@ -211,3 +210,15 @@ class SystemAdminViewSet(viewsets.ViewSet):
         return Response(data=admins.filter(role=role).count())
       else:
         return Response(data=admins.count())
+
+def confirmed_password(data):
+  password = ''
+  password_confirmation = ''
+  if 'password' in data:
+    password = data['password']
+  if 'password_confirmation' in data:
+    password_confirmation = data['password_confirmation']
+
+  if password != password_confirmation:
+    return False
+  return True

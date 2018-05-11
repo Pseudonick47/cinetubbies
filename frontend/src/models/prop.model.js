@@ -1,6 +1,6 @@
 import ImageHelper from '@/helpers/image-helper';
 
-export class OfficialProp {
+export class Prop {
   constructor(data) {
     _.assign(this, data);
 
@@ -13,4 +13,3 @@ export class OfficialProp {
     _.assign(this, data);
   }
 };
-

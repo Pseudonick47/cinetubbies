@@ -1,3 +1,5 @@
+import copy
+
 from rest_framework import serializers
 
 from cinetubbies.utils.func import update
@@ -27,9 +29,10 @@ class RewardScaleSerializer(serializers.Serializer):
     return res
 
   def to_internal_value(self, data):
-    data['min_points'] = data.pop('min')
-    data['max_points'] = data.pop('max')
-    return super().to_internal_value(data)
+    d = copy.deepcopy(data)
+    d['min_points'] = d.pop('min')
+    d['max_points'] = d.pop('max')
+    return super().to_internal_value(d)
 
   def validate(self, data):
     if data['min_points'] > data['max_points']:

@@ -1,5 +1,7 @@
 """Usefull utility functions."""
 
+import _pickle
+
 
 def update(obj: object, **kwargs) -> object:
   """Returns obj with updated attributes.
@@ -23,8 +25,31 @@ def update(obj: object, **kwargs) -> object:
     setattr(obj, k, v)
   return obj
 
-def show_urls(urllist, depth=0):
+
+def deepcopy(obj):
+  """Faster deepcopy.
+
+  Based on c implementation of pickle.
+
+  Args:
+    obj: Object to be copied.
+  Returns:
+    Copied object.
+  """
+  return _pickle.loads(_pickle.dumps(obj))
+
+
+def print_urls(urllist, depth=0):
+  """Prints all application URLs.
+
+  Recursively walks through URL paths and prints them in terminal.
+
+  Args:
+    urllist: Root URLs.
+    depth: Current URL depth.
+  """
+
   for entry in urllist:
     print("  " * depth, entry.pattern)
     if hasattr(entry, 'url_patterns'):
-      show_urls(entry.url_patterns, depth + 1)
+      print_urls(entry.url_patterns, depth + 1)

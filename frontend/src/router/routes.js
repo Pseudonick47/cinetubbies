@@ -4,8 +4,9 @@ import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/CinemaAdmin/Movies.component';
-import Settings from 'Components/User/Settings.component';
+import UserSettings from 'Components/User/Settings.component';
 import Profile from 'Components/User/Profile.component';
+import UserProps from 'Components/User/Props.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import Theater from 'Components/Theaters/Theater.component';
 import Movie from 'Components/Theaters/Movie.component';
@@ -13,8 +14,8 @@ import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 import SystemAdminRewards from 'Components/SystemAdmin/Rewards.component';
 import FanZoneHome from 'Components/FanZone/Home.component';
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
+import PendingProps from 'Components/FanZoneAdmin/PendingProps.component';
 import Showtimes from 'Components/Showtimes/Showtimes.component';
-import AdminHome from 'Components/CinemaAdmin/AdminHome.component';
 import Reports from 'Components/CinemaAdmin/Reports.component';
 import TicketsOnSale from 'Components/CinemaAdmin/TicketsOnSale.component';
 
@@ -62,7 +63,7 @@ export const routes = [
   {
     path: '/user/settings',
     name: 'user-settings',
-    component: Settings,
+    component: UserSettings,
     meta: {
       logged: true
     }
@@ -71,6 +72,14 @@ export const routes = [
     path: '/user/profile',
     name: 'user-profile',
     component: Profile,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/user/props',
+    name: 'user-props',
+    component: UserProps,
     meta: {
       logged: true
     }
@@ -92,7 +101,15 @@ export const routes = [
     }
   },
   {
-    path: '/admin/fan-zone',
+    path: '/admin/fan-zone/pending',
+    name: 'admin-fan-zone-pending',
+    component: PendingProps,
+    meta: {
+      fanZoneAdmin: true
+    }
+  },
+  {
+    path: '/admin/fan-zone/home',
     name: 'admin-fan-zone',
     component: FanZoneAdminHome,
     meta: {
@@ -131,14 +148,6 @@ export const routes = [
     path: '/showtimes',
     name: 'showtimes',
     component: Showtimes,
-    meta: {
-      cinemaAdmin: true
-    }
-  },
-  {
-    path: '/admin-home',
-    name: 'adminHome',
-    component: AdminHome,
     meta: {
       cinemaAdmin: true
     }

@@ -1,84 +1,128 @@
 <template>
   <div>
-    <v-container>
+    <v-container
+      class="content-container"
+      fluid
+    >
       <v-layout
+        class="content-container"
         row
-        pa-2
       >
-        <v-card class="theaters-toolbar">
-          <v-layout
-            row
-            pa-2
-            justify-space-between
+        <transition name="slide-fade">
+          <v-flex
+            v-if="drawer"
+            sm2
           >
-            <v-text-field
-              prepend-icon="search"
-              label="Search"
-              solo-inverted
-              class="mx-3"
-              flat
-            />
-            <v-btn
-              color="primary"
-              @click.native.stop="dialog=true"
-            >New</v-btn>
-          </v-layout>
-        </v-card>
-      </v-layout>
-      <v-layout
-        class="theaters-container"
-        row
-      >
+            <v-navigation-drawer
+              v-model="drawer"
+              style="padding: 0 !important"
+              clipped
+            >
+              <h1 class="pa-3 prop-info-highlight">My Props</h1>
+              <v-btn
+                flat
+                block
+                @click="dialog=true"
+              >
+                New Prop
+              </v-btn>
+              <v-expansion-panel class="elevation-0">
+                <v-expansion-panel-content
+                  hide-actions
+                  ripple
+                >
+                  <div
+                    slot="header"
+                    @click.stop="categorySelected(-1)"
+                  >
+                    Display All Props
+                  </div>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <categories
+                :collection="rootCategories"
+                @select="categorySelected"
+              />
+            </v-navigation-drawer>
+          </v-flex>
+        </transition>
         <v-flex
-          v-for="entry in entries"
-          :key="entry.id"
-          xs12
-          sm6
-          md4
-          lg4
-          xl4
-          pa-3
+          xs2
+          sm1
+          style="display: flex; align-items: center;"
         >
-          <official-prop
-            :info="entry"
-          />
+          <v-btn
+            fab
+            small
+            color="black"
+            style="transform: scale(0.8);"
+            @click="drawer = !drawer"
+          >
+            <v-icon>keyboard_arrow_left</v-icon>
+          </v-btn>
         </v-flex>
-      </v-layout>
-    </v-container>
-    <v-container id="pagination">
-      <v-layout justify-center>
-        <v-pagination
-          :length="pageCount"
-          :total-visible="7"
-          v-model="page"
+        <v-flex>
+          <v-container py-5>
+            <v-layout
+              v-for="prop in props"
+              :key="prop.id"
+              row
+              wrap
+              justify-center
+              mb-4
+            >
+              <used-prop
+                :info="prop"
+                :actions="['edit', 'remove']"
+              />
+            </v-layout>
+          </v-container>
+          <v-container
+            id="pagination"
+            style="display: flex; flex-direction: column; align-items: center;"
+          >
+            <v-layout>
+              <v-pagination
+                :length="pageCount"
+                :total-visible="7"
+                v-model="page"
+                style=" align-self: flex-end;"
+              />
+            </v-layout>
+          </v-container>
+        </v-flex>
+        <v-flex
+          xs2
+          sm1
         />
       </v-layout>
     </v-container>
     <official-prop-dialog
       v-if="dialog"
       @close="dialog=false"
-      @reload="reloadPage"
     />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 
-import OfficialProp from 'Components/FanZone/OfficialProp.component';
+import Categories from 'Components/FanZone/Categories.component';
+import UsedProp from 'Components/FanZone/UsedProp.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
 
-import SystemAdminController from 'Controllers/system-admin.controller';
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/official-props.controller';
 
 export default {
   name: 'FanZoneAdminHome',
   components: {
-    OfficialProp,
+    Categories,
+    UsedProp,
     OfficialPropDialog
   },
   data() {
     return {
+      drawer: true,
       dialog: false,
       entriesPerPage: 9,
       page: 1
@@ -86,54 +130,86 @@ export default {
   },
   computed: {
     ...mapGetters('props/official/', {
-      entries: 'all',
+      props: 'all',
       count: 'count'
     }),
-    ...mapGetters({
-      admin: 'activeUser'
+    ...mapGetters('props/categories/', {
+      rootCategories: 'roots',
+      categoryPath: 'path'
     }),
     pageCount() {
       return _.ceil(_.divide(this.count, this.entriesPerPage));
-    },
-    theater() {
-      return this.admin.theater.id;
     }
   },
   watch: {
     page() {
-      reloadPage();
+      PropsController.requestPage(this.page);
     }
   },
   beforeMount() {
-    SystemAdminController.requestAdminsTheater(this.$store.getters.activeUser.id)
-      .then(() => {
-        const theater = this.theater;
-        CategoriesController.requestCategories();
-        PropsController.requestCount({ theater });
-        PropsController.requestPage(this.page, { theater });
-      });
+    CategoriesController.requestCategories();
+    PropsController.requestCount();
+    PropsController.requestPage(this.page);
   },
   methods: {
-    reloadPage() {
-      PropsController.requestPage(this.page, { theater: this.theater });
+    categorySelected(id) {
+      if (id !== -1) {
+        PropsController.requestCount({ category: id });
+        PropsController.requestPage(this.page, { category: id });
+      } else {
+        PropsController.requestCount();
+        PropsController.requestPage(this.page);
+      }
     }
   }
 };
 </script>
 <style>
-.theaters-toolbar {
+.content-container {
+  padding: 0;
+  height: 100%;
+  transition-timing-function: linear;
+}
+
+.prop-info-background {
+  color: rgb(27, 25, 25);
+}
+
+.prop-info-card {
+  background: linear-gradient(90deg, black, #030303, #080808, #101010);
+  width: 75%;
+}
+
+.prop-info-card:hover {
+  box-shadow: 0px 0px 5px #daa520;
+}
+
+.prop-info-body {
+  height: 100% !important;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+.prop-info-item {
   width: 100%;
 }
-.theaters-container {
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
 
-  flex-flow: row wrap;
-  -webkit-flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: stretch;
+.prop-info-highlight {
+  color: #daa520 !important;
 }
+
+.prop-info-divider {
+  background: linear-gradient(90deg, black, #424242, #c5951b, #424242, black);
+}
+
+.grow-card {
+  transition: all .2s ease-in-out;
+}
+
+.grow-card:hover {
+  transform: scale(1.05);
+}
+
 </style>

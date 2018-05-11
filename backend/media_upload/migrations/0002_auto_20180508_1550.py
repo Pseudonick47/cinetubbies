@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='image',
             name='kind',
-            field=models.CharField(choices=[('o', 'Official Prop Image'), ('t', 'Theater Image')], max_length=1),
+            field=models.CharField(choices=[('o', 'Official Prop Image'), ('z', 'Used Prop Image'), ('t', 'Theater Image')], max_length=1),
         ),
     ]

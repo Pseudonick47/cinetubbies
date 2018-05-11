@@ -1,8 +1,9 @@
 from rest_framework.test import APITestCase
 
 from authentication.models import User
-from authentication.serializers import FanZoneAdminSerializer
-from authentication.serializers import SystemAdminSerializer
+# from authentication.serializers import FanZoneAdminSerializer
+# from authentication.serializers import SystemAdminSerializer
+from authentication.serializers import AdminSerializer
 from authentication.serializers import TheaterAdminSerializer
 from authentication.serializers import UserSerializer
 
@@ -62,16 +63,14 @@ class TicketOnSaleAPITests(APITestCase):
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [3],
+    'admins': [1],
   }
 
   test_theater2 = {
     'name': 'theater2',
     'address': 'address',
     'kind': 'm',
-    'theateradmins': [2],
-    'fanzoneadmins': [3],
+    'admins': [2]
   }
 
   test_movie = {
@@ -106,12 +105,12 @@ class TicketOnSaleAPITests(APITestCase):
       print(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
 
-    serializer = SystemAdminSerializer(data=self.test_system_admin)
+    serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
       print(serializer.errors)
     serializer.save()
@@ -286,7 +285,7 @@ class BookingAPITests(APITestCase):
       print(serializer.errors)
     serializer.save()
 
-    serializer = FanZoneAdminSerializer(data=self.test_fan_zone_admin)
+    serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
       print(serializer.errors)
     serializer.save()
@@ -364,8 +363,7 @@ class BookingAPITests(APITestCase):
     'name': 'theater1',
     'address': 'some street',
     'kind': 'p',
-    'theateradmins': [1],
-    'fanzoneadmins': [2],
+    'admins': [1]
   }
 
   valid_data = [

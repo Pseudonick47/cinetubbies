@@ -85,7 +85,7 @@
           <template
             slot="items"
             slot-scope="props">
-            <td>{{ getMovie(props.item.movie).title }}</td>
+            <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
             <td>{{ props.item.auditorium }} </td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.time }}</td>
@@ -110,12 +110,12 @@
           <template
             slot="items"
             slot-scope="props">
-            <td>{{ getMovie(getShowtime(props.item.showtime).movie).title }}</td>
-            <td>{{ getShowtime(props.item.showtime).auditorium }} </td>
+            <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
             <td>{{ props.item.seat }} </td>
-            <td>{{ getShowtime(props.item.showtime).date }}</td>
-            <td>{{ getShowtime(props.item.showtime).time }}</td>
-            <td>{{ getShowtime(props.item.showtime).price }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
+            <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
             <td>{{ props.item.discount }}</td>
           </template>
           <template slot="no-data">
@@ -196,6 +196,15 @@ export default {
           this.$alert.error('Error occurred.');
         });
     },
+    controllerUpdate(data) {
+      SysAdminController.update(data, this.theater.id)
+        .then((response) => {
+          this.$alert.success('Successfully saved');
+        })
+        .catch(() => {
+          this.$alert.error('Error while saving settings');
+        });
+    },
     submit() {
       this.confirmSubmit = false;
       let data = _.reduce(this.theater, (result, value, key) => {
@@ -207,10 +216,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           if (this.selectedImage === null) {
-            SysAdminController.update(data, this.theater.id)
-              .then((response) => {
-                this.$alert.success('Successfully saved');
-              });
+            this.controllerUpdate(data);
           } else {
             const fd = new FormData();
             fd.append('kind', 't');
@@ -218,10 +224,7 @@ export default {
             MediaService.postImage(fd)
               .then((response) => {
                 data['image_id'] = response.data.id;
-                SysAdminController.update(data, this.theater.id)
-                  .then((response) => {
-                    this.$alert.success('Successfully saved');
-                  });
+                this.controllerUpdate(data);
               }).catch(() => {
                 this.$alert.error('Error while saving settings');
               });
@@ -229,15 +232,19 @@ export default {
         }
       });
     },
-    getMovie(id) {
-      return this.movies.find((element) => {
-        return element.id === id;
-      });
+    findObjectByKey(array, key, value) {
+      for (var i = 0; i < array.length; i++) {
+        if (array[i][key] === value) {
+          return array[i];
+        }
+      }
+      return null;
     },
-    getShowtime(id) {
-      return this.repertoire.find((element) => {
-        return element.id === id;
-      });
+    getObjAttr(array, id, attr) {
+      var obj = this.findObjectByKey(array, 'id', id);
+      if (obj !== null) {
+        return obj[attr];
+      }
     }
   }
 };
