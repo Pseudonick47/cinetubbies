@@ -28,6 +28,7 @@ from .serializers import FriendSerializer
 from .serializers import AdminSerializer
 from .serializers import TheaterAdminSerializer
 from .serializers import AdminSerializer
+from .serializers import UserSerializer
 from .utils import auth
 
 from media_upload.defaults import DEFAULT_USER_IMAGE
@@ -36,7 +37,7 @@ from media_upload.models import USER_IMAGE
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
-  serializer_class = AdminSerializer
+  serializer_class = UserSerializer
   permission_classes = [IsSelfOrReadOnly]
 
   @action(detail=False)
@@ -45,10 +46,10 @@ class UserViewSet(viewsets.ModelViewSet):
     if not user.is_authenticated:
       return Response({'message': 'You are not logged in'}, status=401)
     user = User.objects.get(id=user.id)
-    return Response(AdminSerializer(user).data)
+    return Response(UserSerializer(user).data)
 
   def create(self, request):
-    serializer = AdminSerializer(data=request.data, partial=True)
+    serializer = UserSerializer(data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
     user = serializer.save()
@@ -70,9 +71,13 @@ class UserViewSet(viewsets.ModelViewSet):
     return Response(auth.jwt_response_payload_handler(token, user))
 
   def partial_update(self, request, pk=None):
+
+    if not confirmed_password(request.data):
+      return Response({'message': 'Password not confirmed'}, status=400)
+
     user = User.objects.get(id=pk)
     self.check_object_permissions(request, user)
-    serializer = AdminSerializer(user, data=request.data, partial=True)
+    serializer = UserSerializer(user, data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
     user = serializer.save()
@@ -205,3 +210,15 @@ class SystemAdminViewSet(viewsets.ViewSet):
         return Response(data=admins.filter(role=role).count())
       else:
         return Response(data=admins.count())
+
+def confirmed_password(data):
+  password = ''
+  password_confirmation = ''
+  if 'password' in data:
+    password = data['password']
+  if 'password_confirmation' in data:
+    password_confirmation = data['password_confirmation']
+
+  if password != password_confirmation:
+    return False
+  return True
