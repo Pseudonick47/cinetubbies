@@ -11,6 +11,7 @@ export class Theater {
     this.address = '';
     this.kind = '';
     this.description = '';
+    this.rating = null;
     _.assignWith(this, data);
 
     if (this.image) {
@@ -24,5 +25,9 @@ export class Theater {
 
   isTheater() {
     return this.kind === THEATER_KIND.THEATER;
+  }
+
+  isRatingNull() {
+    return this.rating === null;
   }
 }
