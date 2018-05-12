@@ -200,6 +200,8 @@ import { Theater } from 'Models/theater.model';
 import { Movie } from 'Models/movie.model';
 import TheaterController from 'Controllers/system-admin.controller';
 
+const REVENUE_MESSAGE = 'Select the period for which you want to see the report and click OK.';
+
 export default {
   name: 'Reports',
   data: () => ({
@@ -207,7 +209,7 @@ export default {
     movies: [],
     type: null,
     showMovieRatings: false,
-    revenue: 'Select the period for which you want to see the report and click OK.',
+    revenue: REVENUE_MESSAGE,
     date1: null,
     date2: null,
     month: null,
@@ -276,7 +278,7 @@ export default {
         this.pickMonth = false;
         this.pickYear = false;
       }
-      this.revenue = 'Select the period for which you want to see the report and click OK.';
+      this.revenue = REVENUE_MESSAGE;
     }
   }
 };

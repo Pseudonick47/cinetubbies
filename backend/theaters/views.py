@@ -124,19 +124,19 @@ class RestrictedAPI(ViewSet):
 
   @action(detail=True)
   def get_revenue(self, request, pk=None):
-    allBookings = Booking.objects.all()
-    thisTheaterBookings = [b for b in allBookings if b.getTheater().pk==pk]
+    all_bookings = Booking.objects.all()
+    this_theater_bookings = all_bookings.filter(showtime__movie__theater__id=pk)
     result = 0
 
     if request.data['type'] == 'all':
-      for b in thisTheaterBookings:
+      for b in this_theater_bookings:
         result += b.price() - b.get_discount()
     elif request.data['type'] == 'year':
-      for b in thisTheaterBookings:
+      for b in this_theater_bookings:
         if str(b.date().year) == request.data['year']:
           result += b.price() - b.get_discount()
     elif request.data['type'] == 'month':
-      for b in thisTheaterBookings:
+      for b in this_theater_bookings:
         if b.date().month < 10:
           month = '0'+str(b.date().month)
         else:
@@ -145,7 +145,7 @@ class RestrictedAPI(ViewSet):
         if str(b.date().year) == str(request.data['month'].split('-')[0]) and month == str(request.data['month'].split('-')[1]):
           result += b.price() - b.get_discount()
     else:
-      for b in thisTheaterBookings:
+      for b in this_theater_bookings:
         if str(b.date()) >= request.data['date1'] and str(b.date()) <= request.data['date2']:
           result += b.price() - b.get_discount()
 
