@@ -10,11 +10,14 @@
         sm5
         md4>
         <v-chip
-          v-if="theater.kind==='m'"
+          v-if="theater.isCinema()"
           label
           outline
           color="white"
           center>
+          <v-icon>
+            attach_money
+          </v-icon>
           Cinema revenue
         </v-chip>
         <v-chip
@@ -30,29 +33,94 @@
         </v-chip>
         <v-divider/>
         <v-radio-group
-          v-model="revenue"
-          row>
+          v-model="type"
+          row
+          @change="changeType()"
+        >
           <v-radio
-            label="Last week"
-            value="week" />
+            label="Date"
+            value="date"/>
           <v-radio
-            label="Last month"
+            label="Month"
             value="month"/>
-        </v-radio-group>
-        <v-radio-group
-          v-model="revenue"
-          row>
           <v-radio
-            label="Last year"
+            label="Year"
             value="year"/>
           <v-radio
-            label="Overall"
-            value="overall"/>
+            label="All"
+            value="all"/>
         </v-radio-group>
+        <v-flex v-show="pickDate">
+          <v-menu
+            ref="dateMenu1"
+            :close-on-content-click="false"
+            v-model="dateMenu1"
+            :nudge-right="40"
+            lazy
+            transition="scale-transition"
+            offset-y
+            full-width
+            max-width="290px"
+            min-width="290px"
+          >
+            <v-text-field
+              slot="activator"
+              v-model="date1"
+              label="Start date"
+              hint="YYYY-MM-DD format"
+              persistent-hint
+              prepend-icon="event"
+              readonly
+            />
+            <v-date-picker
+              v-model="date1"
+              no-title
+              @input="dateMenu1 = false"/>
+          </v-menu>
+          <v-menu
+            :close-on-content-click="false"
+            v-model="dateMenu2"
+            :nudge-right="40"
+            lazy
+            transition="scale-transition"
+            offset-y
+            full-width
+            max-width="290px"
+            min-width="290px"
+          >
+            <v-text-field
+              slot="activator"
+              v-model="date2"
+              label="End date"
+              hint="YYYY-MM-DD format"
+              persistent-hint
+              prepend-icon="event"
+              readonly
+            />
+            <v-date-picker
+              v-model="date2"
+              :min="date1"
+              no-title
+              @input="dateMenu2 = false"/>
+          </v-menu>
+        </v-flex>
+        <v-flex v-show="pickMonth">
+          <v-date-picker
+            v-model="month"
+            type="month"/>
+        </v-flex>
+        <v-flex v-show="pickYear">
+          <v-text-field
+            slot="activator"
+            v-model="year"
+            label="Year"
+            persistent-hint
+            prepend-icon="event"
+          />
+        </v-flex>
+        <v-btn @click="showRevenue()">ok</v-btn>
         <hr>
-        <v-card-text v-if="revenue == null">
-          Select the period for which you want to see the report
-        </v-card-text>
+        <v-card-text>{{ revenue }}</v-card-text>
       </v-flex>
     </v-layout>
     <hr>
@@ -129,6 +197,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { Theater } from 'Models/theater.model';
+import { Movie } from 'Models/movie.model';
 import TheaterController from 'Controllers/system-admin.controller';
 
 export default {
@@ -136,8 +205,18 @@ export default {
   data: () => ({
     theater: new Theater(),
     movies: [],
-    revenue: null,
-    showMovieRatings: false
+    type: null,
+    showMovieRatings: false,
+    revenue: 'Select the period for which you want to see the report and click OK.',
+    date1: null,
+    date2: null,
+    month: null,
+    year: null,
+    dateMenu1: false,
+    dateMenu2: false,
+    pickDate: false,
+    pickMonth: false,
+    pickYear: false
   }),
   computed: {
     ...mapGetters([
@@ -154,7 +233,7 @@ export default {
           this.theater = new Theater(response.data);
           TheaterController.getMovies(this.theater.id)
             .then((response) => {
-              this.movies = response.data;
+              this.movies = _.map(response.data, x => new Movie(x));
             })
             .catch((response) => {
               this.$alert.error('Error occurred.');
@@ -163,6 +242,41 @@ export default {
         .catch((response) => {
           this.$alert.error('Error occurred.');
         });
+    },
+    showRevenue() {
+      let data = { type: '', date1: '', date2: '', month: '', year: '' };
+      data['type'] = this.type;
+      data['date1'] = this.date1;
+      data['date2'] = this.date2;
+      data['month'] = this.month;
+      data['year'] = this.year;
+      TheaterController.getRevenue(this.theater.id, data)
+        .then((response) => {
+          this.revenue = response.data;
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
+    changeType() {
+      if (this.type == 'date') {
+        this.pickDate = true;
+        this.pickMonth = false;
+        this.pickYear = false;
+      } else if (this.type == 'month') {
+        this.pickDate = false;
+        this.pickMonth = true;
+        this.pickYear = false;
+      } else if (this.type == 'year') {
+        this.pickDate = false;
+        this.pickMonth = false;
+        this.pickYear = true;
+      } else {
+        this.pickDate = false;
+        this.pickMonth = false;
+        this.pickYear = false;
+      }
+      this.revenue = 'Select the period for which you want to see the report and click OK.';
     }
   }
 };
