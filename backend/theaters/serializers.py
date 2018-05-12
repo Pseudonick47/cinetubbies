@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+import json
 from cinetubbies.utils.func import update
 
 from authentication.models import TheaterAdmin
@@ -9,6 +9,7 @@ from media_upload.models import Image
 from media_upload.serializers import ImageSerializer
 
 from .models import Theater
+from .models import Auditorium
 from .models import THEATER_KIND
 
 class PublicSerializer(serializers.Serializer):
@@ -76,21 +77,19 @@ class AdministrationSerializer(RestrictedSerializer):
     return theater
 
 class AuditoriumSerializer(serializers.Serializer):
-  id = serializers.CharField()
-  name = serializers.CharField(
-    required=True,
-    allow_blank=False,
-    max_length=100
-  )
-  layout = serializers.ListField(
-    child = serializers.ListField(
-      serializers.IntegerField()
-    ),
-    source='get_layout'
-  )
+  id = serializers.IntegerField(read_only=True)
+  name = serializers.CharField()
+  layout = serializers.JSONField()
   theater = serializers.PrimaryKeyRelatedField(
     queryset=Theater.objects.all(),
     allow_null=False,
     write_only=True,
     required=True
   )
+
+  def create(self, validated_data):
+    return Auditorium.objects.create(**validated_data)
+
+  def update(self, auditorium, validated_data):
+    auditorium = update(auditorium, **validated_data)
+    return auditorium.save()

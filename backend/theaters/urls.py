@@ -53,8 +53,15 @@ get_tickets_on_sale = PublicAPI.as_view({
   'get': 'get_tickets_on_sale'
 })
 
-auditoriums = AuditoriumAPI.as_view({
-  'get': 'list'
+auditorium_list = AuditoriumAPI.as_view({
+  'get': 'list',
+  'post': 'create',
+})
+
+auditorium_detail = AuditoriumAPI.as_view({
+  'get': 'retrieve',
+  'delete': 'destroy',
+  'put': 'update'
 })
 
 urlpatterns = [
@@ -109,8 +116,13 @@ urlpatterns = [
     name='tickets-on-sale'
   ),
   path(
-    route='<int:pk>/auditoriums',
-    view=auditoriums,
-    name='get-auditoriums'
+    route='<int:theater_id>/auditoriums',
+    view=auditorium_list,
+    name='auditorium-details'
+  ),
+  path(
+    route='<int:theater_id>/auditoriums/<int:pk>',
+    view=auditorium_detail,
+    name='auditorium-details'
   )
 ]

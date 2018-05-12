@@ -20,6 +20,7 @@ from media_upload.models import Image
 from media_upload.models import THEATER_IMAGE
 
 from .models import Theater
+from .models import Auditorium
 from .models import THEATER_KIND
 from .models import Voting
 from .serializers import PublicSerializer
@@ -155,9 +156,36 @@ class AdministrationAPI(ViewSet):
     )
 
 class AuditoriumAPI(ViewSet):
-  permission_classes = [AllowAny]
-  def list(self, request, pk=None):
-    theater = get_object_or_404(Theater, id=pk)
+  permission_classes = [IsResponsibleForTheater]
+
+  def list(self, request, theater_id=None):
+    theater = get_object_or_404(Theater, id=theater_id)
     auditoriums = theater.auditoriums.all()
     return Response(AuditoriumSerializer(auditoriums, many=True).data)
 
+  def retrieve(self, request, theater_id=None, pk=None):
+    auditorium = get_object_or_404(Auditorium, id=pk)
+    return Response(AuditoriumSerializer(auditorium).data)
+
+  def create(self, request, theater_id=None):
+    theater = get_object_or_404(Theater, id=theater_id)
+    self.check_object_permissions(request, theater)
+    serializer = AuditoriumSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(data=serializer.data)
+
+  def update(self, request, theater_id=None, pk=None):
+    theater = get_object_or_404(Theater, id=theater_id)
+    self.check_object_permissions(request, theater)
+    auditorium = get_object_or_404(Auditorium, id=pk)
+    serializer = AuditoriumSerializer(auditorium, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    auditorium = serializer.save()
+    return Response(data=serializer.data)
+
+  def destroy(self, request, theater_id, pk):
+    theater = get_object_or_404(Theater, pk=theater_id)
+    self.check_object_permissions(request, theater)
+    Auditorium.objects.get(id=pk).delete()
+    return Response(data={'message': f'Auditorium {pk} successfully deleted.'})

@@ -2,6 +2,7 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 from authentication.models import User
 from django.db.models import Avg
+from django.db.models.signals import post_init, pre_save, post_save
 import json
 from django.core.serializers import serialize
 
@@ -57,5 +58,14 @@ class Auditorium(models.Model):
   layout = models.TextField()
   theater = models.ForeignKey(to='theaters.Theater', on_delete=models.SET_NULL, related_name='auditoriums', null=True)
 
-  def get_layout(self):
-    return json.loads(self.layout)['layout']
+def layout_to_dict(**kwargs):
+  instance = kwargs.get('instance')
+  if type(instance.layout).__name__=='str':
+    instance.layout = json.loads(instance.layout)
+
+def layout_to_str(sender, instance, **kwargs):
+  instance.layout = json.dumps(instance.layout)
+
+post_init.connect(layout_to_dict, sender=Auditorium)
+pre_save.connect(layout_to_str, Auditorium)
+post_save.connect(layout_to_dict, Auditorium)
