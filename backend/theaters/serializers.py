@@ -74,3 +74,23 @@ class AdministrationSerializer(RestrictedSerializer):
     theater = Theater.objects.create(**validated_data)
     theater.admins.set(admins)
     return theater
+
+class AuditoriumSerializer(serializers.Serializer):
+  id = serializers.CharField()
+  name = serializers.CharField(
+    required=True,
+    allow_blank=False,
+    max_length=100
+  )
+  layout = serializers.ListField(
+    child = serializers.ListField(
+      serializers.IntegerField()
+    ),
+    source='get_layout'
+  )
+  theater = serializers.PrimaryKeyRelatedField(
+    queryset=Theater.objects.all(),
+    allow_null=False,
+    write_only=True,
+    required=True
+  )

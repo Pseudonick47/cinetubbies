@@ -25,6 +25,7 @@ from .models import Voting
 from .serializers import PublicSerializer
 from .serializers import RestrictedSerializer
 from .serializers import AdministrationSerializer
+from .serializers import AuditoriumSerializer
 from .permissions import IsResponsibleForTheater
 from movies.serializers import MovieSerializer
 from showtimes.serializers import ShowtimeSerializer
@@ -95,7 +96,7 @@ class PublicAPI(ViewSet):
       for s in showtime_list:
         showtimes.append(s)
     return Response(ShowtimeSerializer(showtimes, many=True).data)
-  
+
   @action(detail=True)
   def get_tickets_on_sale(self, request, pk=None):
     theater = get_object_or_404(Theater, id=pk)
@@ -152,3 +153,11 @@ class AdministrationAPI(ViewSet):
     return Response(
       data={'message': 'Theater {0} successfully deleted.'.format(pk)}
     )
+
+class AuditoriumAPI(ViewSet):
+  permission_classes = [AllowAny]
+  def list(self, request, pk=None):
+    theater = get_object_or_404(Theater, id=pk)
+    auditoriums = theater.auditoriums.all()
+    return Response(AuditoriumSerializer(auditoriums, many=True).data)
+

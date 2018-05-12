@@ -1,8 +1,8 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
 from authentication.models import User
-from django.db.models import Count, Avg
-
+from django.db.models import Avg
+import json
 from django.core.serializers import serialize
 
 
@@ -50,3 +50,12 @@ class Voting(models.Model):
   user = models.ForeignKey(User, on_delete=models.PROTECT)
   theater = models.ForeignKey(Theater, on_delete=models.PROTECT)
   rating = models.IntegerField(default=0)
+
+class Auditorium(models.Model):
+  id = models.AutoField(primary_key=True)
+  name = models.CharField(max_length=100, blank=False)
+  layout = models.TextField()
+  theater = models.ForeignKey(to='theaters.Theater', on_delete=models.SET_NULL, related_name='auditoriums', null=True)
+
+  def get_layout(self):
+    return json.loads(self.layout)['layout']
