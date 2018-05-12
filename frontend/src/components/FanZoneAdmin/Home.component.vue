@@ -73,7 +73,8 @@
             >
               <used-prop
                 :info="prop"
-                :actions="['edit', 'remove']"
+                :actions="['edit', 'delete']"
+                @clicked="mutateProp"
               />
             </v-layout>
           </v-container>
@@ -101,6 +102,13 @@
       v-if="dialog"
       @close="dialog=false"
     />
+    <simple-dialog
+      v-if="showDeleteDialog"
+      title="Please confirm your decesion to delete this prop."
+      text="This action is irreversible. Prop will be removed from the store and all reservations will be canceled."
+      @cancel="showDeleteDialog = false; propToDelete = null"
+      @confirm="deleteProp"
+    />
   </div>
 </template>
 <script>
@@ -109,6 +117,7 @@ import { mapGetters } from 'vuex';
 import Categories from 'Components/FanZone/Categories.component';
 import UsedProp from 'Components/FanZone/UsedProp.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
+import SimpleDialog from 'Components/helpers/SimpleDialog.component';
 
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/official-props.controller';
@@ -118,14 +127,17 @@ export default {
   components: {
     Categories,
     UsedProp,
-    OfficialPropDialog
+    OfficialPropDialog,
+    SimpleDialog
   },
   data() {
     return {
       drawer: true,
       dialog: false,
+      showDeleteDialog: false,
       entriesPerPage: 9,
-      page: 1
+      page: 1,
+      propToDelete: null
     };
   },
   computed: {
@@ -160,6 +172,21 @@ export default {
         PropsController.requestCount();
         PropsController.requestPage(this.page);
       }
+    },
+    mutateProp(payload) {
+      const { id, action } = payload;
+      if (action === 'delete') {
+        this.propToDelete = id;
+        this.showDeleteDialog = true;
+      } else if (action === 'edit') {
+        console.log('edit');
+      }
+    },
+    deleteProp() {
+      this.showDeleteDialog = false;
+      PropsController.deleteProp(this.propToDelete);
+      this.$store.commit('props/official/deleteProp', this.propToDelete);
+      this.propToDelete = null;
     }
   }
 };

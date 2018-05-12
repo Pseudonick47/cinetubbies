@@ -1,6 +1,6 @@
-import copy
-
 from rest_framework import serializers
+
+from cinetubbies.utils.func import deepcopy
 
 from media_upload.models import Image
 from media_upload.serializers import ImageSerializer
@@ -31,7 +31,7 @@ class PropSerializer(serializers.Serializer):
   )
 
   def to_internal_value(self, data):
-    d = copy.deepcopy(data)
+    d = deepcopy(data)
     d['image_id'] = d.pop('imageId')
     return super().to_internal_value(d)
 

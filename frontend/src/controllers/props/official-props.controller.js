@@ -49,5 +49,9 @@ export default {
 
   postProp(data) {
     return Service.props.post(data);
+  },
+
+  deleteProp(id) {
+    return Service.props.delete(id);
   }
 };
