@@ -2,6 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 from rest_framework import status
 from rest_framework.decorators import action
@@ -23,6 +25,7 @@ from .models import Theater
 from .models import Auditorium
 from .models import THEATER_KIND
 from .models import Voting
+from sale_tickets.models import Booking
 from .serializers import PublicSerializer
 from .serializers import RestrictedSerializer
 from .serializers import AdministrationSerializer
@@ -120,6 +123,35 @@ class RestrictedAPI(ViewSet):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data)
+
+  @action(detail=True)
+  def get_revenue(self, request, pk=None):
+    all_bookings = Booking.objects.all()
+    this_theater_bookings = all_bookings.filter(showtime__movie__theater__id=pk)
+    result = 0
+
+    if request.data['type'] == 'all':
+      for b in this_theater_bookings:
+        result += b.price() - b.get_discount()
+    elif request.data['type'] == 'year':
+      for b in this_theater_bookings:
+        if str(b.date().year) == request.data['year']:
+          result += b.price() - b.get_discount()
+    elif request.data['type'] == 'month':
+      for b in this_theater_bookings:
+        if b.date().month < 10:
+          month = '0'+str(b.date().month)
+        else:
+          month = str(b.date().month)
+
+        if str(b.date().year) == str(request.data['month'].split('-')[0]) and month == str(request.data['month'].split('-')[1]):
+          result += b.price() - b.get_discount()
+    else:
+      for b in this_theater_bookings:
+        if str(b.date()) >= request.data['date1'] and str(b.date()) <= request.data['date2']:
+          result += b.price() - b.get_discount()
+
+    return Response(result)
 
 class AdministrationAPI(ViewSet):
   permission_classes = [IsAuthenticated, IsSystemAdmin]

@@ -63,6 +63,9 @@ auditorium_detail = AuditoriumAPI.as_view({
   'delete': 'destroy',
   'put': 'update'
 })
+get_revenue = RestrictedAPI.as_view({
+  'post': 'get_revenue'
+})
 
 urlpatterns = [
   path(
@@ -124,5 +127,10 @@ urlpatterns = [
     route='<int:theater_id>/auditoriums/<int:pk>',
     view=auditorium_detail,
     name='auditorium-details'
-  )
+  ),
+  path(
+    route='<int:pk>/revenue',
+    view=get_revenue,
+    name='get-revenue'
+  ),
 ]

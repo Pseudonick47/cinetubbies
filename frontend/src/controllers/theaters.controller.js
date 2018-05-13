@@ -47,4 +47,5 @@ export default {
   getAuditoriums(theaterId) {
     return TheatersApiService.getAuditoriums(theaterId);
   }
+
 };

@@ -52,6 +52,10 @@ export default {
     return Axios.get(`${PREFIX}${data}/tickets-on-sale`);
   },
 
+  getRevenue(id, data) {
+    return Axios.post(`${PREFIX}${id}/revenue`, data);
+  },
+
   getAuditoriums(theaterId) {
     return Axios.get(`${PREFIX}${theaterId}/auditoriums`);
   },
