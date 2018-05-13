@@ -6,12 +6,6 @@
     color="secondary"
     lazy
   >
-    <!-- <v-btn
-      slot="activator"
-      color="primary"
-    >
-      Open Dialog
-    </v-btn> -->
     <v-card>
       <v-card-title>
         {{ dialogTitle }}
@@ -20,6 +14,7 @@
           v-model="selectedAuditorium.name"
           label="Auditorium Name"
           single-line
+          autofocus
           hide-details
         />
       </v-card-title>

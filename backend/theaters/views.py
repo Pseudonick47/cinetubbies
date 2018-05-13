@@ -183,7 +183,7 @@ class AuditoriumAPI(ViewSet):
     request.data['theater'] = theater.id
     serializer = AuditoriumSerializer(auditorium, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    auditorium = serializer.save()
     return Response(data=serializer.data)
 
   def destroy(self, request, theater_id, pk):

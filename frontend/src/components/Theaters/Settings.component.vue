@@ -245,14 +245,17 @@ export default {
     loadAuditoriums() {
       TheatersController.getAuditoriums(this.theater.id)
         .then((response) => {
-          this.auditoriums = _.map(response.data, x => {
-            x.layout = x.layout.layout;
-            return x;
-          });
+          this.auditoriums = this.mapAuditoriums(response.data);
         })
         .catch((response) => {
 
         });
+    },
+    mapAuditoriums(data) {
+      return _.map(data, x => {
+        x.layout = x.layout.layout;
+        return x;
+      });
     },
     loadTheater() {
       this.loading = true;
@@ -360,22 +363,24 @@ export default {
         TheatersController.updateAuditorium(this.theater.id, auditorium)
           .then((response) => {
             this.$alert.success('Successfully updated auditorium');
+            this.insertOrUpdateAuditorium(response.data);
+            this.closeAuditoriumModal();
           })
           .catch(() => {
             this.$alert.error('Error while updated auditorium');
           });
         this.selectedAuditorium = null;
-
         return;
       }
       TheatersController.createAuditorium(this.theater.id, auditorium)
         .then((response) => {
+          this.insertOrUpdateAuditorium(response.data);
           this.$alert.success('Successfully created auditorium');
+          this.closeAuditoriumModal();
         })
         .catch(() => {
           this.$alert.error('Error while created auditorium');
         });
-      this.closeAuditoriumModal();
     },
     closeAuditoriumModal() {
       this.showAddAuditoriumModal = false;
@@ -384,11 +389,25 @@ export default {
     deleteAuditorium(id) {
       TheatersController.deleteAuditorium(this.theater.id, id)
         .then((response) => {
+          this.removeAuditorium(id);
           this.$alert.success('Successfully deleted auditorium');
         })
         .catch(() => {
           this.$alert.error('Error while deleting auditorium');
         });
+    },
+    removeAuditorium(id) {
+      let index = _.findIndex(this.auditoriums, { id });
+      if (index > -1) {
+        this.auditoriums.splice(index, 1);
+      }
+    },
+    insertOrUpdateAuditorium(data) {
+      let index = _.findIndex(this.auditoriums, { id: data.id });
+      if (index < 0) {
+        return this.auditoriums.push(data);
+      }
+      this.auditoriums.splice(index, 1, this.mapAuditoriums([ data ])[0]);
     }
   }
 };
