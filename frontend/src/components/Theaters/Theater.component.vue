@@ -116,7 +116,7 @@ export default {
     return {
       search: '',
       movies: [],
-      theater: {},
+      theater: new Theater(),
       ticketsOnSale: [],
       showTicketsOnSale: false,
       repertoire: []
