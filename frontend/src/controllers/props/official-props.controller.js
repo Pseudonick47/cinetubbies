@@ -47,8 +47,12 @@ export default {
     });
   },
 
-  postProp(data) {
+  createProp(data) {
     return Service.props.post(data);
+  },
+
+  updateProp(id, data) {
+    return Service.props.put(id, data);
   },
 
   deleteProp(id) {

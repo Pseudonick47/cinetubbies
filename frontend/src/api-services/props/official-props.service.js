@@ -27,6 +27,10 @@ const props = {
     return Axios.post(`${PROPS}${OFFICIAL}`, data);
   },
 
+  put(id, data) {
+    return Axios.put(`${PROPS}${OFFICIAL}${id}`, data);
+  },
+
   delete(id) {
     return Axios.delete(`${PROPS}${OFFICIAL}${id}`);
   }

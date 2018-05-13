@@ -20,3 +20,6 @@ class UsedProp(Prop, OptimisticLockingModel):
   expiration_date = models.DateField()
   approved = models.BooleanField(default=False)
   pending_approval = models.BooleanField(default=True)
+
+  def get_kind(self):
+    return 'used'

@@ -19,6 +19,7 @@ class PropSerializer(serializers.Serializer):
   )
   image_id = serializers.PrimaryKeyRelatedField(
     queryset=Image.objects.all(),
+    required=False,
     allow_null=True,
     write_only=True,
     source='image'
@@ -29,11 +30,17 @@ class PropSerializer(serializers.Serializer):
   post_date = serializers.DateField(
     read_only=True,
   )
+  kind = serializers.CharField(
+    source='get_kind',
+    read_only=True
+  )
 
   def to_internal_value(self, data):
-    d = deepcopy(data)
-    d['image_id'] = d.pop('imageId')
-    return super().to_internal_value(d)
+    if 'imageId' in data:
+      d = deepcopy(data)
+      d['image_id'] = d.pop('imageId')
+      return super().to_internal_value(d)
+    return super().to_internal_value(data)
 
   def to_representation(self, obj):
     ret = super().to_representation(obj)

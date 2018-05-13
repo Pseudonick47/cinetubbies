@@ -62,99 +62,83 @@
                 >
                   <v-flex>
                     <v-form ref="form">
+                      <v-text-field
+                        v-validate="'required'"
+                        v-model="prop.title"
+                        :error-messages="errors.collect('title')"
+                        name="title"
+                        label="Title"
+                        type="text"
+                        required
+                      />
+                      <v-select
+                        v-validate="'required'"
+                        :items="categories"
+                        v-model="prop.category"
+                        :error-messages="errors.collect('category')"
+                        name="category"
+                        label="Category"
+                        item-text="path"
+                        item-value="id"
+                        autocomplete
+                        return-object
+                        required
+                      />
+                      <v-select
+                        v-validate="'required'"
+                        :items="theaters"
+                        v-model="prop.theater"
+                        :error-messages="errors.collect('theater')"
+                        name="theater"
+                        label="Theater/Cinema"
+                        item-text="name"
+                        item-value="id"
+                        autocomplete
+                        return-object
+                        required
+                      />
                       <v-layout
                         row
                         wrap
+                        justify-space-between
                       >
                         <v-flex
                           xs12
-                          sm12
-                          md7
+                          md5
                         >
                           <v-text-field
-                            v-validate="'required'"
-                            v-model="prop.title"
-                            :error-messages="errors.collect('title')"
-                            name="title"
-                            label="Title"
-                            type="text"
+                            v-validate="'required|decimal:3'"
+                            v-model="prop.price"
+                            :error-messages="errors.collect('price')"
+                            name="price"
+                            label="Price"
+                            prefix="$"
                             required
                           />
-                          <v-select
-                            v-validate="'required'"
-                            :items="categories"
-                            v-model="selectedCategory"
-                            :error-messages="errors.collect('category')"
-                            name="category"
-                            label="Category"
-                            item-text="path"
-                            autocomplete
-                            return-object
-                            required
-                          />
-                          <v-select
-                            v-validate="'required'"
-                            :items="theaters"
-                            v-model="selectedTheater"
-                            :error-messages="errors.collect('theater')"
-                            name="theater"
-                            label="Theater/Cinema"
-                            item-text="name"
-                            autocomplete
-                            return-object
-                            required
-                          />
-                          <v-layout
-                            row
-                            wrap
-                            justify-space-between
-                          >
-                            <v-flex
-                              xs12
-                              md5
-                            >
-                              <v-text-field
-                                v-validate="'required|decimal:3'"
-                                v-model="prop.price"
-                                :error-messages="errors.collect('price')"
-                                name="price"
-                                label="Price"
-                                prefix="$"
-                                required
-                              />
-                            </v-flex>
-                            <v-flex
-                              xs12
-                              md5
-                            >
-                              <v-text-field
-                                v-validate="'required|numeric'"
-                                v-model="prop.quantity"
-                                :error-messages="errors.collect('quantity')"
-                                name="quantity"
-                                label="Quantity"
-                                required
-                              />
-                            </v-flex>
-                          </v-layout>
-                          <small>*indicates required field</small>
                         </v-flex>
                         <v-flex
                           xs12
-                          sm12
                           md5
-                          pl-2
                         >
                           <v-text-field
-                            v-model="prop.description"
-                            name="description"
-                            label="Description"
-                            multi-line
-                            style="height: 100%"
-                            pa-0
+                            v-validate="'required|numeric'"
+                            v-model="prop.quantity"
+                            :error-messages="errors.collect('quantity')"
+                            name="quantity"
+                            label="Quantity"
+                            required
                           />
                         </v-flex>
                       </v-layout>
+                      <small>*indicates required field</small>
+                      <v-text-field
+                        v-model="prop.description"
+                        name="description"
+                        label="Description"
+                        multi-line
+                        style="height: 100%"
+                        pa-0
+                      />
                     </v-form>
                   </v-flex>
                 </v-layout>
@@ -209,10 +193,16 @@ import { Prop } from 'Models/prop.model';
 
 export default {
   name: 'OfficialPropDialog',
+  props: {
+    prop: {
+      type: Prop,
+      required: false,
+      default: () => new Prop()
+    }
+  },
   data() {
     return {
       show: true,
-      prop: new Prop(),
       selectedCategory: null,
       selectedImage: null,
       selectedTheater: null,
@@ -264,22 +254,21 @@ export default {
     },
     submit() {
       this.$validator.validateAll().then((result) => {
-        if (result) {
-          if (this.selectedImage) {
-            console.log('Posting');
-            this.postImage()
-              .then((response) => {
-                console.log('Data', response.data);
-                this.postProp(response.data.id);
-              })
-              .catch(() => {
-                this.$alert.error('Image upload failed. Please check your internet connection and try again!');
-              });
-          } else {
-            this.postProp();
-          }
-        } else {
+        if (!result) {
           this.$alert.error('Please fill all required fields.');
+          return;
+        }
+
+        if (this.selectedImage) {
+          this.postImage()
+            .then((response) => {
+              this.saveProp(response.data.id);
+            })
+            .catch(() => {
+              this.$alert.error('Image upload failed. Please check your internet connection and try again!');
+            });
+        } else {
+          this.saveProp();
         }
       });
     },
@@ -289,18 +278,36 @@ export default {
       fd.append('data', this.selectedImage, this.selectedImage.name);
       return MediaService.postImage(fd);
     },
-    postProp(imageId = null) {
-      this.prop.category = this.selectedCategory.id;
-      this.prop.theater = this.selectedTheater.id;
-      this.prop.imageId = imageId;
+    saveProp(imageId = null) {
+      this.prop.categoryId = this.prop.category.id;
+      this.prop.theaterId = this.prop.theater.id;
 
-      PropsController.postProp(this.prop)
+      if (imageId) {
+        this.prop.imageId = imageId;
+      }
+
+      if (this.prop.id) {
+        this.updateProp();
+      } else {
+        this.createProp();
+      }
+    },
+    createProp() {
+      PropsController.createProp(this.prop)
         .then((response) => {
           this.$alert.success('Official prop successfully created.');
-          this.$emit('reload');
-
           this.$store.commit('props/official/insertProp', response.data);
-
+          this.reset();
+        })
+        .catch((e) => {
+          this.$alert.error('Something went wrong. Please try again!');
+        });
+    },
+    updateProp() {
+      PropsController.updateProp(this.prop.id, this.prop)
+        .then((response) => {
+          this.$alert.success('Official prop successfully created.');
+          this.$store.commit('props/official/updateProp', response.data);
           this.reset();
         })
         .catch((e) => {

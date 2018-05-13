@@ -269,20 +269,20 @@ class PublicOfficialPropAPI(APITestCase):
   test_prop_1 = {
     'title': 'Prop1',
     'description': 'some profound text here',
-    'category': 1,
+    'categoryId': 1,
     'quantity': 2,
     'price': 99.9,
-    'theater': 1,
+    'theaterId': 1,
     'imageId': None
   }
 
   test_prop_2 = {
     'title': 'Prop2',
     'description': 'some profound text here',
-    'category': 2,
+    'categoryId': 2,
     'quantity': 5,
     'price': 59.9,
-    'theater': 1,
+    'theaterId': 1,
     'imageId': None
   }
 
@@ -432,10 +432,10 @@ class RestrictedOfficialPropAPITests(APITestCase):
   test_prop_1 = {
     'title': 'Prop1',
     'description': 'some profound text here',
-    'category': 1,
+    'categoryId': 1,
     'quantity': 2,
     'price': 99.9,
-    'theater': 1,
+    'theaterId': 1,
     'imageId': None
   }
 
@@ -519,10 +519,10 @@ class RestrictedOfficialPropAPITests(APITestCase):
     test_prop_2 = {
       'title': 'Prop2',
       'description': 'some profound text here',
-      'category': 2,
+      'categoryId': 2,
       'quantity': 5,
       'price': 59.9,
-      'theater': 1,
+      'theaterId': 1,
       'imageId': None
     }
 
@@ -546,10 +546,10 @@ class RestrictedOfficialPropAPITests(APITestCase):
     test_prop_2 = {
       'title': 'Prop2',
       'description': 'some profound text here',
-      'category': 2,
+      'categoryId': 2,
       'quantity': 5,
       'price': 59.9,
-      'theater': 2,
+      'theaterId': 2,
       'imageId': None
     }
 
@@ -596,10 +596,10 @@ class RestrictedOfficialPropAPITests(APITestCase):
     test_prop_2 = {
       'title': 'Prop2',
       'description': 'some profound text here',
-      'category': 2,
+      'categoryId': 2,
       'quantity': 5,
       'price': 59.9,
-      'theater': 1,
+      'theaterId': 1,
       'imageId': None
     }
 

@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     clicked(e) {
-      this.$emit('clicked', { id: this.info.id, action: e });
+      this.$emit('clicked', { prop: this.info, action: e });
     }
   }
 };

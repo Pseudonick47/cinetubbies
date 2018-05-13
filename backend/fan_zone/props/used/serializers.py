@@ -1,10 +1,9 @@
-import copy
-
 from rest_framework import serializers
 
 from authentication.models import User
 from authentication.serializers import AdminSerializer
 
+from cinetubbies.utils.func import deepcopy
 from cinetubbies.utils.func import update
 
 from fan_zone.categories.serializers import PublicSerializer as \
@@ -58,7 +57,7 @@ class MemberSerializer(PublicSerializer):
   )
 
   def to_internal_value(self, data):
-    d = copy.deepcopy(data)
+    d = deepcopy(data)
     d['owner_id'] = d.pop('ownerId')
     d['category_id'] = d.pop('categoryId')
     d['expiration_date'] = d.pop('expirationDate')

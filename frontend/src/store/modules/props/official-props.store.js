@@ -28,6 +28,13 @@ const mutations = {
     state.props = _.sortBy(state.props, (p) => _.lowerCase(p.title));
   },
 
+  updateProp(state, prop) {
+    const p = _.find(state.props, [ 'id', prop.id ]);
+    if (p) {
+      p.update(prop);
+    }
+  },
+
   deleteProp(state, id) {
     _.remove(state.props, (p) => p.id == id);
   }

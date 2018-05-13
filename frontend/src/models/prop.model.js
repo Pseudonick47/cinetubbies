@@ -11,9 +11,19 @@ export class Prop {
       this.image = {};
       this.image.path = ImageHelper.getAbsolutePath(DEFAULT_PROP_IMAGE);
     }
+
+    if (this.kind === 'official') {
+      this.category = this.category || {};
+      this.theater = this.theater || {};
+    }
   }
 
   update(data) {
     _.assign(this, data);
+    this.image.path = ImageHelper.getAbsolutePath(this.image.path);
+  }
+
+  clone() {
+    return _.cloneDeep(this);
   }
 };

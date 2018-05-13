@@ -22,7 +22,7 @@
               <v-btn
                 flat
                 block
-                @click="dialog=true"
+                @click="showCreateDialog = true"
               >
                 New Prop
               </v-btn>
@@ -99,8 +99,13 @@
       </v-layout>
     </v-container>
     <official-prop-dialog
-      v-if="dialog"
-      @close="dialog=false"
+      v-if="showCreateDialog && propToEdit"
+      :prop="propToEdit"
+      @close="showCreateDialog = false; propToEdit = null"
+    />
+    <official-prop-dialog
+      v-else-if="showCreateDialog"
+      @close="showCreateDialog = false; propToEdit = null"
     />
     <simple-dialog
       v-if="showDeleteDialog"
@@ -133,11 +138,12 @@ export default {
   data() {
     return {
       drawer: true,
-      dialog: false,
+      showCreateDialog: false,
       showDeleteDialog: false,
       entriesPerPage: 9,
       page: 1,
-      propToDelete: null
+      propToDelete: null,
+      propToEdit: null
     };
   },
   computed: {
@@ -174,18 +180,19 @@ export default {
       }
     },
     mutateProp(payload) {
-      const { id, action } = payload;
+      const { prop, action } = payload;
       if (action === 'delete') {
-        this.propToDelete = id;
+        this.propToDelete = prop;
         this.showDeleteDialog = true;
       } else if (action === 'edit') {
-        console.log('edit');
+        this.propToEdit = prop.clone();
+        this.showCreateDialog = true;
       }
     },
     deleteProp() {
       this.showDeleteDialog = false;
-      PropsController.deleteProp(this.propToDelete);
-      this.$store.commit('props/official/deleteProp', this.propToDelete);
+      PropsController.deleteProp(this.propToDelete.id);
+      this.$store.commit('props/official/deleteProp', this.propToDelete.id);
       this.propToDelete = null;
     }
   }
