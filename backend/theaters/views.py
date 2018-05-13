@@ -170,6 +170,7 @@ class AuditoriumAPI(ViewSet):
   def create(self, request, theater_id=None):
     theater = get_object_or_404(Theater, id=theater_id)
     self.check_object_permissions(request, theater)
+    request.data['theater'] = theater.id
     serializer = AuditoriumSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -179,9 +180,10 @@ class AuditoriumAPI(ViewSet):
     theater = get_object_or_404(Theater, id=theater_id)
     self.check_object_permissions(request, theater)
     auditorium = get_object_or_404(Auditorium, id=pk)
+    request.data['theater'] = theater.id
     serializer = AuditoriumSerializer(auditorium, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
-    auditorium = serializer.save()
+    serializer.save()
     return Response(data=serializer.data)
 
   def destroy(self, request, theater_id, pk):

@@ -1,4 +1,3 @@
-
 import Home from 'Components/Home.component';
 import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';

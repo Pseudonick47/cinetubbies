@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <v-container
       grid-list-md
       text-xs-center>
@@ -12,7 +12,7 @@
           <div
             v-for="j in colsCount"
             :key="`5${i}${j}`"
-            :class="[seats[i-1][j-1] ? 'seat-free' : 'seat-taken']"
+            :class="[selectedSeats[i-1][j-1] ? 'seat-free' : 'seat-taken']"
             class="layout-seat"
             @click="seatClicked(i-1, j-1)"
           >
@@ -21,40 +21,38 @@
           </div>
         </div>
       </div>
-      <v-btn
-        @click="submit"
-      >Submit</v-btn>
     </v-container>
   </div>
 </template>
 <script>
 export default {
   name: 'Layout',
-  data: () => ({
-    seats: [
-      [ 0, 0, 0, 1, 1, 0, 0, 0 ],
-      [ 0, 0, 1, 1, 1, 1, 0, 0 ],
-      [ 0, 0, 1, 1, 1, 1, 0, 0 ],
-      [ 1, 0, 0, 1, 1, 1, 0, 0 ],
-      [ 0, 1, 0, 1, 1, 1, 1, 0 ],
-      [ 1, 0, 1, 1, 1, 1, 1, 0 ]
-    ]
-  }),
+  props: {
+    seats: {
+      type: Array,
+      default: () => [ [] ]
+    }
+  },
   computed: {
+    selectedSeats: {
+      get() {
+        return this.seats;
+      },
+      set(value) {
+        this.$emit('update:seats', value);
+      }
+    },
     rowsCount() {
-      return this.seats.length;
+      return this.selectedSeats.length;
     },
     colsCount() {
-      return this.seats[0].length;
+      return this.selectedSeats[0].length;
     }
   },
   methods: {
     seatClicked(i, j) {
-      this.seats[i][j] = this.seats[i][j] === 1 ? 0 : 1;
+      this.selectedSeats[i][j] = this.selectedSeats[i][j] === 1 ? 0 : 1;
       this.$forceUpdate();
-    },
-    submit() {
-      this.$emit('layout-finished', this.seats);
     }
   }
 };

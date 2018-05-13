@@ -92,4 +92,4 @@ class AuditoriumSerializer(serializers.Serializer):
 
   def update(self, auditorium, validated_data):
     auditorium = update(auditorium, **validated_data)
-    return auditorium.save()
+    return auditorium

@@ -50,6 +50,25 @@ export default {
 
   getTicketsOnSale(data) {
     return Axios.get(`${PREFIX}${data}/tickets-on-sale`);
-  }
+  },
 
+  getAuditoriums(theaterId) {
+    return Axios.get(`${PREFIX}${theaterId}/auditoriums`);
+  },
+
+  retrieveAuditorium(theaterId, auditoriumId) {
+    return Axios.get(`${PREFIX}${theaterId}/auditoriums/${auditoriumId}`);
+  },
+
+  createAuditorium(theaterId, data) {
+    return Axios.post(`${PREFIX}${theaterId}/auditoriums`, data);
+  },
+
+  updateAuditorium(theaterId, data) {
+    return Axios.put(`${PREFIX}${theaterId}/auditoriums/${data.id}`, data);
+  },
+
+  deleteAuditorium(theaterId, auditoriumId) {
+    return Axios.delete(`${PREFIX}${theaterId}/auditoriums/${auditoriumId}`);
+  }
 };

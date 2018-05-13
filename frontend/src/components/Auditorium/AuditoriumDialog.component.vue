@@ -14,11 +14,19 @@
     </v-btn> -->
     <v-card>
       <v-card-title>
-        <span class="headline">Choose seat to finish booking</span>
+        {{ dialogTitle }}
+        <v-spacer/>
+        <v-text-field
+          v-model="selectedAuditorium.name"
+          label="Auditorium Name"
+          single-line
+          hide-details
+        />
       </v-card-title>
       <v-card-text>
-        <div class="seats-mockup"/>
-
+        <layout
+          :seats.sync="selectedAuditorium.layout"
+        />
       </v-card-text>
       <v-card-actions>
         <v-spacer/>
@@ -28,8 +36,8 @@
           @click.native="cancel">Cancel</v-btn>
         <v-btn
           color="info darken-1"
-          @click.native="bookTicket">
-          book
+          @click.native="submit">
+          Submit
           <v-icon class="ml-2">send</v-icon>
         </v-btn>
       </v-card-actions>
@@ -37,23 +45,27 @@
   </v-dialog>
 </template>
 <script>
+import Layout from 'Components/Auditorium/Layout.component';
+
 export default {
-  name: 'BookTicketDialog',
+  name: 'AuditoriumDialog',
+  components: {
+    Layout
+  },
   props: {
     show: {
       type: Boolean,
       required: true
     },
-    showtimeId: {
-      type: Number,
-      required: true
+    auditorium: {
+      type: Object,
+      required: false,
+      default: () => ({ name: '', layout: [] })
     }
   },
-  data() {
-    return {
-      selectedSeats: [ 1, 2, 44 ]
-    };
-  },
+  data: () => ({
+    selectedAuditorium: { name: '', layout: [ [ 1, 1, 1 ], [ 0, 1, 1 ], [ 1, 1, 1 ] ] }
+  }),
   computed: {
     showThis: {
       get() {
@@ -62,23 +74,23 @@ export default {
       set(value) {
         this.$emit('update:show', value);
       }
+    },
+    dialogTitle() {
+      return this.auditorium && this.auditorium.id ?
+        'Edit Auditorium' :
+        'Add Auditorium';
     }
   },
+  mounted() {
+    this.selectedAuditorium = this.auditorium || this.selectedAuditorium;
+  },
   methods: {
-    bookTicket() {
-      this.$emit('book-ticket', this.selectedSeats);
-    },
     cancel() {
       this.$emit('cancel');
+    },
+    submit() {
+      this.$emit('auditorium-finished', this.selectedAuditorium);
     }
   }
 };
 </script>
-<style>
-.seats-mockup {
-  height: 200px;
-  width: 400px;
-  margin: auto;
-  background: rgb(123, 123, 123);
-}
-</style>
