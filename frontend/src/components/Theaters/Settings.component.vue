@@ -91,7 +91,7 @@
               slot="items"
               slot-scope="props">
               <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
-              <td>{{ props.item.auditorium }} </td>
+              <td>{{ findObjectById(auditoriums, props.item.auditorium).name }} </td>
               <td>{{ props.item.date }}</td>
               <td>{{ props.item.time }}</td>
               <td>{{ props.item.price }}</td>
@@ -122,7 +122,7 @@
               slot="items"
               slot-scope="props">
               <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
-              <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
+              <td>{{ findObjectById(auditoriums, getObjAttr(repertoire, props.item.showtime, 'auditorium')).name }} </td>
               <td>{{ props.item.seat }} </td>
               <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
               <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
@@ -245,17 +245,11 @@ export default {
     loadAuditoriums() {
       TheatersController.getAuditoriums(this.theater.id)
         .then((response) => {
-          this.auditoriums = this.mapAuditoriums(response.data);
+          this.auditoriums = TheatersController.mapAuditoriums(response.data);
         })
         .catch((response) => {
 
         });
-    },
-    mapAuditoriums(data) {
-      return _.map(data, x => {
-        x.layout = x.layout.layout;
-        return x;
-      });
     },
     loadTheater() {
       this.loading = true;
@@ -332,6 +326,12 @@ export default {
         }
       });
     },
+    findObjectById(array, id) {
+      let index = _.findIndex(array, o => {
+        return o.id === id;
+      });
+      return array[index];
+    },
     findObjectByKey(array, key, value) {
       for (var i = 0; i < array.length; i++) {
         if (array[i][key] === value) {
@@ -407,7 +407,7 @@ export default {
       if (index < 0) {
         return this.auditoriums.push(data);
       }
-      this.auditoriums.splice(index, 1, this.mapAuditoriums([ data ])[0]);
+      this.auditoriums.splice(index, 1, TheatersController.mapAuditoriums([ data ])[0]);
     }
   }
 };

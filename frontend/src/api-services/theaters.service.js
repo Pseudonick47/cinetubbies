@@ -32,8 +32,8 @@ export default {
   },
 
   // returns theater whose admin is passed through parameter
-  getTheater(data) {
-    return Axios.get(`${PREFIX}admins/${data}/theater`);
+  getTheater(adminId) {
+    return Axios.get(`${PREFIX}admins/${adminId}/theater`);
   },
 
   update(data, id) {

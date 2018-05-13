@@ -15,14 +15,17 @@
                 xs12
                 sm6
                 md4>
-                <v-text-field
+                <v-select
                   v-validate="'required'"
-                  v-model="showtime.auditorium"
+                  :items="auditoriums"
                   :error-messages="errors.collect('auditorium')"
-                  :counter="255"
-                  label="Auditorium"
+                  v-model="showtime.auditorium"
+                  item-text="name"
+                  item-value="id"
                   data-vv-name="auditorium"
-                  required
+                  label="Select Auditorium"
+                  single-line
+                  requeired
                 />
               </v-flex>
               <v-flex
@@ -152,7 +155,7 @@
             slot="items"
             slot-scope="props">
             <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
-            <td>{{ `${props.item.auditorium}` }} </td>
+            <td>{{ findObjectById(auditoriums, props.item.auditorium).name }} </td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.time }}</td>
             <td>{{ props.item.price }}</td>
@@ -211,6 +214,7 @@ import { mapGetters } from 'vuex';
 var moment = require('moment');
 
 export default {
+  name: 'Showtimes',
   data: () => ({
     search: '',
     movies: [],
@@ -223,7 +227,8 @@ export default {
     kind: '',
     dialog: false,
     editedIndex: -1,
-    filtered: false
+    filtered: false,
+    auditoriums: []
   }),
   computed: {
     ...mapGetters([
@@ -294,6 +299,13 @@ export default {
           }
           this.getMovies();
           this.getRepertoire();
+          TheaterController.getAuditoriums(this.theaterId)
+            .then((response) => {
+              this.auditoriums = TheaterController.mapAuditoriums(response.data);
+            })
+            .catch((response) => {
+              this.$alert.error('Error occurred. Please reload the page');
+            });
         })
         .catch((response) => {
           this.$alert.error('Error occurred.');
@@ -345,6 +357,12 @@ export default {
         }
       }
       return null;
+    },
+    findObjectById(array, id) {
+      let index = _.findIndex(array, o => {
+        return o.id === id;
+      });
+      return array[index];
     },
     getObjAttr(array, id, attr) {
       var obj = this.findObjectByKey(array, 'id', id);

@@ -201,7 +201,6 @@ export default {
     })
   },
   beforeMount() {
-    console.log(TheatersController);
     TheatersController.requestAllTheaters();
   },
   methods: {

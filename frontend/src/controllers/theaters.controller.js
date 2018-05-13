@@ -46,6 +46,11 @@ export default {
 
   getAuditoriums(theaterId) {
     return TheatersApiService.getAuditoriums(theaterId);
+  },
+  mapAuditoriums(data) {
+    return _.map(data, x => {
+      x.layout = x.layout.layout;
+      return x;
+    });
   }
-
 };

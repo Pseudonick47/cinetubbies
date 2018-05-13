@@ -8,6 +8,7 @@ from theaters.serializers import AdministrationSerializer
 from movies.serializers import MovieSerializer
 from showtimes.serializers import ShowtimeSerializer
 from theaters.serializers import PublicSerializer
+from theaters.serializers import AuditoriumSerializer
 
 from fan_zone.categories.serializers import AdministrationSerializer as CategorySerializer
 from fan_zone.props.official.serializers import RestrictedSerializer as OPropSerializer
@@ -52,6 +53,12 @@ def seed():
 
   for theater in theaters:
     serializer = AdministrationSerializer(data=theater)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+  for auditorium in auditoriums:
+    serializer = AuditoriumSerializer(data=auditorium)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -167,6 +174,24 @@ theaters = [
   }
 ]
 
+auditoriums = [
+  {
+    'name': 'Mala sala',
+    'layout': '{"layout": [[0, 0, 0], [1, 1, 0], [1, 1, 1]]}',
+    'theater': 1
+  },
+  {
+    'name': 'Velika sala',
+    'layout': '{"layout": [[0, 0, 0], [1, 1, 0], [1, 1, 1]]}',
+    'theater': 1
+  },
+  {
+    'name': 'Srednja sala',
+    'layout': '{"layout": [[0, 0, 0], [1, 1, 0], [1, 1, 1]]}',
+    'theater': 1
+  }
+]
+
 movies = [
   {
     'title': 'The Fate of the Furious',
@@ -181,35 +206,35 @@ movies = [
 
 showtimes = [
   {
-    'auditorium': 'Velika sala',
+    'auditorium': 1,
     'date': '2018-05-16',
     'time': '01:10:00',
     'price': 400,
     'movie': 1
   },
   {
-    'auditorium': 'Velika sala',
+    'auditorium': 2,
     'date': '2018-05-19',
     'time': '01:10:00',
     'price': 400,
     'movie': 1
   },
   {
-    'auditorium': 'Velika sala',
+    'auditorium': 1,
     'date': '2018-05-19',
     'time': '18:00:00',
     'price': 400,
     'movie': 1
   },
   {
-    'auditorium': 'Mala sala',
+    'auditorium': 2,
     'date': '2018-05-19',
     'time': '19:00:00',
     'price': 500,
     'movie': 1
   },
   {
-    'auditorium': 'Mala sala',
+    'auditorium': 3,
     'date': '2018-05-14',
     'time': '12:45:00',
     'price': 200,

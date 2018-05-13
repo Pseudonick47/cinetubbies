@@ -67,7 +67,9 @@ class PublicAPI(ViewSet):
   def get_theater(self, request, pk=None):
     theater_admin = TheaterAdmin.objects.get(user_ptr_id=pk)
     theater = Theater.objects.get(id=theater_admin.theater_id)
-    return Response(data=PublicSerializer(theater).data)
+    data = PublicSerializer(theater).data
+    data['auditoriums'] = AuditoriumSerializer(theater.auditoriums.all(), many=True).data
+    return Response(data=data)
 
   @action(detail=True)
   def update_rating(self, request, pk=None):
