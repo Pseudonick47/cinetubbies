@@ -21,6 +21,7 @@
         <v-layout row>
           <v-flex>
             <v-chip
+              v-if="showNew"
               label
               small
               color="yellow darken-11"
@@ -41,9 +42,9 @@
             >
               <div>
                 <div class="headline">
-                  {{ info.title }}
+                  {{ prop.title }}
                 </div>
-                <span class="grey--text">{{ category }}</span>
+                <span class="grey--text">{{ prop.category.name }}</span>
               </div>
             </v-card-title>
           </v-flex>
@@ -58,17 +59,14 @@ var moment = require('moment');
 export default {
   name: 'Prop',
   props: {
-    info: {
+    prop: {
       type: Object,
       required: true
     }
   },
   computed: {
-    category() {
-      return this.$store.getters['props/categories/one'](this.info.category);
-    },
     showNew() {
-      return moment().diff(moment(info.postDate));
+      return moment().diff(moment(this.prop.postDate), 'days') < 7;
     }
   }
 };
@@ -77,7 +75,6 @@ export default {
 
 .used-prop-card:hover {
   box-shadow: 0px 0px 5px goldenrod;
-  /* background-color: #151515 !important; */
   background: radial-gradient(circle, black,#040404, #080808);
 }
 .grow {

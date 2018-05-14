@@ -102,7 +102,7 @@
                   pa-3
                 >
                   <prop
-                    :info="prop"
+                    :prop="prop"
                   />
                 </v-flex>
               </v-layout>
@@ -128,7 +128,7 @@
         />
       </v-layout>
     </v-container>
-    <used-prop-detail
+    <prop-detail
       v-if="dialog"
       @close="dialog=false"
     />
@@ -139,7 +139,7 @@ import { mapGetters } from 'vuex';
 
 import Categories from 'Components/FanZone/Categories.component';
 import Prop from 'Components/FanZone/Prop.component';
-import UsedPropDetail from 'Components/FanZone/UsedPropDetail.component';
+import PropDetail from 'Components/FanZone/PropDetail.component';
 
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/props.controller';
@@ -151,7 +151,7 @@ export default {
   components: {
     Categories,
     Prop,
-    UsedPropDetail
+    PropDetail
   },
   data() {
     return {

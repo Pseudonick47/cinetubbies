@@ -6,25 +6,15 @@ from authentication.serializers import AdminSerializer
 from cinetubbies.utils.func import deepcopy
 from cinetubbies.utils.func import update
 
-from fan_zone.categories.serializers import PublicSerializer as \
-                                            CategorySerializer
-from fan_zone.categories.models import Category
+from fan_zone.props.models import Prop
 from fan_zone.props.serializers import PropSerializer
-
-from .models import UsedProp
 
 
 class PublicSerializer(PropSerializer):
   owner = AdminSerializer(
     read_only=True,
   )
-  category = CategorySerializer(
-    read_only=True,
-  )
-  expiration_date = serializers.DateField(
-    required=True,
-    allow_null=False,
-  )
+  expiration_date = serializers.DateField()
   approved = serializers.BooleanField(
     read_only=True,
   )
@@ -44,16 +34,7 @@ class MemberSerializer(PublicSerializer):
   owner_id = serializers.PrimaryKeyRelatedField(
     queryset=User.objects.all(),
     write_only=True,
-    required=True,
-    allow_null=False,
     source='owner'
-  )
-  category_id = serializers.PrimaryKeyRelatedField(
-    queryset=Category.objects.all(),
-    write_only=True,
-    required=True,
-    allow_null=False,
-    source='category'
   )
 
   def to_internal_value(self, data):
@@ -64,7 +45,7 @@ class MemberSerializer(PublicSerializer):
     return super().to_internal_value(d)
 
   def create(self, validated_data):
-    return UsedProp.objects.create(**validated_data)
+    return Prop.objects.create(**validated_data)
 
   def update(self, prop, validated_data):
     prop = update(prop, **validated_data)

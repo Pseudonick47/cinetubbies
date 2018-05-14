@@ -197,7 +197,7 @@ export default {
     prop: {
       type: Prop,
       required: false,
-      default: () => new Prop()
+      default: () => new Prop({ kind: 'O' })
     }
   },
   data() {

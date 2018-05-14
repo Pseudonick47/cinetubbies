@@ -12,11 +12,9 @@ from .categories.models import Category
 from .categories.serializers import AdministrationSerializer as \
                                     AdminCategorySerializer
 
-from .props.official.models import OfficialProp
+from .props.models import Prop
 from .props.official.serializers import RestrictedSerializer as \
                                         RestrictedOfficialPropSerializer
-
-from .props.used.models import UsedProp
 from .props.used.serializers import MemberSerializer as MemberUsedPropSerializer
 
 
@@ -273,7 +271,8 @@ class PublicOfficialPropAPI(APITestCase):
     'quantity': 2,
     'price': 99.9,
     'theaterId': 1,
-    'imageId': None
+    'imageId': None,
+    'kind': 'O'
   }
 
   test_prop_2 = {
@@ -283,7 +282,8 @@ class PublicOfficialPropAPI(APITestCase):
     'quantity': 5,
     'price': 59.9,
     'theaterId': 1,
-    'imageId': None
+    'imageId': None,
+    'kind': 'O'
   }
 
   def setUp(self):
@@ -329,19 +329,10 @@ class PublicOfficialPropAPI(APITestCase):
     self.assertEqual(len(response.data), 2)
 
     response = self.client.get(path='http://localhost:8000/api/props/categories/1/official/')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(len(response.data), 1)
-
-    response = self.client.get(path='http://localhost:8000/api/props/categories/2/official/')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(len(response.data), 1)
-
-    response = self.client.get(path='http://localhost:8000/api/props/categories/99/official/')
     self.assertEqual(response.status_code, 404)
 
-    OfficialProp.objects.all().delete()
+
+    Prop.official.all().delete()
 
     response = self.client.get(path='http://localhost:8000/api/props/official/')
     self.assertEqual(response.status_code, 200)
@@ -354,19 +345,9 @@ class PublicOfficialPropAPI(APITestCase):
     self.assertEqual(response.data, 2)
 
     response = self.client.get(path='http://localhost:8000/api/props/categories/1/official/count')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(response.data, 1)
-
-    response = self.client.get(path='http://localhost:8000/api/props/categories/2/official/count')
-    self.assertEqual(response.status_code, 200)
-    self.assertTrue(response.data)
-    self.assertEqual(response.data, 1)
-
-    response = self.client.get(path='http://localhost:8000/api/props/categories/99/official/count')
     self.assertEqual(response.status_code, 404)
 
-    OfficialProp.objects.all().delete()
+    Prop.official.all().delete()
 
     response = self.client.get(path='http://localhost:8000/api/props/official/count')
     self.assertEqual(response.status_code, 200)
@@ -436,7 +417,8 @@ class RestrictedOfficialPropAPITests(APITestCase):
     'quantity': 2,
     'price': 99.9,
     'theaterId': 1,
-    'imageId': None
+    'imageId': None,
+    'kind': 'O'
   }
 
   def login(self, user):
@@ -523,7 +505,8 @@ class RestrictedOfficialPropAPITests(APITestCase):
       'quantity': 5,
       'price': 59.9,
       'theaterId': 1,
-      'imageId': None
+      'imageId': None,
+      'kind': 'O'
     }
 
     response = self.post(test_prop_2)
@@ -550,7 +533,8 @@ class RestrictedOfficialPropAPITests(APITestCase):
       'quantity': 5,
       'price': 59.9,
       'theaterId': 2,
-      'imageId': None
+      'imageId': None,
+      'kind': 'O'
     }
 
     serializer = RestrictedOfficialPropSerializer(data=test_prop_2)
@@ -600,7 +584,8 @@ class RestrictedOfficialPropAPITests(APITestCase):
       'quantity': 5,
       'price': 59.9,
       'theaterId': 1,
-      'imageId': None
+      'imageId': None,
+      'kind': 'O'
     }
 
     serializer = RestrictedOfficialPropSerializer(data=test_prop_2)
@@ -668,7 +653,8 @@ class PublicUsedAPI(APITestCase):
     'ownerId': 1,
     'categoryId': 1,
     'imageId': None,
-    'expirationDate': '2018-06-01'
+    'expirationDate': '2018-06-01',
+    'kind': 'U'
   }
 
   test_prop_2 = {
@@ -677,7 +663,8 @@ class PublicUsedAPI(APITestCase):
     'ownerId': 1,
     'categoryId': 2,
     'imageId': None,
-    'expirationDate': '2018-06-06'
+    'expirationDate': '2018-06-06',
+    'kind': 'U'
   }
 
   def setUp(self):
@@ -733,9 +720,10 @@ class PublicUsedAPI(APITestCase):
     self.assertEqual(len(response.data), 1)
 
     response = self.client.get(path='http://localhost:8000/api/props/used/?category=99&all=true')
-    self.assertEqual(response.status_code, 404)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(len(response.data), 0)
 
-    UsedProp.objects.all().delete()
+    Prop.used.all().delete()
 
     response = self.client.get(path='http://localhost:8000/api/props/used/?all=true')
     self.assertEqual(response.status_code, 200)
@@ -758,9 +746,10 @@ class PublicUsedAPI(APITestCase):
     self.assertEqual(response.data, 1)
 
     response = self.client.get(path='http://localhost:8000/api/props/used/count?category=99&all=true')
-    self.assertEqual(response.status_code, 404)
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.data, 0)
 
-    UsedProp.objects.all().delete()
+    Prop.used.all().delete()
 
     response = self.client.get(path='http://localhost:8000/api/props/used/count?all=true')
     self.assertEqual(response.status_code, 200)
@@ -814,7 +803,8 @@ class MemberUsedPropAPITests(APITestCase):
     'ownerId': 1,
     'categoryId': 1,
     'imageId': None,
-    'expirationDate': '2018-06-01'
+    'expirationDate': '2018-06-01',
+    'kind': 'U'
   }
 
   def login(self, user):
@@ -890,7 +880,8 @@ class MemberUsedPropAPITests(APITestCase):
       'ownerId': 1,
       'categoryId': 2,
       'imageId': None,
-      'expirationDate': '2018-06-01'
+      'expirationDate': '2018-06-01',
+      'kind': 'U'
     }
 
     response = self.post(test_prop_2)
@@ -920,7 +911,8 @@ class MemberUsedPropAPITests(APITestCase):
   #     'ownerId': 1,
   #     'categoryId': 2,
   #     'imageId': None,
-  #     'expirationDate': '2018-06-01'
+  #     'expirationDate': '2018-06-01',
+      # 'kind': 'U'
   #   }
 
   #   serializer = MemberUsedPropSerializer(data=test_prop_2)
@@ -977,7 +969,8 @@ class MemberUsedPropAPITests(APITestCase):
   #     'ownerId': 1,
   #     'categoryId': 2,
   #     'imageId': None,
-  #     'expirationDate': '2018-06-01'
+  #     'expirationDate': '2018-06-01',
+    #   'kind': 'U'
   #   }
 
   #   serializer = MemberUsedPropSerializer(data=test_prop_2)
@@ -1049,7 +1042,8 @@ class RestrictedUsedPropAPITests(APITestCase):
     'ownerId': 1,
     'categoryId': 1,
     'imageId': None,
-    'expirationDate': '2018-06-01'
+    'expirationDate': '2018-06-01',
+    'kind': 'U'
   }
 
   def login(self, user):

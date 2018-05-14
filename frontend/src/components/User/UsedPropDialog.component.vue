@@ -167,7 +167,7 @@ export default {
   data() {
     return {
       show: true,
-      prop: new Prop(),
+      prop: new Prop({ kind: 'U' }),
       selectedCategory: null,
       selectedImage: null,
       showImage: 'https://dhs1n389ze6jv.cloudfront.net/img/product-thumb/1518384418b7e5afe78228c751029fa6e1b9063b87.png'

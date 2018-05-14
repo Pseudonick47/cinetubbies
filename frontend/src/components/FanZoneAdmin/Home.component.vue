@@ -71,8 +71,8 @@
               justify-center
               mb-4
             >
-              <used-prop
-                :info="prop"
+              <prop-control
+                :prop="prop"
                 :actions="['edit', 'delete']"
                 @clicked="mutateProp"
               />
@@ -120,7 +120,7 @@
 import { mapGetters } from 'vuex';
 
 import Categories from 'Components/FanZone/Categories.component';
-import UsedProp from 'Components/FanZone/UsedProp.component';
+import PropControl from 'Components/FanZone/PropControl.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
 import SimpleDialog from 'Components/helpers/SimpleDialog.component';
 
@@ -131,7 +131,7 @@ export default {
   name: 'FanZoneAdminHome',
   components: {
     Categories,
-    UsedProp,
+    PropControl,
     OfficialPropDialog,
     SimpleDialog
   },

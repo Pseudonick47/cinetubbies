@@ -15,8 +15,8 @@
           pl-4
         >
           <v-card-media
-            v-if="info.image"
-            :src="info.image.path"
+            v-if="prop.image"
+            :src="prop.image.path"
             contain
             height="100%"
             style="-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.5)));"
@@ -37,14 +37,14 @@
               mt-4
               mb-2
             >
-              <div class="display-1">{{ info.title }}</div>
+              <div class="display-1">{{ prop.title }}</div>
               <div v-if="status">
                 <v-icon
-                  v-if="!info.approved && info.pendingApproval"
+                  v-if="!prop.approved && prop.pendingApproval"
                   class="prop-info-highlight"
                 >hourglass_empty</v-icon>
                 <v-icon
-                  v-else-if="!info.approved && !info.pendingApproval"
+                  v-else-if="!prop.approved && !prop.pendingApproval"
                   class="prop-info-highlight"
                 >report</v-icon>
                 <v-icon
@@ -69,7 +69,7 @@
                 class="caption grey--text"
                 style="width: 100%"
               >
-                <p class="text-xs-right">Expiration date: {{ info.expirationDate }}</p>
+                <p class="text-xs-right">Expiration date: {{ prop.expirationDate }}</p>
               </div>
             </v-layout>
             <v-layout
@@ -104,9 +104,9 @@
 import { Prop } from 'Models/prop.model';
 
 export default {
-  name: 'UsedProp',
+  name: 'PropControl',
   props: {
-    info: {
+    prop: {
       type: Prop,
       required: true
     },
@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     clicked(e) {
-      this.$emit('clicked', { prop: this.info, action: e });
+      this.$emit('clicked', { prop: this.prop, action: e });
     }
   }
 };
