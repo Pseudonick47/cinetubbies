@@ -36,7 +36,7 @@ class AbstractProp(models.Model):
 
 
 class OfficialProp(models.Model):
-  quantity = models.IntegerField(
+  quantity = models.PositiveSmallIntegerField(
     null=True
   )
   price = models.FloatField(
@@ -99,7 +99,7 @@ class Prop(AbstractProp, OfficialProp, UsedProp):
 
   @transaction.atomic
   def save(self, *args, **kwargs):
-      queryset = self.__class__.objects.select_for_update()
+      queryset = Prop.objects.select_for_update()
       #lock object
       try:
         queryset.filter(id=self.id, version=self.version).get()
@@ -108,8 +108,10 @@ class Prop(AbstractProp, OfficialProp, UsedProp):
       except ObjectDoesNotExist:
         pass
 
-      # if self.kind == OFFICIAL_PROP[0]:
-      #   print(kwargs)
+      if self.kind == OFFICIAL_PROP[0]:
+        print(self.__dict__)
+        if self.quantity < 0:
+          raise ValueError('Quantity can\'t be less then 0.')
 
       self.version += 1
       super().save(*args, **kwargs)

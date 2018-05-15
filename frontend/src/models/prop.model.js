@@ -18,6 +18,14 @@ export class Prop {
     }
   }
 
+  isOfficial() {
+    return this.kind === 'O';
+  }
+
+  isUsed() {
+    return this.kind === 'U';
+  }
+
   update(data) {
     _.assign(this, data);
     this.image.path = ImageHelper.getAbsolutePath(this.image.path);

@@ -13,7 +13,7 @@ const state = {
 
 const getters = {
   all: (state) => state.props,
-  one: (state) => (id) => _.find(state.props, 'id'),
+  one: (state) => (id) => _.find(state.props, [ 'id', id ]),
   count: (state) => state.count
 };
 

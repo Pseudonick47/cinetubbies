@@ -12,7 +12,13 @@ from fan_zone.categories.serializers import PublicSerializer as \
                                             CategorySerializer
 
 from fan_zone.props.models import Prop
+from fan_zone.props.models import OFFICIAL_PROP
+from fan_zone.props.models import USED_PROP
 from fan_zone.props.serializers import PropSerializer
+from fan_zone.props.official.serializers import PublicSerializer as \
+                                                OfficialPropSerializer
+from fan_zone.props.used.serializers import PublicSerializer as \
+                                            UsedPropSerializer
 
 from media_upload.models import Image
 from media_upload.serializers import ImageSerializer
@@ -45,7 +51,14 @@ class PublicAPI(ViewSet):
     page = request.GET.get('num') or 1
     props = paginator.get_page(page).object_list
 
-    return Response(data=PropSerializer(props, many=True).data)
+    ret = []
+    for prop in props:
+      if prop.kind == OFFICIAL_PROP[0]:
+        ret.append(OfficialPropSerializer(prop).data)
+      else:
+        ret.append(UsedPropSerializer(prop).data)
+
+    return Response(data=ret)
 
   def retrieve(self, request, *args, **kwargs):
     pk = kwargs.pop('pk')

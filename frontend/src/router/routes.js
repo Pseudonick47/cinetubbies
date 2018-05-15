@@ -10,11 +10,16 @@ import UserProps from 'Components/User/Props.component';
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import Theater from 'Components/Theaters/Theater.component';
 import Movie from 'Components/Theaters/Movie.component';
+
 import SystemAdminHome from 'Components/SystemAdmin/Home.component';
 import SystemAdminRewards from 'Components/SystemAdmin/Rewards.component';
+
 import FanZoneHome from 'Components/FanZone/Home.component';
+import PropDetail from 'Components/FanZone/PropDetail.component';
+
 import FanZoneAdminHome from 'Components/FanZoneAdmin/Home.component';
 import PendingProps from 'Components/FanZoneAdmin/PendingProps.component';
+
 import Showtimes from 'Components/Showtimes/Showtimes.component';
 import Reports from 'Components/CinemaAdmin/Reports.component';
 import TicketsOnSale from 'Components/CinemaAdmin/TicketsOnSale.component';
@@ -121,7 +126,16 @@ export const routes = [
     name: 'fan-zone',
     component: FanZoneHome,
     meta: {
-      logged: true
+      quest: true
+    }
+  },
+  {
+    path: '/fan-zone/prop/:id',
+    name: 'fan-zone-prop',
+    component: PropDetail,
+    props: true,
+    meta: {
+      quest: true
     }
   },
   {

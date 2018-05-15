@@ -103,6 +103,7 @@
                 >
                   <prop
                     :prop="prop"
+                    @click.native="goToProp(prop)"
                   />
                 </v-flex>
               </v-layout>
@@ -129,8 +130,9 @@
       </v-layout>
     </v-container>
     <prop-detail
-      v-if="dialog"
-      @close="dialog=false"
+      v-if="propToDisplay"
+      :prop="propToDisplay"
+      @close="propToDisplay = null"
     />
   </div>
 </template>
@@ -156,7 +158,7 @@ export default {
   data() {
     return {
       drawer: true,
-      dialog: false,
+      propToDisplay: null,
       entriesPerPage: 9,
       page: 1,
       showOfficialProps: true,
@@ -187,6 +189,9 @@ export default {
     PropsController.requestPage(this.page);
   },
   methods: {
+    goToProp(prop) {
+      this.$router.push({ name: 'fan-zone-prop', params: { id: prop.id } });
+    },
     categorySelected(id) {
       if (id === -1) {
         PropsController.requestCount();
