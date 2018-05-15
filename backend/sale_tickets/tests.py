@@ -97,12 +97,12 @@ class TicketOnSaleAPITests(APITestCase):
   def setUp(self):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = TheaterAdminSerializer(data=self.test_theater_admin2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdminSerializer(data=self.test_fan_zone_admin)
@@ -112,37 +112,37 @@ class TicketOnSaleAPITests(APITestCase):
 
     serializer = AdminSerializer(data=self.test_system_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = UserSerializer(data=self.test_user)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = MovieSerializer(data=self.test_movie)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = ShowtimeSerializer(data=self.test_showtime)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = TicketOnSaleSerializer(data=self.test_ticket)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
   def login(self, user):
@@ -282,37 +282,37 @@ class BookingAPITests(APITestCase):
   def setUp(self):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdminSerializer(data=self.test_fan_zone_admin)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = UserSerializer(data=self.test_user)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = UserSerializer(data=self.test_user2)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = MovieSerializer(data=self.test_movie)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
     serializer = ShowtimeSerializer(data=self.test_showtime)
     if not serializer.is_valid():
-      print(serializer.errors)
+      raise Exception(serializer.errors)
     serializer.save()
 
   test_theater_admin = {
