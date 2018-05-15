@@ -4,9 +4,12 @@ import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/CinemaAdmin/Movies.component';
-import UserSettings from 'Components/User/Settings.component';
+
 import Profile from 'Components/User/Profile.component';
 import UserProps from 'Components/User/Props.component';
+import UserPropReservations from 'Components/User/PropReservations.component';
+import UserSettings from 'Components/User/Settings.component';
+
 import TheaterSettings from 'Components/Theaters/Settings.component';
 import Theater from 'Components/Theaters/Theater.component';
 import Movie from 'Components/Theaters/Movie.component';
@@ -85,6 +88,14 @@ export const routes = [
     path: '/user/props',
     name: 'user-props',
     component: UserProps,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/user/prop-reservations',
+    name: 'user-prop-reservations',
+    component: UserPropReservations,
     meta: {
       logged: true
     }

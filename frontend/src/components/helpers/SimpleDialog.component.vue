@@ -7,17 +7,24 @@
     <v-card color="black">
       <v-card-title class="headline">{{ title }}</v-card-title>
       <v-card-text v-if="text">{{ text }}</v-card-text>
-      <v-card-actions justify-space-between>
-        <v-btn
-          class="highlight"
-          flat="flat"
-          @click="cancel"
-        >Cancel</v-btn>
-        <v-btn
-          class="highlight"
-          flat="flat"
-          @click="confirm"
-        >Confirm</v-btn>
+      <v-card-actions>
+        <v-layout
+          row
+          wrap
+          justify-space-between
+          py-1
+        >
+          <v-btn
+            class="highlight"
+            flat="flat"
+            @click="cancel"
+          >Cancel</v-btn>
+          <v-btn
+            class="highlight"
+            flat="flat"
+            @click="confirm"
+          >Confirm</v-btn>
+        </v-layout>
       </v-card-actions>
     </v-card>
   </v-dialog>

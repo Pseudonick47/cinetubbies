@@ -9,6 +9,9 @@ const props = {
   },
   fetchByCategory(num, page, category) {
     return Axios.get(`${PROPS}?num=${num}&page=${page}&category=${category}`);
+  },
+  fetchOne(id) {
+    return Axios.get(`${PROPS}${id}`);
   }
 };
 

@@ -7,14 +7,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from authentication.permissions import IsFanZoneOrSystemAdmin
-from authentication.serializers import UserSerializer
 
 from cinetubbies.utils.models import ObjectLocked
 
 from fan_zone.props.models import Prop
 from fan_zone.props.models import OFFICIAL_PROP
-from fan_zone.props.official.serializers import PublicSerializer as \
-                                                PropSerializer
 
 from fan_zone.reservations.models import Reservation
 from fan_zone.reservations.permissions import IsOwner
@@ -79,8 +76,8 @@ class MemberAPI(ViewSet):
 
   def list(self, request, *args, **kwargs):
     user_id = kwargs.pop('user_id')
-    users = Reservation.objects.filter(user_id=user_id).all()
-    return Response(data=UserSerializer(users, many=True).data)
+    reservations = Reservation.objects.filter(user_id=user_id).all()
+    return Response(data=PublicSerializer(reservations, many=True).data)
 
   def retrieve(self, request, *args, **kwargs):
     reservation = get_object_or_404(Reservation, pk=kwargs.pop('pk'))
@@ -99,8 +96,8 @@ class RestrictedAPI(ViewSet):
 
   def list(self, request, *args, **kwargs):
     prop_id = kwargs.pop('prop_id')
-    props = Reservation.objects.filter(prop_id=prop_id).all()
-    return Response(data=PropSerializer(props, many=True).data)
+    reservations = Reservation.objects.filter(prop_id=prop_id).all()
+    return Response(data=PublicSerializer(reservations, many=True).data)
 
   def retrieve(self, request, *args, **kwargs):
     reservation = get_object_or_404(Reservation, pk=kwargs.pop('pk'))

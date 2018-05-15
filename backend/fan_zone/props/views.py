@@ -63,4 +63,10 @@ class PublicAPI(ViewSet):
   def retrieve(self, request, *args, **kwargs):
     pk = kwargs.pop('pk')
     prop = get_object_or_404(Prop, pk=pk)
-    return Response(data=PropSerializer(prop).data)
+
+    if prop.kind == OFFICIAL_PROP[0]:
+      ret = OfficialPropSerializer(prop).data
+    else:
+      ret = UsedPropSerializer(prop).data
+
+    return Response(data=ret)

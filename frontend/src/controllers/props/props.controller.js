@@ -28,5 +28,11 @@ export default {
         store.commit('props/setCount', response.data);
       });
     }
+  },
+
+  requestOne(id) {
+    Service.props.fetchOne(id).then((response) => {
+      store.commit('props/setProp', response.data);
+    });
   }
 };

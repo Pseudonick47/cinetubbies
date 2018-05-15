@@ -2,6 +2,7 @@
   <div class="background">
     <v-container fluid>
       <v-layout
+        v-if="prop"
         row
         wrap
       >
@@ -50,6 +51,7 @@
 import { mapGetters } from 'vuex';
 
 import ReservePropDialog from 'Components/FanZone/Dialogs/ReserveProp.component';
+import PropsController from 'Controllers/props/props.controller';
 
 export default {
   name: 'PropDetail',
@@ -64,7 +66,6 @@ export default {
   },
   data() {
     return {
-      prop: null,
       showReserveDialog: false
     };
   },
@@ -74,10 +75,14 @@ export default {
     }),
     showReserveBtn() {
       return this.prop.isOfficial() && this.user && this.prop.quantity > 0;
+    },
+    prop() {
+      console.log('here');
+      return this.$store.getters['props/get'];
     }
   },
   beforeMount() {
-    this.prop = this.$store.getters['props/one'](Number(this.id));
+    PropsController.requestOne(this.id);
   }
 };
 </script>
