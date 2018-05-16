@@ -17,28 +17,35 @@
         <span class="headline">Choose seat to finish booking</span>
       </v-card-title>
       <v-card-text>
-        <div class="seats-mockup"/>
+        <v-card-text>
+          <layout
+            :seats.sync="layout"
+          />
 
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          color="error darken-1"
-          flat
-          @click.native="cancel">Cancel</v-btn>
-        <v-btn
-          color="info darken-1"
-          @click.native="bookTicket">
-          book
-          <v-icon class="ml-2">send</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer/>
+          <v-btn
+            color="error darken-1"
+            flat
+            @click.native="cancel">Cancel</v-btn>
+          <v-btn
+            color="info darken-1"
+            @click.native="bookTicket">
+            book
+            <v-icon class="ml-2">send</v-icon>
+          </v-btn>
+        </v-card-actions>
+    </v-card-text></v-card>
   </v-dialog>
 </template>
 <script>
+import Layout from 'Components/Auditorium/Layout.component';
 export default {
   name: 'BookTicketDialog',
+  components: {
+    Layout
+  },
   props: {
     show: {
       type: Boolean,
@@ -51,7 +58,12 @@ export default {
   },
   data() {
     return {
-      selectedSeats: [ 1, 2, 44 ]
+      selectedSeats: [ 1, 2, 44 ],
+      layout: [
+        [ 0, 1, 0, 1 ],
+        [ 1, 0, 0, 1 ],
+        [ 1, 1, 1, 1 ]
+      ]
     };
   },
   computed: {
