@@ -39,7 +39,7 @@ urlpatterns = [
   ),
   path(
     route='<int:pk>',
-    view=UsedProps.as_view(),
+    view=UsedProp.as_view(),
     name='used-prop'
   ),
   path(
