@@ -91,5 +91,9 @@ export default {
 
   getMovies(data) {
     return TheatersService.getMovies(data);
+  },
+
+  getRevenue(id, data) {
+    return TheatersService.getRevenue(id, data);
   }
 };

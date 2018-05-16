@@ -3,6 +3,8 @@ from django.urls import path
 
 from rest_framework_jwt.views import obtain_jwt_token
 
+from fan_zone.reservations.urls import urls_by_user as prop_reservation_urls
+
 from .views import AdminViewSet
 from .views import UserViewSet
 from .views import FriendViewSet
@@ -55,7 +57,8 @@ urlpatterns = [
   path('users/<int:pk>/friends/', user_friends, name='user-friends'),
   path('users/friends/<str:query>', search_friends, name='user-friends-search'),
   path('users/<int:pk>/', user, name='user'),
-  path('users/<int:user_id>/props/', include('fan_zone.props.used.urls'), name='user'),
+  path('users/<int:user_id>/reservations/', include(prop_reservation_urls), name='user-prop-reservations'),
+  path('users/<int:user_id>/props/', include('fan_zone.props.used.urls'), name='user-props'),
   path('users/', users, name='users'),
   path('auth/me/', active, name='active-user'),
   path('auth/login/', obtain_jwt_token, name='login'),

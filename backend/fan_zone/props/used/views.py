@@ -21,8 +21,8 @@ from media_upload.models import USED_PROP_IMAGE
 from media_upload.models import Image
 
 from fan_zone.categories.models import Category
+from fan_zone.props.models import Prop
 
-from .models import UsedProp
 from .permissions import IsOwner
 from .serializers import MemberSerializer
 from .serializers import PublicSerializer
@@ -33,16 +33,14 @@ class PublicAPI(ViewSet):
 
   @action(detail=False)
   def count(self, request, *args, **kwargs):
-    queryset = UsedProp.objects.all()
+    queryset = Prop.used.all()
 
     user_id = kwargs.pop('user_id', None)
     if user_id:
-      get_object_or_404(User, pk=user_id)
       queryset = queryset.filter(owner_id=user_id)
 
     category_id = request.GET.get('category')
     if category_id:
-      get_object_or_404(Category, pk=category_id)
       queryset = queryset.filter(category_id=category_id)
 
     all = request.GET.get('all')
@@ -53,20 +51,17 @@ class PublicAPI(ViewSet):
       else:
         queryset = queryset.filter(approved=True)
 
-
     return Response(data=queryset.count())
 
   def list(self, request, *args, **kwargs):
-    queryset = UsedProp.objects.all()
+    queryset = Prop.used.all()
 
     user_id = kwargs.pop('user_id', None)
     if user_id:
-      get_object_or_404(User, pk=user_id)
       queryset = queryset.filter(owner_id=user_id)
 
     category_id = request.GET.get('category')
     if category_id:
-      get_object_or_404(Category, pk=category_id)
       queryset = queryset.filter(category_id=category_id)
 
     all = request.GET.get('all')
@@ -86,26 +81,8 @@ class PublicAPI(ViewSet):
 
   def retrieve(self, request, *args, **kwargs):
     prop_id = kwargs.pop('pk')
-
-    user_id = kwargs.pop('user_id', None)
-    if user_id:
-      user = get_object_or_404(User, user_id)
-
-      try:
-        prop = user.usedprops.get(pk=prop_id)
-        return Response(data=PublicSerializer(prop).data)
-
-      except ObjectDoesNotExist:
-        return Response(
-          data={
-            'message': 'User {0} is not the owner of used prop {1}'
-              .format(user_id, prop_id)
-          }
-        )
-
-    else:
-      prop = get_object_or_404(UsedProp, pk=prop_id)
-      return Response(data=PublicSerializer(prop).data)
+    prop = get_object_or_404(Prop, pk=prop_id)
+    return Response(data=PublicSerializer(prop).data)
 
 
 class MemberAPI(ViewSet):
@@ -128,7 +105,7 @@ class MemberAPI(ViewSet):
 
   def destroy(self, request, *args, **kwargs):
     prop_id = kwargs.pop('pk')
-    prop = get_object_or_404(UsedProp, pk=prop_id)
+    prop = get_object_or_404(Prop, pk=prop_id)
     self.check_object_permissions(request, prop)
     prop.delete()
     return Response(
@@ -137,7 +114,7 @@ class MemberAPI(ViewSet):
 
   def update(self, request, *args, **kwargs):
     prop_id = kwargs.pop('pk')
-    prop = get_object_or_404(UsedProp, pk=prop_id)
+    prop = get_object_or_404(Prop, pk=prop_id)
     self.check_object_permissions(request, prop)
 
     serializer = MemberSerializer(prop, data=request.data, partial=True)
@@ -161,7 +138,7 @@ class RestrictedAPI(ViewSet):
     prop_id = kwargs.pop('pk')
 
     try:
-      prop = get_object_or_404(UsedProp, pk=prop_id)
+      prop = get_object_or_404(Prop, pk=prop_id)
     except ObjectLocked:
       return Response(
         data={{'message': 'Prop already reviewed.'}},

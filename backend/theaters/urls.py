@@ -53,6 +53,10 @@ get_tickets_on_sale = PublicAPI.as_view({
   'get': 'get_tickets_on_sale'
 })
 
+get_revenue = RestrictedAPI.as_view({
+  'post': 'get_revenue'
+})
+
 urlpatterns = [
   path(
     route='',
@@ -103,5 +107,10 @@ urlpatterns = [
     route='<int:pk>/tickets-on-sale',
     view=get_tickets_on_sale,
     name='tickets-on-sale'
-  )
+  ),
+  path(
+    route='<int:pk>/revenue',
+    view=get_revenue,
+    name='get-revenue'
+  ),
 ]

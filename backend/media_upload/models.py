@@ -27,6 +27,12 @@ def official_props_dir():
     'props', 'official', str(now.year), str(now.month), str(now.day)
   )
 
+def used_props_dir():
+  now = datetime.datetime.now()
+  return os.path.join(
+    'props', 'used', str(now.year), str(now.month), str(now.day)
+  )
+
 def theaters_dir():
   now = datetime.datetime.now()
   return os.path.join(
@@ -49,6 +55,8 @@ def generate_image_path(instance, filename):
   dir = ''
   if instance.kind == OFFICIAL_PROP_IMAGE[0]:
     dir = official_props_dir()
+  elif instance.kind == USED_PROP_IMAGE[0]:
+    dir = used_props_dir()
   elif instance.kind == THEATER_IMAGE[0]:
     dir = theaters_dir()
   elif instance.kind == MOVIE_IMAGE[0]:

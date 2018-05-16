@@ -50,6 +50,10 @@ export default {
 
   getTicketsOnSale(data) {
     return Axios.get(`${PREFIX}${data}/tickets-on-sale`);
+  },
+
+  getRevenue(id, data) {
+    return Axios.post(`${PREFIX}${id}/revenue`, data);
   }
 
 };

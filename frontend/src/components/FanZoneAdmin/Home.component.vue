@@ -22,7 +22,7 @@
               <v-btn
                 flat
                 block
-                @click="dialog=true"
+                @click="showCreateDialog = true"
               >
                 New Prop
               </v-btn>
@@ -71,9 +71,10 @@
               justify-center
               mb-4
             >
-              <used-prop
-                :info="prop"
-                :actions="['edit', 'remove']"
+              <prop-control
+                :prop="prop"
+                :actions="['edit', 'delete']"
+                @clicked="mutateProp"
               />
             </v-layout>
           </v-container>
@@ -98,8 +99,20 @@
       </v-layout>
     </v-container>
     <official-prop-dialog
-      v-if="dialog"
-      @close="dialog=false"
+      v-if="showCreateDialog && propToEdit"
+      :prop="propToEdit"
+      @close="showCreateDialog = false; propToEdit = null"
+    />
+    <official-prop-dialog
+      v-else-if="showCreateDialog"
+      @close="showCreateDialog = false; propToEdit = null"
+    />
+    <simple-dialog
+      v-if="showDeleteDialog"
+      title="Please confirm your decesion to delete this prop."
+      text="This action is irreversible. Prop will be removed from the store and all reservations will be canceled."
+      @cancel="showDeleteDialog = false; propToDelete = null"
+      @confirm="deleteProp"
     />
   </div>
 </template>
@@ -107,8 +120,9 @@
 import { mapGetters } from 'vuex';
 
 import Categories from 'Components/FanZone/Categories.component';
-import UsedProp from 'Components/FanZone/UsedProp.component';
+import PropControl from 'Components/FanZone/PropControl.component';
 import OfficialPropDialog from 'Components/FanZoneAdmin/OfficialPropDialog.component';
+import SimpleDialog from 'Components/helpers/SimpleDialog.component';
 
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/official-props.controller';
@@ -117,15 +131,19 @@ export default {
   name: 'FanZoneAdminHome',
   components: {
     Categories,
-    UsedProp,
-    OfficialPropDialog
+    PropControl,
+    OfficialPropDialog,
+    SimpleDialog
   },
   data() {
     return {
       drawer: true,
-      dialog: false,
+      showCreateDialog: false,
+      showDeleteDialog: false,
       entriesPerPage: 9,
-      page: 1
+      page: 1,
+      propToDelete: null,
+      propToEdit: null
     };
   },
   computed: {
@@ -160,6 +178,22 @@ export default {
         PropsController.requestCount();
         PropsController.requestPage(this.page);
       }
+    },
+    mutateProp(payload) {
+      const { prop, action } = payload;
+      if (action === 'delete') {
+        this.propToDelete = prop;
+        this.showDeleteDialog = true;
+      } else if (action === 'edit') {
+        this.propToEdit = prop.clone();
+        this.showCreateDialog = true;
+      }
+    },
+    deleteProp() {
+      this.showDeleteDialog = false;
+      PropsController.deleteProp(this.propToDelete.id);
+      this.$store.commit('props/official/deleteProp', this.propToDelete.id);
+      this.propToDelete = null;
     }
   }
 };

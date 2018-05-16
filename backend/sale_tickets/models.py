@@ -23,3 +23,12 @@ class Booking(models.Model):
 
   def price(self):
     return self.showtime.price
+
+  def get_discount(self):
+    return self.discount * self.showtime.price / 100
+
+  def date(self):
+    return self.showtime.date
+
+  def getTheater(self):
+    return self.showtime.movie.theater

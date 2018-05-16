@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.core.management.base import BaseCommand
 
 from authentication.serializers import UserSerializer
@@ -20,7 +21,8 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     try:
-      seed()
+      with transaction.atomic():
+        seed()
       self.stdout.write(self.style.SUCCESS('DB seed finished successfully'))
     except Exception as e:
       self.stdout.write(self.style.ERROR('DB seed failed \n' + str(e)))
@@ -248,38 +250,42 @@ officialprops = [
   {
     'title': 'Prop1',
     'description': 'some profound text here',
-    'category': 3,
+    'categoryId': 3,
     'quantity': 2,
     'price': 99.9,
-    'theater': 1,
-    'imageId': None
+    'theaterId': 1,
+    'imageId': None,
+    'kind': 'O'
   },
   {
     'title': 'Prop2',
     'description': 'some profound text here',
-    'category': 3,
+    'categoryId': 3,
     'quantity': 2,
     'price': 99.9,
-    'theater': 1,
-    'imageId': None
+    'theaterId': 1,
+    'imageId': None,
+    'kind': 'O'
   },
   {
     'title': 'Prop3',
     'description': 'some profound text here',
-    'category': 3,
+    'categoryId': 3,
     'quantity': 2,
     'price': 99.9,
-    'theater': 1,
-    'imageId': None
+    'theaterId': 1,
+    'imageId': None,
+    'kind': 'O'
   },
   {
     'title': 'Prop4',
     'description': 'some profound text here',
-    'category': 3,
+    'categoryId': 3,
     'quantity': 10,
     'price': 99.9,
-    'theater': 1,
-    'imageId': None
+    'theaterId': 1,
+    'imageId': None,
+    'kind': 'O'
   },
 ]
 
@@ -290,7 +296,8 @@ usedprops = [
     'ownerId': 5,
     'categoryId': 1,
     'imageId': None,
-    'expirationDate': '2018-06-01'
+    'expirationDate': '2018-06-01',
+    'kind': 'U'
   },
   {
     'title': 'Prop2',
@@ -298,7 +305,8 @@ usedprops = [
     'ownerId': 5,
     'categoryId': 1,
     'imageId': None,
-    'expirationDate': '2018-06-01'
+    'expirationDate': '2018-06-01',
+    'kind': 'U'
   },
   {
     'title': 'Prop3',
@@ -306,6 +314,7 @@ usedprops = [
     'ownerId': 6,
     'categoryId': 1,
     'imageId': None,
-    'expirationDate': '2018-06-01'
+    'expirationDate': '2018-06-01',
+    'kind': 'U'
   }
 ]

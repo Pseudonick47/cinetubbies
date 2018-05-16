@@ -64,8 +64,8 @@
               justify-center
               mb-4
             >
-              <used-prop
-                :info="prop"
+              <prop-control
+                :prop="prop"
                 :actions="['approve', 'reject']"
                 @clicked="changePropStatus"
               />
@@ -97,7 +97,7 @@
 import { mapGetters } from 'vuex';
 
 import Categories from 'Components/FanZone/Categories.component';
-import UsedProp from 'Components/FanZone/UsedProp.component';
+import PropControl from 'Components/FanZone/PropControl.component';
 
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/used-props.controller';
@@ -106,7 +106,7 @@ export default {
   name: 'PendingProps',
   components: {
     Categories,
-    UsedProp
+    PropControl
   },
   data() {
     return {

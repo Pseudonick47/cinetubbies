@@ -1,6 +1,9 @@
+from django.urls import include
 from django.urls import path
 
 from cinetubbies.utils.routing import BaseManageView
+
+from fan_zone.reservations.urls import urls_by_props as reservation_urls
 
 from .views import PublicAPI
 from .views import RestrictedAPI
@@ -41,5 +44,9 @@ urlpatterns = [
     route='<int:pk>',
     view=OfficialProp.as_view(),
     name="official-prop"
+  ),
+  path(
+    route='<int:prop_id>/reservations/',
+    view= include(reservation_urls),
   ),
 ]

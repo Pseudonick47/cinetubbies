@@ -22,4 +22,5 @@ export default {
   getTicketsOnSale(id) {
     return TheatersApiService.getTicketsOnSale(id);
   }
+
 };

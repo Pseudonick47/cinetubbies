@@ -103,6 +103,7 @@ export default {
           { icon: 'person_add', text: 'Profile', path: '/user/profile' },
           { icon: 'shopping_cart', text: 'Fan Zone', path: '/fan-zone' },
           { icon: 'shopping_cart', text: 'My Props', path: '/user/props' },
+          { icon: 'shopping_cart', text: 'My Prop Reservations', path: '/user/prop-reservations' },
           { icon: 'settings', text: 'Settings', path: '/user/settings' }
         ],
         'guest': [
