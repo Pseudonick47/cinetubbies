@@ -1,7 +1,7 @@
 const ENVIRONMENTS = {
   'localhost': 'dev',
   'cinetubbies.local  ': 'dev',
-  'odin.onthewifi.com': 'stage'
+  'odin.onthewifi.com': 'stage',
   'cinetubbies.pseudonick.com': 'stage'
 };
 

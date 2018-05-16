@@ -26,7 +26,9 @@ SECRET_KEY = '33yo6x$&ogd%0w+gs+c96a4lqciu@w5=kkw50==3-aqqqnkt&v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  'cinetubbies.pseudonick.com'
+]
 
 
 # Application definition
