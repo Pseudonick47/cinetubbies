@@ -104,8 +104,8 @@ DATABASES = {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'cinetubbies',
     'USER': 'root',
-    'PASSWORD': 'password',
-    'HOST': 'localhost',
+    'PASSWORD': 'milan',
+    'HOST': '/run/mysqld/mysqld.sock',
     'PORT': '3306',
   },
 }
