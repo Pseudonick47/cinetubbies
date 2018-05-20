@@ -9,7 +9,7 @@ from fan_zone.props.models import Prop
 from fan_zone.props.official.serializers import PublicSerializer as \
                                                 PropSerializer
 
-from fan_zone.reservations.models import Reservation
+from .models import Reservation
 
 
 class PublicSerializer(serializers.Serializer):

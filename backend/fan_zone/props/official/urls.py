@@ -3,8 +3,7 @@ from django.urls import path
 
 from cinetubbies.utils.routing import BaseManageView
 
-from fan_zone.reservations.urls import urls_by_props as reservation_urls
-
+from .reservations.urls import urls_by_props as reservation_urls
 from .views import PublicAPI
 from .views import RestrictedAPI
 

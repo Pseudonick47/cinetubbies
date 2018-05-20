@@ -3,7 +3,8 @@ from django.urls import path
 
 from rest_framework_jwt.views import obtain_jwt_token
 
-from fan_zone.reservations.urls import urls_by_user as prop_reservation_urls
+from fan_zone.props.official.reservations.urls import urls_by_user as \
+                                                      prop_reservation_urls
 
 from .views import AdminViewSet
 from .views import UserViewSet
