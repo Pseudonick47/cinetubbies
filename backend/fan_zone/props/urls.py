@@ -9,6 +9,8 @@ from .used.urls import urlpatterns as used_urls
 
 props = PublicAPI.as_view({'get': 'list'})
 
+prop = PublicAPI.as_view({'get': 'retrieve'})
+
 count_props = PublicAPI.as_view({'get': 'count'})
 
 
@@ -30,8 +32,8 @@ urlpatterns = [
     name='count-props'
   ),
   path(
-    route='categories/<int:category_pk>/',
-    view=include(prop_urls),
-    name='category-props'
+    route='<int:pk>',
+    view=prop,
+    name='prop'
   ),
 ] + prop_urls

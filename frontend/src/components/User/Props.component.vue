@@ -71,8 +71,8 @@
               justify-center
               mb-4
             >
-              <used-prop
-                :info="prop"
+              <prop-control
+                :prop="prop"
                 :actions="['edit', 'remove']"
                 status
               />
@@ -107,7 +107,7 @@
 <script>
 import { mapGetters } from 'vuex';
 
-import UsedProp from 'Components/FanZone/UsedProp.component';
+import PropControl from 'Components/FanZone/PropControl.component';
 
 import Categories from 'Components/FanZone/Categories.component';
 import UsedPropDialog from 'Components/User/UsedPropDialog.component';
@@ -118,7 +118,7 @@ import PropsController from 'Controllers/props/used-props.controller';
 export default {
   name: 'UserProps',
   components: {
-    UsedProp,
+    PropControl,
     UsedPropDialog,
     Categories
   },
