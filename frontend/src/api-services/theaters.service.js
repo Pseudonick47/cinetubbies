@@ -54,6 +54,10 @@ export default {
 
   getRevenue(id, data) {
     return Axios.post(`${PREFIX}${id}/revenue`, data);
+  },
+
+  getAttendance(id, period) {
+    return Axios.get(`${PREFIX}${id}/attendance/${period}`);
   }
 
 };
