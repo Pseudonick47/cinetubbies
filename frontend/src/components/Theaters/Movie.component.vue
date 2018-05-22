@@ -119,10 +119,12 @@
 import * as _ from 'lodash';
 import BookTicketDialog from 'Components/Theaters/BookTicketDialog.component';
 import MovieController from 'Controllers/movies.controller';
-import TheaterController from 'Controllers/system-admin.controller';
+import TheatersController from 'Controllers/theaters.controller';
 import TicketsOnSaleController from 'Controllers/tickets-on-sale.controller';
 import { Movie } from 'Models/movie.model';
 import StarRating from 'vue-star-rating';
+import store from 'Store';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Movie',
@@ -151,8 +153,16 @@ export default {
     };
   },
   computed: {
+    ...mapGetters([
+      'auditorium',
+      'auditoriums',
+      'showtime'
+    ]),
     selectedDateShowtimes() {
       return _.filter(this.showtimes, { date: this.selectedDate });
+    },
+    selectedShowtime() {
+      return _.find(this.showtimes, x => x.id === this.selectedShowtimeId);
     },
     showtimeDates() {
       return _.map(this.showtimes, (showtime) => {
@@ -161,10 +171,14 @@ export default {
     }
   },
   mounted() {
-    this.getMovie(this.movieId);
-    this.getShowtimes(this.movieId);
+    this.init();
   },
   methods: {
+    async init() {
+      await this.getMovie(this.movieId);
+      await this.getShowtimes(this.movieId);
+      store.dispatch('fetchAuditoriums', this.theaterId);
+    },
     openSeatsDialog(showtimeId) {
       this.selectedShowtimeId = showtimeId;
       this.showBookDialog = true;
@@ -172,12 +186,21 @@ export default {
     closeBookingDialog() {
       this.showBookDialog = false;
     },
+    mapXYToSeatIds(choosenSeats) {
+      const size = this.auditorium(this.selectedShowtime.auditorium).layout[0].length;
+      let tmpLayout = _.chunk(this.showtime(this.selectedShowtimeId).seats, size);
+      return _.map(choosenSeats, (seatXY) => {
+        return tmpLayout[seatXY.x][seatXY.y].seat;
+      });
+    },
     bookTicket(choosenSeats) {
-      TicketsOnSaleController.bookTicket({
-        choosenSeats,
+      let data = {
+        choosenSeats: this.mapXYToSeatIds(choosenSeats),
         showtime: this.selectedShowtimeId
-      })
+      };
+      TicketsOnSaleController.bookTicket(data)
         .then((response) => {
+          store.commit('bookTicket', { showtimeId: this.selectedShowtimeId, seats: data.choosenSeats });
           this.$alert.success('Ticket successfully booked');
           this.showRatingDialog = true;
         })
@@ -198,6 +221,7 @@ export default {
     getShowtimes(id) {
       MovieController.getShowtimes(id)
         .then((response) => {
+          store.commit('setShowtimes', response.data);
           this.showtimes = response.data;
         })
         .catch(() => {
@@ -206,7 +230,7 @@ export default {
     },
     setTheaterRating(rating) {
       const data = { 'rating': rating };
-      TheaterController.updateRating(data, this.theaterId)
+      TheatersController.updateRating(data, this.theaterId)
         .then((response) => {
           this.$alert.success('Thank you!');
         })

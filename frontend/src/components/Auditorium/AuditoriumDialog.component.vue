@@ -21,6 +21,7 @@
       <v-card-text>
         <layout
           :seats.sync="selectedAuditorium.layout"
+          :last-selected.sync="bookedTickets"
         />
       </v-card-text>
       <v-card-actions>
@@ -41,6 +42,7 @@
 </template>
 <script>
 import Layout from 'Components/Auditorium/Layout.component';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AuditoriumDialog',
@@ -59,9 +61,11 @@ export default {
     }
   },
   data: () => ({
+    bookedTickets: [],
     selectedAuditorium: { name: '', layout: [ [ 1, 1, 1 ], [ 0, 1, 1 ], [ 1, 1, 1 ] ] }
   }),
   computed: {
+    ...mapGetters([ 'isCinemaAdmin' ]),
     showThis: {
       get() {
         return this.show;
@@ -84,7 +88,11 @@ export default {
       this.$emit('cancel');
     },
     submit() {
-      this.$emit('auditorium-finished', this.selectedAuditorium);
+      if (this.isCinemaAdmin) {
+        this.$emit('auditorium-finished', this.selectedAuditorium);
+      } else {
+        this.$emit('tickets-booked', this.bookedTickets);
+      }
     }
   }
 };

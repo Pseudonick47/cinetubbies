@@ -20,6 +20,7 @@
         <v-card-text>
           <layout
             :seats.sync="layout"
+            :last-selected.sync="selectedSeats"
           />
 
         </v-card-text>
@@ -41,6 +42,7 @@
 </template>
 <script>
 import Layout from 'Components/Auditorium/Layout.component';
+import { mapGetters } from 'vuex';
 export default {
   name: 'BookTicketDialog',
   components: {
@@ -58,15 +60,18 @@ export default {
   },
   data() {
     return {
-      selectedSeats: [ 1, 2, 44 ],
-      layout: [
-        [ 0, 1, 0, 1 ],
-        [ 1, 0, 0, 1 ],
-        [ 1, 1, 1, 1 ]
-      ]
+      selectedSeats: []
     };
   },
   computed: {
+    layout() {
+      const showtime = this.showtime(this.showtimeId);
+      const auditorium = this.auditorium(showtime.auditorium);
+      const size = auditorium.layout[0].length;
+      let chunked = _.chunk(this.showtimeSeats(this.showtimeId), size);
+      return chunked;
+    },
+    ...mapGetters([ 'showtimeSeats', 'showtime', 'auditorium' ]),
     showThis: {
       get() {
         return this.show;
@@ -78,7 +83,7 @@ export default {
   },
   methods: {
     bookTicket() {
-      this.$emit('book-ticket', this.selectedSeats);
+      this.$emit('book-ticket', this.selectedSeats); // [ {x:1, y:4}]
     },
     cancel() {
       this.$emit('cancel');

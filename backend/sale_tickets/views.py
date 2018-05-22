@@ -59,11 +59,22 @@ class BookingViewSet(viewsets.ViewSet):
 
   def create(self, request):
     request.data['user'] = request.user.id
-    serializer = BookingSerializer(data=request.data)
-    if not serializer.is_valid():
-      return Response(serializer.errors, status=400)
-    serializer.save()
-    return Response(serializer.data)
+    # provera da li je zauzeto i zakljucavanje svih od jednom
+    seat_ids = request.data['choosenSeats']
+
+    updated_bookings = []
+    for seat in seat_ids:
+      request.data['seat'] = seat
+      place = Booking.objects.filter(showtime_id=request.data['showtime'], seat=request.data['seat'])[0]
+      if not place.user is None:
+        return Response({'message': 'Booking failed. Are all the seats empty?'}, status=400)
+      place.user_id = request.user.id
+      updated_bookings.append(place)
+    # Booking.objects.bulk_update(updated_bookings)
+    for s in updated_bookings:
+      s.save()
+    # otkljucati
+    return Response({'message': 'Tickets booked successfully'})
 
   def destroy(self, request, pk=None):
     booking = get_object_or_404(Booking, id=pk)

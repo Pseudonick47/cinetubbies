@@ -31,7 +31,7 @@ class BookingSerializer(serializers.Serializer):
   user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=False)
   discount = serializers.IntegerField(required=False)
   price = serializers.IntegerField(required=False)
-  seat = serializers.IntegerField(required=False)
+  seat = serializers.IntegerField()
 
   def create(self, validated_data):
     booking = Booking.objects.create(**validated_data)

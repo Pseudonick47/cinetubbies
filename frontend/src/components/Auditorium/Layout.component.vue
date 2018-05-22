@@ -12,7 +12,10 @@
           <div
             v-for="j in colsCount"
             :key="`5${i}${j}`"
-            :class="[selectedSeats[i-1][j-1] ? 'seat-free' : 'seat-taken']"
+            :class="[
+              selectedSeats[i-1][j-1] ? 'seat-free' : 'seat-taken',
+              isLastSelected(i-1,j-1) ? 'seat-booked' : ''
+            ]"
             class="layout-seat"
             @click="seatClicked(i-1, j-1)"
           >
@@ -48,7 +51,11 @@ export default {
   props: {
     seats: {
       type: Array,
-      default: () => [ [] ]
+      default: () => [ [] ] // nule i jedinice
+    },
+    lastSelected: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -63,6 +70,14 @@ export default {
         this.$emit('update:seats', value);
       }
     },
+    lastSelectedSeats: {
+      get() {
+        return this.lastSelected;
+      },
+      set(value) {
+        this.$emit('update:last-selected', value);
+      }
+    },
     rowsCount() {
       return this.selectedSeats.length;
     },
@@ -71,7 +86,34 @@ export default {
     }
   },
   methods: {
+    isLastSelected(i, j) {
+      return !!(_.findIndex(this.lastSelectedSeats, (o) => {
+        return o.x == i && o.y == j;
+      }) + 1);
+    },
+    bookOrUnbook(i, j) {
+      let index = _.findIndex(this.lastSelectedSeats, (o) => {
+        return o.x == i && o.y == j;
+      });
+      if (index === -1) {
+        this.lastSelectedSeats.push({ x: i, y: j });
+        this.lastSelectedSeats = this.lastSelectedSeats;
+        return;
+      }
+      this.lastSelectedSeats.splice(index, 1);
+    },
+    isSeatTaken(i, j) {
+      return !this.selectedSeats[i][j];
+    },
     seatClicked(i, j) {
+      // nije admin => bookira karte
+      if (!this.isCinemaAdmin) {
+        if (this.isSeatTaken(i, j)) {
+          return;
+        }
+        this.bookOrUnbook(i, j);
+        return;
+      }
       this.selectedSeats[i][j] = this.selectedSeats[i][j] === 1 ? 0 : 1;
       this.$forceUpdate();
     },
@@ -80,7 +122,7 @@ export default {
     },
     addColumn() {
       _.forEach(this.selectedSeats, x => {
-        x.push(0);
+        x.push(1);
       });
     }
   }
@@ -115,6 +157,9 @@ export default {
 }
 .seat-taken {
   background: crimson;
+}
+.seat-booked {
+  background: blueviolet!important;
 }
 .seat-free {
   background: teal;
