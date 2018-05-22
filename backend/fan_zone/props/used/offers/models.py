@@ -15,4 +15,4 @@ class Offer(models.Model):
     on_delete=models.CASCADE,
     related_name='+'
   )
-  sum = models.PositiveIntegerField()
+  amount = models.PositiveIntegerField()

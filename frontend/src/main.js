@@ -14,7 +14,11 @@ import AuthController from 'Controllers/auth.controller';
 Vue.config.productionTip = false;
 
 Vue.use(VeeValidate);
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  theme: {
+    primary: '#DAA520'
+  }
+});
 Vue.prototype.router = router;
 Vue.prototype.$alert = AlertHelper;
 

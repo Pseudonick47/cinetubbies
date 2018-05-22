@@ -3,6 +3,7 @@ from django.urls import path
 
 from cinetubbies.utils.routing import BaseManageView
 
+from .offers.urls import urls_by_props as offer_urls
 from .views import MemberAPI
 from .views import PublicAPI
 from .views import RestrictedAPI
@@ -41,6 +42,11 @@ urlpatterns = [
     route='<int:pk>',
     view=UsedProp.as_view(),
     name='used-prop'
+  ),
+  path(
+    route='<int:prop_id>/offers/',
+    view=include(offer_urls),
+    name='used-prop-offers'
   ),
   path(
     route='<int:pk>/review',

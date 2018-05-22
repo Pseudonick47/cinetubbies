@@ -5,6 +5,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from fan_zone.props.official.reservations.urls import urls_by_user as \
                                                       prop_reservation_urls
+from fan_zone.props.used.offers.urls import urls_by_user as prop_offer_urls
 
 from .views import AdminViewSet
 from .views import UserViewSet
@@ -59,6 +60,7 @@ urlpatterns = [
   path('users/friends/<str:query>', search_friends, name='user-friends-search'),
   path('users/<int:pk>/', user, name='user'),
   path('users/<int:user_id>/reservations/', include(prop_reservation_urls), name='user-prop-reservations'),
+  path('users/<int:user_id>/offers/', include(prop_offer_urls), name='user-prop-offers'),
   path('users/<int:user_id>/props/', include('fan_zone.props.used.urls'), name='user-props'),
   path('users/', users, name='users'),
   path('auth/me/', active, name='active-user'),

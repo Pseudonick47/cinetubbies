@@ -52,17 +52,23 @@ class MemberAPI(ViewSet):
         status=status.HTTP_400_BAD_REQUEST
       )
 
-    sum = request.data.get('sum', None)
+    if prop.owner.id == request.user.id:
+      return Response(
+        data="User is not allowed to place an offer on his own prop ad.",
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
+    amount = request.data.get('amount', None)
     if not sum:
       return Response(
-        data="Sum is required.",
+        data="Amount is required.",
         status=status.HTTP_400_BAD_REQUEST
       )
 
     offer = Offer.objects.create(
       user_id=request.user.id,
       prop_id=prop_id,
-      sum=sum
+      amount=amount
     )
 
     return Response(data=PublicSerializer(offer).data)

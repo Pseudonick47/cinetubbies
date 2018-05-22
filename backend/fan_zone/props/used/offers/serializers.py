@@ -22,7 +22,7 @@ class PublicSerializer(serializers.Serializer):
   prop = PropSerializer(
     read_only=True
   )
-  sum = serializers.IntegerField(
+  amount = serializers.IntegerField(
     min_value=0
   )
 

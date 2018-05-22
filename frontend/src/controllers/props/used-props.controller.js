@@ -37,11 +37,11 @@ export default {
 
     if (payload.all) {
       this.fetchPageForAll(num, page, payload).then((response) => {
-        store.commit('props/used/setProps', response.data);
+        store.commit('props/setProps', response.data);
       });
     } else {
       this.fetchPage(num, page, payload).then((response) => {
-        store.commit('props/used/setProps', response.data);
+        store.commit('props/setProps', response.data);
       });
     }
   },
@@ -77,11 +77,11 @@ export default {
   requestCount(payload = {}) {
     if (payload.all) {
       this.fetchCountForAll(payload).then((response) => {
-        store.commit('props/used/setCount', response.data);
+        store.commit('props/setCount', response.data);
       });
     } else {
       this.fetchCount(payload).then((response) => {
-        store.commit('props/used/setCount', response.data);
+        store.commit('props/setCount', response.data);
       });
     }
   },
@@ -92,5 +92,9 @@ export default {
 
   reviewProp(id, data) {
     return Service.props.review(id, data);
+  },
+
+  deleteProp(id) {
+    return Service.props.delete(id);
   }
 };
