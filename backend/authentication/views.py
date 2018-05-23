@@ -14,7 +14,6 @@ from rest_framework_jwt.settings import api_settings
 
 from theaters.serializers import PublicSerializer as TheaterSerializer
 
-# from .models import FanZoneAdmin
 from .models import FAN_ZONE_ADMIN
 from .models import Friendship
 from .models import TheaterAdmin
@@ -94,6 +93,42 @@ class UserViewSet(viewsets.ModelViewSet):
     self.check_object_permissions(request, user)
     user.delete()
     return Response({'message': 'User successfully deleted'})
+
+  @action(detail=False)
+  def set_password(self, request, *args, **kwargs):
+    token = request.data.get('token')
+    if not token:
+      return Response(
+        data={'message': 'Token is required.'},
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
+    user = get_object_or_404(User, single_use_token=token)
+
+    password = request.data.get('password')
+    if not password:
+      return Response(
+        data={'message': 'Password is required.'},
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
+    if len(password) < 5:
+      return Response(
+        data={'message': 'Password must be at least 5 characters long.'},
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
+    user.set_password(password)
+    user.single_use_token = None
+    user.save()
+
+    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+    payload = jwt_payload_handler(user)
+    token = jwt_encode_handler(payload)
+
+    return Response(auth.jwt_response_payload_handler(token, user))
+
 
 class FriendViewSet(viewsets.ViewSet):
   def create(self, request, pk=None):
@@ -183,6 +218,9 @@ class SystemAdminViewSet(viewsets.ViewSet):
     pwd = auth.generate_password()
     request.data['password'] = pwd
 
+    single_use_token = auth.generate_single_use_token()
+    request.data['single_use_token'] = single_use_token
+
     if request.data['role'] == THEATER_ADMIN[0]:
       serializer = TheaterAdminSerializer(data=request.data, partial=True)
     else:
@@ -195,7 +233,8 @@ class SystemAdminViewSet(viewsets.ViewSet):
     jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
     payload = jwt_payload_handler(admin)
     token = jwt_encode_handler(payload)
-    auth.send_mail_to_admin(admin, pwd, token)
+
+    auth.send_mail_to_admin(admin, single_use_token, token)
 
     return Response(data=serializer.data)
 

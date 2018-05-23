@@ -6,7 +6,8 @@ const ENDPOINTS = {
   REGISTER: 'register/',
   CHANGE_PASSWORD: 'change-password/',
   LOGOUT: 'logout/',
-  ME: 'me/'
+  ME: 'me/',
+  SET_PASSWORD: 'set-password/'
 };
 
 export default {
@@ -28,5 +29,9 @@ export default {
 
   fetchActiveUser() {
     return Axios.get(PREFIX + ENDPOINTS.ME);
+  },
+
+  setPassword(data) {
+    return Axios.post(PREFIX + ENDPOINTS.SET_PASSWORD, data);
   }
 };

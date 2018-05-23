@@ -6,7 +6,6 @@ from rest_framework.validators import UniqueValidator
 
 from theaters.models import Theater
 
-# from .models import FanZoneAdmin
 from .models import ROLES
 from .models import TheaterAdmin
 from .models import User
@@ -105,6 +104,11 @@ class UserSerializer(serializers.Serializer):
 class AdminSerializer(UserSerializer):
   phone = None
   city = None
+  single_use_token = serializers.CharField(
+    write_only=True,
+    required=False
+  )
+
 
 class TheaterAdminSerializer(AdminSerializer):
   theater = serializers.PrimaryKeyRelatedField(

@@ -4,6 +4,7 @@ import Login from 'Components/Login.component';
 import Register from 'Components/Register.component';
 import Welcome from 'Components/Welcome.component';
 import Movies from 'Components/CinemaAdmin/Movies.component';
+import PasswordReset from 'Components/PasswordReset.component';
 
 import Profile from 'Components/User/Profile.component';
 import UserProps from 'Components/User/Props.component';
@@ -49,6 +50,15 @@ export const routes = [
     path: '/register',
     name: 'register',
     component: Register,
+    meta: {
+      guest: true
+    }
+  },
+  {
+    path: '/set-password/:token',
+    name: 'set-password',
+    component: PasswordReset,
+    props: true,
     meta: {
       guest: true
     }

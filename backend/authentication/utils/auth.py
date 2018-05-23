@@ -40,20 +40,16 @@ def send_verification_mail(user, token):
     message
   )
 
-def send_mail_to_admin(user, password, token):
+def send_mail_to_admin(user, single_use_token, token):
   message = f"""
     Hello, welcome to Cinetubbies
     You are now able to login to our services. We have generated for you a
-    single use password and it will become invalid on you first login. You will
-    be prompted to enter a new one, please don't leave the page before you
+    single use token and it will become invalid on you first login. You will
+    be prompted to enter a new password, please don't leave the page before you
     confirm your new password.
 
-    These are your credentials:
-    Username: {user.username}
-    Password: {password}
-
     To verify your email and login for the first time, visit:
-    ovo.je/neki/link/{token}
+    http://localhost:8080/set-password/{single_use_token}
 
     Sincerely,
     Cinetubbies Team
@@ -68,3 +64,6 @@ def send_mail_to_admin(user, password, token):
 
 def generate_password(num_of_chars=12):
   return ''.join([random.choice(CHAR_SET) for _ in range(12)])
+
+def generate_single_use_token(num_of_chars=32):
+  return ''.join([random.choice(CHAR_SET) for _ in range(32)])

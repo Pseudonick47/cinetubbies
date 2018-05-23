@@ -29,8 +29,8 @@ class User(AbstractUser):
   phone = models.CharField(max_length=30, blank=True)
   city = models.CharField(max_length=30, blank=True)
   friendships = models.ManyToManyField('self', through='Friendship', symmetrical=False)
-  first_login = models.BooleanField(default=True)
   image = models.ForeignKey(to="media_upload.Image", on_delete=models.SET_NULL, related_name='+', null=True)
+  single_use_token = models.CharField(max_length=32, null=True)
 
   def is_user(self):
     return self.role == USER[0]
@@ -64,7 +64,6 @@ class Friendship(models.Model):
     me = models.ForeignKey(User, on_delete=models.PROTECT, related_name='me')
     friend = models.ForeignKey(User, on_delete=models.PROTECT, related_name='friend')
     accepted = models.BooleanField(default=False)
-
 
 class TheaterAdmin(User):
   theater = models.ForeignKey(

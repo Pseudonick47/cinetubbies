@@ -67,13 +67,15 @@ export default {
   },
   methods: {
     confirm() {
-      // console.log(this.$route.params.token);
-      console.log(this.token);
       this.$validator.validateAll().then((result) => {
         if (!result) {
           this.$alert.error('Please fill all required fields.');
         }
-        console.log('Password', this.password);
+
+        AuthController.setPassword({
+          password: this.password,
+          token: this.token
+        });
       });
     }
   }

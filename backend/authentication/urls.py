@@ -37,6 +37,10 @@ admins = SystemAdminViewSet.as_view({
   'get': 'list',
 })
 
+set_password = UserViewSet.as_view({
+  'post': 'set_password'
+})
+
 admin_count = SystemAdminViewSet.as_view({
   'get': 'count'
 })
@@ -66,6 +70,7 @@ urlpatterns = [
   path('auth/me/', active, name='active-user'),
   path('auth/login/', obtain_jwt_token, name='login'),
   path('auth/register/', register, name='register'),
+  path('auth/set-password/', set_password, name='set-password'),
   path('admins/', admins, name='admins'),
   path('admins/count', admin_count, name='admin-count'),
   path('admins/<int:pk>/theater', admin_theater, name='admin-theater'),
