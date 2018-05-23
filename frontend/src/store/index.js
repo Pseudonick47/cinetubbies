@@ -4,13 +4,14 @@ import Vuex from 'vuex';
 import {
   alert,
   auth,
+  miscellaneous,
+  movies,
   props,
-  reservations,
-  systemAdmin,
   repertoire,
-  ticketsOnSale,
+  reservations,
   showtimes,
-  movies
+  systemAdmin,
+  ticketsOnSale
 } from './modules';
 
 Vue.use(Vuex);
@@ -19,13 +20,14 @@ const storeData = {
   modules: {
     alert,
     auth,
+    miscellaneous,
+    movies,
     props,
-    reservations,
-    systemAdmin,
     repertoire,
-    ticketsOnSale,
+    reservations,
     showtimes,
-    movies
+    systemAdmin,
+    ticketsOnSale
   }
 };
 

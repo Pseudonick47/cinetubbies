@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%; width: 100%;">
     <v-navigation-drawer
       v-model="drawer"
       app
@@ -62,6 +62,7 @@
             </v-layout>
           </v-container>
           <v-container
+            v-if="pageCount > 0"
             id="pagination"
             style="display: flex; flex-direction: column; align-items: center;"
           >

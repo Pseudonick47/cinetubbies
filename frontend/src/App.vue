@@ -77,7 +77,13 @@
           <v-spacer/>
           <v-toolbar-title class="display-1">Cinetubbies</v-toolbar-title>
           <v-spacer/>
-          <v-toolbar-items class="hidden-sm-and-down"/>
+          <v-btn
+            v-if="showRightDrawer"
+            icon
+            @click.stop="toggleRightDrawer"
+          >
+            <v-icon>more_vert</v-icon>
+          </v-btn>
         </v-layout>
       </div>
     </v-toolbar>
@@ -176,11 +182,17 @@ export default {
       'isLogged',
       'activeUserRole',
       'showAlert'
-    ])
+    ]),
+    ...mapGetters('miscellaneous', {
+      showRightDrawer: 'hasDrawer'
+    })
   },
   methods: {
     logout() {
       AuthController.logout();
+    },
+    toggleRightDrawer() {
+      this.$store.commit('miscellaneous/setDrawer', !this.$store.getters['miscellaneous/drawer']);
     }
   }
 };

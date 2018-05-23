@@ -35,7 +35,7 @@
               pr-4
               pl-3
               mt-4
-              mb-2
+              mb-4
             >
               <div class="display-1">{{ prop.title }}</div>
               <div v-if="status">

@@ -18,7 +18,7 @@
           xs6
         >
           <v-text-field
-            v-validate="'required|decimal:3'"
+            v-validate="'required|decimal:2'"
             ref="amountInput"
             v-model="amount"
             :error-messages="errors.collect('amount')"
@@ -67,7 +67,7 @@ export default {
       default: () => new PropOffer()
     },
     prop: {
-      type: Prop,
+      type: [ Prop, Object ],
       required: true
     }
   },
@@ -107,7 +107,7 @@ export default {
       });
     },
     createOffer() {
-      OffersController.offer(this.prop.id, this.prop.offer)
+      OffersController.offer(this.prop.id, this.offer)
         .then((response) => {
           this.$alert.success('You have successfully made an offer!');
           this.$emit('confirm');

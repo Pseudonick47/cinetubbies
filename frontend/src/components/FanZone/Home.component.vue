@@ -1,5 +1,8 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div
+    id="shopBody"
+    style="width: 100%; height: 100%"
+  >
     <v-navigation-drawer
       v-model="drawer"
       class="shop-drawer pl-2 pt-4"
@@ -15,42 +18,30 @@
           prepend-icon="search"
           mb-0
         />
-        <v-btn
-          class="mb-3"
-          small
-          block
-          @click="searchProps"
-        >Search</v-btn>
+        <div style="display: flex; justify-content: center">
+          <v-btn
+            class="mb-3"
+            color="primary"
+            small
+            light
+            @click="searchProps"
+          >Search</v-btn>
+        </div>
+        <div class="headline mt-2 mb-4">Props</div>
         <v-switch
           v-model="showOfficialProps"
-          class="title"
+          class="title pl-2"
           label="Official props"
           color="primary"
         />
         <v-switch
           v-model="showUsedProps"
-          class="title"
+          class="title pl-2"
           label="Used props"
           color="primary"
         />
       </div>
-      <div class="title pa-3">Categories</div>
-      <v-expansion-panel
-        class="elevation-0"
-        color="black"
-      >
-        <v-expansion-panel-content
-          hide-actions
-          ripple
-        >
-          <div
-            slot="header"
-            @click.stop="categorySelected(-1)"
-          >
-            All Categories
-          </div>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <div class="headline pa-3">Categories</div>
       <categories
         :collection="rootCategories"
         style="background-color: black"
@@ -73,16 +64,27 @@
         <v-flex style="display: flex; flex-direction: column;">
           <div>
             <v-container style="align-items: stretch;">
-              <v-layout class="props-row">
-                <v-flex
+              <v-layout
+                class="props-row"
+                justify-center
+              >
+                <!-- <v-flex
                   v-for="(prop, i) in props"
                   :key="i"
                   class="prop-container"
+                  :class="{ xs10: screen.small, md4: screen.medium, xl3: screen.large }"
                   xs12
                   sm6
                   md4
                   lg3
                   xl3
+                  pa-3
+                > -->
+                <v-flex
+                  v-for="(prop, i) in props"
+                  :key="i"
+                  class="prop-container"
+                  :class="{ xs10: screen.small, md4: screen.medium, xl3: screen.large }"
                   pa-3
                 >
                   <prop
@@ -107,22 +109,10 @@
             </v-container>
           </div>
         </v-flex>
-
         <v-flex
           hidden-sm-and-down
           md1
-          style="display: flex; align-items: center; justify-content: flex-end"
-        >
-          <v-btn
-            fab
-            small
-            color="black"
-            style="transform: scale(0.8);"
-            @click="drawer = !drawer"
-          >
-            <v-icon>keyboard_arrow_right</v-icon>
-          </v-btn>
-        </v-flex>
+        />
       </v-layout>
     </v-container>
     <prop-detail
@@ -153,7 +143,6 @@ export default {
   },
   data() {
     return {
-      drawer: false,
       propToDisplay: null,
       entriesPerPage: 9,
       page: 1,
@@ -173,6 +162,39 @@ export default {
     }),
     pageCount() {
       return _.ceil(_.divide(this.count, this.entriesPerPage));
+    },
+    drawer: {
+      set(visible) {
+        this.$store.commit('miscellaneous/setDrawer', visible);
+      },
+      get() {
+        return this.$store.getters['miscellaneous/drawer'];
+      }
+    },
+    screen() {
+      const el = document.getElementById('shopBody');
+      const width = el.offsetWidth;
+      const height = el.offsetHeight
+
+      const size = width > height ? height : width;
+
+      console.log(width, height);
+
+      const screen = {
+        small: false,
+        medium: false,
+        large: false
+      };
+
+      if (size <= 960) {
+        screen.small = true;
+      } else if (size > 960 && size <= 1264) {
+        screen.medium = true;
+      } else {
+        screen.large = true;
+      }
+      console.log(screen);
+      return screen;
     }
   },
   watch: {
@@ -181,9 +203,14 @@ export default {
     }
   },
   beforeMount() {
+    this.$store.commit('miscellaneous/setDrawer', false);
+
     CategoriesController.requestCategories();
     PropsController.requestCount();
     PropsController.requestPage(this.page);
+  },
+  beforeDestroy() {
+    this.$store.commit('miscellaneous/setDrawer', null);
   },
   methods: {
     goToProp(prop) {
