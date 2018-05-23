@@ -26,23 +26,22 @@
                   v-model="movie.title"
                   :error-messages="errors.collect('title')"
                   :counter="255"
+                  :width="20"
                   label="Title"
                   data-vv-name="title"
                   required
+                  box
                 />
-              </v-flex>
-              <v-flex
-                xs12
-                sm6
-                md4>
-                <v-text-field
+                <span>&emsp;</span>
+                <v-select
                   v-validate="'required'"
-                  :counter="255"
                   v-model="movie.genre"
+                  :items="getGenres()"
                   :error-messages="errors.collect('genre')"
                   label="Genre"
                   data-vv-name="genre"
                   required
+                  box
                 />
               </v-flex>
               <v-flex
@@ -51,38 +50,12 @@
                 md4>
                 <v-text-field
                   :counter="255"
-                  v-model="movie.director"
-                  label="Director"
-                />
-              </v-flex>
-              <v-flex
-                xs12
-                sm6
-                md4>
-                <v-text-field
-                  :counter="255"
-                  v-model="movie.actors"
-                  label="Actors"
-                />
-              </v-flex>
-              <v-flex
-                xs12
-                sm6
-                md4>
-                <v-text-field
-                  :counter="255"
-                  v-model="movie.duration"
-                  label="Duration"
-                />
-              </v-flex>
-              <v-flex
-                xs12
-                sm6
-                md4>
-                <v-text-field
-                  :counter="255"
+                  :rows="2"
                   v-model="movie.description"
                   label="Description"
+                  multi-line
+                  box
+                  auto-grow
                 />
               </v-flex>
               <v-flex
@@ -90,12 +63,146 @@
                 sm6
                 md4>
                 <v-layout row>
-                  <span>Movie image:</span>
-                  <v-divider/>
+                  <v-text-field
+                    :counter="255"
+                    v-model="newDirector"
+                    label="Director"
+                    box
+                  />
+                  <v-tooltip bottom>
+                    <v-btn
+                      slot="activator"
+                      icon
+                      @click="addNewDirector()">
+                      <v-icon>add</v-icon>
+                    </v-btn>
+                    <span>Add director</span>
+                  </v-tooltip>
+                </v-layout>
+                <v-flex>
+                  <v-expansion-panel>
+                    <v-expansion-panel-content>
+                      <div slot="header">Directors</div>
+                      <v-card
+                        v-for="(item,i) in directors"
+                        :key="i"
+                      >
+                        <v-layout row>
+                          <v-card-text style="word-wrap: break-word;">{{ item }}</v-card-text>
+                          <v-card-actions>
+                            <v-btn
+                              icon
+                              @click="editDirector(i)">
+                              <v-icon small>edit</v-icon>
+                            </v-btn>
+                            <v-btn
+                              icon
+                              @click="deleteDirector(i)">
+                              <v-icon small>delete</v-icon
+                            ></v-btn>
+                          </v-card-actions>
+                          <v-dialog
+                            v-model="showEditDirDialog"
+                            width="300px">
+                            <v-card>
+                              <v-card-text>Edit director</v-card-text>
+                              <v-text-field
+                                v-model="editingDirector.director"
+                                label="Director"
+                                box
+                              />
+                              <v-card-actions>
+                                <v-btn @click="showEditDirDialog=false">close</v-btn>
+                                <v-btn @click="saveEditedDirector()">save</v-btn>
+                              </v-card-actions>
+                            </v-card>
+                          </v-dialog>
+                        </v-layout>
+                      </v-card>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-flex>
+                <v-layout row>
+                  <v-text-field
+                    :counter="255"
+                    v-model="newActor"
+                    label="Actor"
+                    box
+                  />
+                  <v-tooltip bottom>
+                    <v-btn
+                      slot="activator"
+                      icon
+                      @click="addNewActor()">
+                      <v-icon>add</v-icon>
+                    </v-btn>
+                    <span>Add actor</span>
+                  </v-tooltip>
+                </v-layout>
+              </v-flex>
+              <v-flex>
+                <v-expansion-panel>
+                  <v-expansion-panel-content>
+                    <div slot="header">Actors</div>
+                    <v-card
+                      v-for="(item,i) in actors"
+                      :key="i"
+                    >
+                      <v-layout row>
+                        <v-card-text style="word-wrap: break-word;">{{ item }}</v-card-text>
+                        <v-card-actions>
+                          <v-btn
+                            icon
+                            @click="editActor(i)">
+                            <v-icon small>edit</v-icon>
+                          </v-btn>
+                          <v-btn
+                            icon
+                            @click="deleteActor(i)">
+                            <v-icon small>delete</v-icon
+                          ></v-btn>
+                        </v-card-actions>
+                        <v-dialog
+                          v-model="showEditActDialog"
+                          width="300px">
+                          <v-card>
+                            <v-card-text>Edit actor</v-card-text>
+                            <v-text-field
+                              v-model="editingActor.actor"
+                              label="Actor"
+                              box
+                            />
+                            <v-card-actions>
+                              <v-btn @click="showEditActDialog=false">close</v-btn>
+                              <v-btn @click="saveEditedActor(i)">save</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </v-layout>
+                    </v-card>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4>
+                <v-text-field
+                  v-model.number="movie.duration"
+                  label="Duration"
+                  box
+                  suffix="min"
+                />
+                <v-chip
+                  label
+                  outline
+                >
+                  Poster image
+                  <span>&emsp;</span>
                   <input
                     type="file"
                     @change="imageSelected"
-                ></v-layout>
+                ></v-chip>
               </v-flex>
             </v-layout>
           </v-container>
@@ -103,7 +210,8 @@
         <v-card-actions>
           <v-spacer/>
           <v-btn
-            color="blue darken-1"
+            color="
+blue darken-1"
             flat
             @click="dialog = false">Cancel</v-btn>
           <v-btn
@@ -213,12 +321,22 @@ export default {
     dialog: false,
     editedIndex: -1,
     kind: '',
-    selectedImage: null
+    selectedImage: null,
+    newActor: '',
+    actors: [],
+    newDirector: '',
+    directors: [],
+    showEditDirDialog: false,
+    showEditActDialog: false,
+    editingDirector: { index: '', director: '' },
+    editingActor: { index: '', actor: '' }
   }),
   computed: {
     ...mapGetters([
       'activeUser',
-      'movieHeaders'
+      'movieHeaders',
+      'theaterGenres',
+      'cinemaGenres'
     ]),
     formTitle() {
       return this.editedIndex === -1 ? 'New ' + this.kind : 'Edit ' + this.kind;
@@ -235,8 +353,14 @@ export default {
       this.dialog = true;
       this.movie = new Movie(movie);
       this.editedIndex = -1;
+      this.actors = [];
+      this.directors = [];
     },
     controllerCreate() {
+      this.movie.actors = this.actors.join(',');
+      this.movie.director = this.directors.join(',');
+      this.actors = [];
+      this.directors = [];
       MoviesController.create(this.movie)
         .then((response) => {
           this.$alert.success('Successfully saved');
@@ -307,6 +431,8 @@ export default {
     editButton(movieData) {
       this.movie = new Movie(movieData);
       this.editedIndex = 1;
+      this.actors = this.movie.actors.split(',');
+      this.directors = this.movie.director.split(',');
       this.dialog = true;
     },
     deleteButton(id) {
@@ -346,6 +472,47 @@ export default {
         .catch((response) => {
           this.$alert.error('Error occurred.  Tip:Movie cannot be deleted if there are showtimes for it.');
         });
+    },
+    addNewActor() {
+      this.actors.push(this.newActor);
+      this.newActor = '';
+    },
+    addNewDirector() {
+      this.directors.push(this.newDirector);
+      this.newDirector = '';
+    },
+    getGenres() {
+      if (this.kind === 'm') {
+        return this.cinemaGenres;
+      } else {
+        return this.theaterGenres;
+      }
+    },
+    deleteDirector(i) {
+      this.directors.splice(i, 1);
+    },
+    deleteActor(i) {
+      this.actors.splice(i, 1);
+    },
+    editDirector(i) {
+      this.showEditDirDialog = true;
+      this.editingDirector.director = this.directors[i];
+      this.editingDirector.index = i;
+    },
+    saveEditedDirector() {
+      this.showEditDirDialog = false;
+      this.directors[this.editingDirector.index] = this.editingDirector.director;
+      this.movie.director = this.directors.join(',');
+    },
+    editActor(i) {
+      this.showEditActDialog = true;
+      this.editingActor.actor = this.actors[i];
+      this.editingActor.index = i;
+    },
+    saveEditedActor() {
+      this.showEditActDialog = false;
+      this.actors[this.editingActor.index] = this.editingActor.actor;
+      this.movie.actors = this.actors.join(',');
     }
   }
 };
