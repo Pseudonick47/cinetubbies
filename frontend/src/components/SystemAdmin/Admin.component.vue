@@ -1,5 +1,8 @@
 <template>
-  <v-card class="theater-card">
+  <v-card
+    class="theater-card"
+    color="black"
+  >
     <v-card-title primary-title>
       <div>
         <div class="headline">{{ info.username }}</div>
@@ -13,13 +16,14 @@
       >
         <v-btn
           flat
+          color="primary"
           @click="edit"
         >
           Edit
         </v-btn>
         <v-btn
           flat
-          color="purple"
+          color="primary"
           @click="remove"
         >
           Remove

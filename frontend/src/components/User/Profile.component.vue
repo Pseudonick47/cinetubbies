@@ -1,28 +1,35 @@
 <template>
   <v-layout
     row
-    wrap>
+    wrap
+    pa-4>
     <v-flex
-      xs4
-      offset-xs8>
-      <v-card>
+      xs5
+      offset-xs7>
+      <v-card color="black">
         <v-card-title>
-          Friends
-          <v-btn
-            icon
-            class="mx-3"
-            @click="showAddFriend = true"
-          >
-            <v-icon color="teal">add_circle_outline</v-icon>
-          </v-btn>
-          <v-spacer/>
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Search"
-            single-line
-            hide-details
-          />
+          <v-layout
+            row
+            wrap
+            align-center>
+            <div class="title">Friends</div>
+            <v-btn
+              icon
+              class="mx-3"
+              @click="showAddFriend = true"
+            >
+              <v-icon color="teal">add_circle_outline</v-icon>
+            </v-btn>
+            <v-spacer/>
+            <v-text-field
+              v-model="search"
+              append-icon="search"
+              label="Search"
+              single-line
+              hide-details
+              style="position: relative; top: -10px;"
+            />
+          </v-layout>
         </v-card-title>
         <v-data-table
           v-if="friends.length"

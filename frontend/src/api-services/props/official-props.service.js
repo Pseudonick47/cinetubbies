@@ -3,7 +3,6 @@ import Axios from 'axios';
 const THEATERS = 'theaters/';
 const PROPS = 'props/';
 const OFFICIAL = 'official/';
-const CATEGORIES = 'categories/';
 const COUNT = 'count';
 
 const props = {
@@ -16,11 +15,7 @@ const props = {
   },
 
   fetchByCategory(num, page, category) {
-    return Axios.get(`${PROPS}${CATEGORIES}${category}/${OFFICIAL}?num=${num}&page=${page}`);
-  },
-
-  fetchByTheaterAndCategory(num, page, theater, category) {
-    return Axios.get(`${THEATERS}${theater}/${PROPS}${CATEGORIES}${category}/${OFFICIAL}?num=${num}&page=${page}`);
+    return Axios.get(`${PROPS}${OFFICIAL}?num=${num}&page=${page}&category=${category}`);
   },
 
   post(data) {
@@ -46,11 +41,7 @@ const count = {
   },
 
   fetchByCategory(category) {
-    return Axios.get(`${PROPS}${CATEGORIES}${category}/${OFFICIAL}${COUNT}`);
-  },
-
-  fetchByTheaterAndCategory(theater, category) {
-    return Axios.get(`${THEATERS}${theater}/${PROPS}${CATEGORIES}${category}/${OFFICIAL}${COUNT}`);
+    return Axios.get(`${PROPS}${OFFICIAL}${COUNT}?category=${category}`);
   }
 };
 

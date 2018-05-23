@@ -3,16 +3,17 @@ import Vuex from 'vuex';
 
 import {
   alert,
-  auth,
-  props,
-  reservations,
-  systemAdmin,
-  repertoire,
-  ticketsOnSale,
-  showtimes,
-  movies,
   auditoriums,
-  chart
+  auth,
+  chart,
+  miscellaneous,
+  movies,
+  props,
+  repertoire,
+  reservations,
+  showtimes,
+  systemAdmin,
+  ticketsOnSale
 } from './modules';
 
 Vue.use(Vuex);
@@ -20,16 +21,17 @@ Vue.use(Vuex);
 const storeData = {
   modules: {
     alert,
-    auth,
-    props,
-    reservations,
-    systemAdmin,
-    repertoire,
-    ticketsOnSale,
-    showtimes,
-    movies,
     auditoriums,
-    chart
+    auth,
+    chart,
+    miscellaneous,
+    movies,
+    props,
+    repertoire,
+    reservations,
+    showtimes,
+    systemAdmin,
+    ticketsOnSale
   }
 };
 

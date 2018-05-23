@@ -35,7 +35,8 @@
               pr-4
               pl-3
               mt-4
-              mb-2
+              mb-4
+              style="height: auto"
             >
               <div class="display-1">{{ prop.title }}</div>
               <div v-if="status">
@@ -75,6 +76,8 @@
             <v-layout
               row
               wrap
+              style="height: auto"
+              pb-4
             >
               <v-card-actions
                 class="prop-info-item"

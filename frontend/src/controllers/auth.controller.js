@@ -94,5 +94,16 @@ export default {
     }
     store.commit('auth', userData);
     return store.getters.activeUser;
+  },
+
+  setPassword(data) {
+    AuthApiService.setPassword(data)
+      .then((response) => {
+        this.setLocalStorageAuthData(response.data);
+        this.setAuthHeader();
+        store.commit('auth', response.data.user);
+        Vue.prototype.router.push({ name: 'home' });
+        return response;
+      });
   }
 };

@@ -1,76 +1,53 @@
 <template>
-  <v-layout row>
-    <v-flex
-      xs-12
-      sm5
+  <div
+    style="height: 100%; width: 100%"
+  >
+    <v-layout
+      row
+      justify-space-between
+      my-5
+      px-4
+      style="height: auto"
     >
-      <v-chip
-        color="white"
-        text-color="black">
-        <v-icon left>build</v-icon>
-        Theater settings
-      </v-chip>
-      <v-chip
-        color="white"
-        text-color="black">
-        <span v-if="theater.isCinema()">Type: cinema</span>
-        <span v-else>Type: theater</span>
-        <v-tooltip right>
-          <v-icon
-            slot="activator"
-            right
-          >info</v-icon>
-          <span>Types: cinema, theater</span>
-        </v-tooltip>
-      </v-chip>
-      <v-card>
-        <v-card-media
-          v-if="theater.image"
-          :src="theater.image.path"
-          height="200px"
-        />
-      </v-card>
-      <form>
-        <v-text-field
-          v-model="theater.name"
-          label="Name"
-        />
-        <v-text-field
-          v-model="theater.address"
-          label="Address"
-        />
-        <v-text-field
-          v-model="theater.description"
-          label="Description"
-        />
-        <v-layout row>
-          <span>Theater image:</span>
-          <v-divider/>
-          <input
-            type="file"
-            @change="imageSelected"
-        ></v-layout>
-        <v-btn @click="confirmSubmit = true">submit</v-btn>
-      </form>
-      <v-dialog
-        v-model="confirmSubmit"
-        persistent
-        max-width="300px"
+      <v-flex
+        xs12
+        sm12
+        md4
       >
+        <v-chip
+          color="white"
+          text-color="black">
+          <v-icon left>build</v-icon>
+          Theater settings
+        </v-chip>
+        <v-chip
+          color="white"
+          text-color="black">
+          <span v-if="theater.isCinema()">Type: cinema</span>
+          <span v-else>Type: theater</span>
+          <v-tooltip right>
+            <v-icon
+              slot="activator"
+              right
+            >info</v-icon>
+            <span>Types: cinema, theater</span>
+          </v-tooltip>
+        </v-chip>
         <v-card>
-          <v-card-text>
-            Submit changes?
-          </v-card-text>
-          <v-card-actions>
-            <v-btn @click="submit">yes</v-btn>
-            <v-spacer/>
-            <v-btn @click="confirmSubmit = false">no</v-btn>
-          </v-card-actions>
-
+          <v-card-media
+            v-if="theater.image"
+            :src="theater.image.path"
+            height="200px"
+          />
         </v-card>
-      </v-dialog>
-    </v-flex>
-    <v-layout column>
+      </v-flex>
+    </v-layout>
+    <v-layout
+      column
+      style="height: auto"
+      mb-5
+      px-4
+    >
       <v-flex
         mt-2
         xs-12
@@ -103,7 +80,7 @@
         </v-card>
       </v-flex>
       <v-flex
-        mt-2
+        mt-4
         xs-12
         offset-lg1
       >
@@ -134,10 +111,9 @@
             </template>
           </v-data-table>
         </v-card>
-
       </v-flex>
       <v-flex
-        mt-2
+        mt-4
         xs-12
         offset-lg1
       >
@@ -200,7 +176,7 @@
       @auditorium-finished="addOrUpdateAuditorium"
       @cancel="closeAuditoriumModal"
     />
-  </v-layout>
+  </div>
 </template>
 
 <script>

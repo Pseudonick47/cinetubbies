@@ -1,5 +1,8 @@
 <template>
-  <v-layout column>
+  <v-layout
+    column
+    pa-4
+  >
     <v-dialog
       v-model="dialog"
       max-width="500px">

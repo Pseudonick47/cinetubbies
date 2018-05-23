@@ -1,5 +1,31 @@
 <template>
-  <div>
+  <div
+    style="width: 100%; height: 100%"
+  >
+    <v-navigation-drawer
+      v-model="drawer"
+      class="shop-drawer pl-2 pt-4"
+      app
+      right
+    >
+      <div class="px-3">
+        <div style="display: flex; justify-content: center">
+          <v-btn
+            class="mb-3"
+            color="primary"
+            small
+            light
+            @click="showCreateDialog = true"
+          >New Prop</v-btn>
+        </div>
+      </div>
+      <div class="headline pa-3">Categories</div>
+      <categories
+        :collection="rootCategories"
+        style="background-color: black"
+        @select="categorySelected"
+      />
+    </v-navigation-drawer>
     <v-container
       class="content-container"
       fluid
@@ -8,59 +34,10 @@
         class="content-container"
         row
       >
-        <transition name="slide-fade">
-          <v-flex
-            v-if="drawer"
-            sm2
-          >
-            <v-navigation-drawer
-              v-model="drawer"
-              style="padding: 0 !important"
-              clipped
-            >
-              <h1 class="pa-3 prop-info-highlight">My Props</h1>
-              <v-btn
-                flat
-                block
-                @click="showCreateDialog = true"
-              >
-                New Prop
-              </v-btn>
-              <v-expansion-panel class="elevation-0">
-                <v-expansion-panel-content
-                  hide-actions
-                  ripple
-                >
-                  <div
-                    slot="header"
-                    @click.stop="categorySelected(-1)"
-                  >
-                    Display All Props
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <categories
-                :collection="rootCategories"
-                @select="categorySelected"
-              />
-            </v-navigation-drawer>
-          </v-flex>
-        </transition>
         <v-flex
-          xs2
-          sm1
-          style="display: flex; align-items: center;"
-        >
-          <v-btn
-            fab
-            small
-            color="black"
-            style="transform: scale(0.8);"
-            @click="drawer = !drawer"
-          >
-            <v-icon>keyboard_arrow_left</v-icon>
-          </v-btn>
-        </v-flex>
+          hidden-sm-and-down
+          md1
+        />
         <v-flex>
           <v-container py-5>
             <v-layout
@@ -93,8 +70,8 @@
           </v-container>
         </v-flex>
         <v-flex
-          xs2
-          sm1
+          hidden-sm-and-down
+          md1
         />
       </v-layout>
     </v-container>
@@ -137,7 +114,6 @@ export default {
   },
   data() {
     return {
-      drawer: true,
       showCreateDialog: false,
       showDeleteDialog: false,
       entriesPerPage: 9,
@@ -157,6 +133,14 @@ export default {
     }),
     pageCount() {
       return _.ceil(_.divide(this.count, this.entriesPerPage));
+    },
+    drawer: {
+      set(visible) {
+        this.$store.commit('miscellaneous/setDrawer', visible);
+      },
+      get() {
+        return this.$store.getters['miscellaneous/drawer'];
+      }
     }
   },
   watch: {
@@ -165,9 +149,14 @@ export default {
     }
   },
   beforeMount() {
+    this.$store.commit('miscellaneous/setDrawer', false);
+
     CategoriesController.requestCategories();
     PropsController.requestCount();
     PropsController.requestPage(this.page);
+  },
+  beforeDestroy() {
+    this.$store.commit('miscellaneous/setDrawer', null);
   },
   methods: {
     categorySelected(id) {
@@ -199,6 +188,11 @@ export default {
 };
 </script>
 <style>
+
+.shop-drawer {
+  background-color: rgb(0,0,0) !important;
+}
+
 .content-container {
   padding: 0;
   height: 100%;

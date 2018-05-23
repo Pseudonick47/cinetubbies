@@ -1,6 +1,9 @@
 <template>
   <div style="height: 100%; width: 100%;">
-    <v-container>
+    <v-container
+      mt-5
+      pt-5
+    >
       <v-layout
         v-for="offer in offers"
         :key="offer.id"
@@ -8,61 +11,94 @@
         justify-center
       >
         <v-flex
-          xs8
-          md6
+          sm10
+          md8
           mb-3
         >
-          <v-card>
+          <v-card color="black">
             <v-layout
               row
               wrap
             >
               <v-flex
-                xs8
+                xs12
+                sm12
+                md8
               >
                 <v-layout
+                  class="height-auto"
                   row
                   wrap
                   justify-start
                 >
                   <v-flex align-center>
                     <v-card-title
+                      class="pb-1"
                       style="cursor: pointer"
                       @click="goToProp(offer.prop)"
                     >
                       <h3 class="headline">{{ offer.prop.title }}</h3>
                     </v-card-title>
                   </v-flex>
-                  <v-flex
-                    align-center
-                    d-flex
-                  >
-                    <v-card-text>
-                      Amount: {{ offer.amount }}
+                </v-layout>
+                <v-layout
+                  class="height-auto"
+                  row
+                  wrap
+                  justify-start
+                  pl-4
+                >
+                  <v-flex align-center>
+                    <v-card-text style="padding-bottom: 0;">
+                      <h4>{{ summerize(offer.prop) }}</h4>
                     </v-card-text>
                   </v-flex>
-                  <v-spacer />
                 </v-layout>
               </v-flex>
               <v-flex
-                xs4
-                align-center
-                d-flex
+                xs12
+                sm12
+                md4
               >
                 <v-layout
                   row
                   wrap
-                  justify-end
+                  align-center
                 >
-                  <v-btn
-                    flat
-                    @click="offerToEdit = offer; showEditDialog = true"
-                  >Edit</v-btn>
-                  <v-btn
-                    flat
-                    @click="offerToDelete = offer; showDeleteDialog = true"
-                  >Delete</v-btn>
+                  <v-flex>
+                    <v-card-title style="display: flex; justify-content: center;">
+                      <div class="headline text-xs-center">{{ offer.amount }}$</div>
+                    </v-card-title>
+                  </v-flex>
                 </v-layout>
+              </v-flex>
+            </v-layout>
+            <v-layout
+              row
+              wrap
+              justify-end
+            >
+              <v-flex
+                xs2
+                align-center
+              >
+                <v-btn
+                  flat
+                  block
+                  color="primary"
+                  @click="offerToEdit = offer; showEditDialog = true"
+                >Edit</v-btn>
+              </v-flex>
+              <v-flex
+                xs2
+                align-center
+              >
+                <v-btn
+                  flat
+                  block
+                  color="primary"
+                  @click="offerToDelete = offer; showDeleteDialog = true"
+                >Delete</v-btn>
               </v-flex>
             </v-layout>
           </v-card>
@@ -78,7 +114,7 @@
     <offer-dialog
       v-if="showEditDialog"
       :offer="offerToEdit"
-      :prop="prop"
+      :prop="offerToEdit.prop"
       @cancel="showEditDialog = false"
       @confirm="showEditDialog = false"
     />
@@ -129,7 +165,20 @@ export default {
         .catch(() => {
           this.$alert.error('Something went wrong. Please try again!');
         });
+    },
+    summerize(prop) {
+      if (prop.description.length > 32) {
+        return `${prop.description.substring(0, 32)}...`;
+      }
+      return prop.description;
     }
   }
 };
 </script>
+<style>
+
+.height-auto {
+  height: auto !important;
+}
+
+</style>

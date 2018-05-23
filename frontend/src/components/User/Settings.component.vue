@@ -1,71 +1,110 @@
 <template>
-  <v-flex
-    xs-12
-    sm5
-    pa-4
-  >
-    <h1>User settings</h1>
-    <v-avatar
-      v-if="user.image"
-      :size="100"
-      color="grey lighten-4"
-    >
-      <img :src="user.getImagePath()">
-    </v-avatar>
+  <v-container>
     <form>
-      <v-layout row>
-        <span>Profile picture:</span>
-        <v-divider/>
-        <input
-          type="file"
-          @change="imageSelected"
-      ></v-layout>
-      <v-text-field
-        v-model="user.first_name"
-        label="First Name"
-      />
-      <v-text-field
-        v-model="user.last_name"
-        label="Last Name"
-      />
-      <v-text-field
-        v-validate="'email'"
-        :error-messages="errors.collect('email')"
-        v-model="user.email"
-        data-vv-name="email"
-        label="Email"
-      />
-      <v-text-field
-        v-model="user.city"
-        label="City"
-      />
-      <v-text-field
-        v-model="user.phone"
-        label="Phone"
-      />
-      <v-text-field
-        v-model="user.password"
-        label="New Password"
-        type="password"
-      />
-      <v-text-field
-        v-model="user.password_confirmation"
-        type="password"
-        label="Confirm New Password"
-      />
-      <v-flex
-        xs12
-        sm6>
-        <v-date-picker
-          v-model="user.birth_date"
-          year-icon="mdi-calendar-blank"
-          prev-icon="mdi-skip-previous"
-          next-icon="mdi-skip-next"
-        />
-      </v-flex>
-      <v-btn @click="submit">submit</v-btn>
+      <v-layout
+        row
+        wrap
+        justify-space-between
+      >
+        <v-flex
+          sm5
+          fill-height
+        >
+          <v-layout row>
+            <v-avatar
+              v-if="user.image"
+              :size="150"
+              color="grey lighten-4"
+            >
+              <img :src="user.getImagePath()">
+            </v-avatar>
+          </v-layout>
+          <v-layout
+            row
+            mt-3
+            mb-2
+          >
+            <span>Profile picture:</span>
+          </v-layout>
+          <v-divider/>
+          <v-layout
+            row
+            mt-3
+          >
+            <input
+              type="file"
+              @change="imageSelected"
+            >
+          </v-layout>
+          <v-layout
+            row
+            mt-4
+          >
+            <v-flex
+              xs12
+              justify-center
+              style="display: flex"
+            >
+              <v-date-picker
+                v-model="user.birth_date"
+                year-icon="mdi-calendar-blank"
+                prev-icon="mdi-skip-previous"
+                next-icon="mdi-skip-next"
+              />
+            </v-flex>
+          </v-layout>
+        </v-flex>
+        <v-flex
+          xs-12
+          sm6
+        >
+          <h1>User settings</h1>
+          <v-text-field
+            v-model="user.first_name"
+            label="First Name"
+          />
+          <v-text-field
+            v-model="user.last_name"
+            label="Last Name"
+          />
+          <v-text-field
+            v-validate="'email'"
+            :error-messages="errors.collect('email')"
+            v-model="user.email"
+            data-vv-name="email"
+            label="Email"
+          />
+          <v-text-field
+            v-model="user.city"
+            label="City"
+          />
+          <v-text-field
+            v-model="user.phone"
+            label="Phone"
+          />
+          <v-text-field
+            v-model="user.password"
+            label="New Password"
+            type="password"
+          />
+          <v-text-field
+            v-model="user.password_confirmation"
+            type="password"
+            label="Confirm New Password"
+          />
+          <v-layout
+            row
+            justify-end
+            mt-3
+            style="height: auto"
+          >
+            <v-btn @click="submit">submit</v-btn>
+          </v-layout>
+
+        </v-flex>
+      </v-layout>
     </form>
-  </v-flex>
+  </v-container>
 </template>
 
 <script>

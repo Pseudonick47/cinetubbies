@@ -45,7 +45,8 @@
       <v-layout
         column
         align-center
-        justify-center>
+        justify-center
+      >
         <h1 class="white--text title-text-shadow">{{ movie.title }}</h1>
         <h4 class="white--text title-text-shadow">by <i>{{ movie.director }}</i></h4>
       </v-layout>
@@ -53,6 +54,7 @@
     <v-layout
       row
       class="my-3"
+      px-3
     >
       <v-flex md5>
         <h3>Title:</h3><p>{{ movie.title }}</p>

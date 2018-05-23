@@ -1,33 +1,26 @@
 <template>
-  <div>
+  <div style="height: 100%; width: 100%;">
     <v-navigation-drawer
       v-model="drawer"
+      class="shop-drawer pl-2 pt-4"
       app
       right
     >
-      <h1 class="pa-3 prop-info-highlight">My Props</h1>
-      <v-btn
-        flat
-        block
-        @click="dialog=true"
-      >
-        New Prop
-      </v-btn>
-      <v-expansion-panel class="elevation-0">
-        <v-expansion-panel-content
-          hide-actions
-          ripple
-        >
-          <div
-            slot="header"
-            @click.stop="categorySelected(-1)"
-          >
-            Display All Props
-          </div>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <div class="px-3">
+        <div style="display: flex; justify-content: center">
+          <v-btn
+            class="mb-3"
+            color="primary"
+            small
+            light
+            @click="dialog = true"
+          >New Prop</v-btn>
+        </div>
+      </div>
+      <div class="headline pa-3">Categories</div>
       <categories
         :collection="rootCategories"
+        style="background-color: black"
         @select="categorySelected"
       />
     </v-navigation-drawer>
@@ -62,6 +55,7 @@
             </v-layout>
           </v-container>
           <v-container
+            v-if="pageCount > 0"
             id="pagination"
             style="display: flex; flex-direction: column; align-items: center;"
           >
@@ -78,18 +72,7 @@
         <v-flex
           hidden-sm-and-down
           md1
-          style="display: flex; align-items: center; justify-content: flex-end"
-        >
-          <v-btn
-            fab
-            small
-            color="black"
-            style="transform: scale(0.8);"
-            @click="drawer = !drawer"
-          >
-            <v-icon>keyboard_arrow_right</v-icon>
-          </v-btn>
-        </v-flex>
+        />
       </v-layout>
     </v-container>
     <used-prop-dialog
@@ -131,7 +114,6 @@ export default {
   },
   data() {
     return {
-      drawer: true,
       dialog: false,
       approved: true,
       pendingApproval: false,
@@ -158,6 +140,14 @@ export default {
     }),
     pageCount() {
       return _.ceil(_.divide(this.count, this.entriesPerPage));
+    },
+    drawer: {
+      set(visible) {
+        this.$store.commit('miscellaneous/setDrawer', visible);
+      },
+      get() {
+        return this.$store.getters['miscellaneous/drawer'];
+      }
     }
   },
   watch: {
@@ -166,9 +156,14 @@ export default {
     }
   },
   beforeMount() {
+    this.$store.commit('miscellaneous/setDrawer', false);
+
     CategoriesController.requestCategories();
     PropsController.requestCount({ user: this.user.id, all: true });
     PropsController.requestPage(this.page, { user: this.user.id, all: true });
+  },
+  beforeDestroy() {
+    this.$store.commit('miscellaneous/setDrawer', null);
   },
   methods: {
     categorySelected(id) {
@@ -226,6 +221,10 @@ export default {
 
 .prop-info-card:hover {
   box-shadow: 0px 0px 5px #daa520;
+}
+
+.shop-drawer {
+  background-color: rgb(0,0,0) !important;
 }
 
 .prop-info-body {

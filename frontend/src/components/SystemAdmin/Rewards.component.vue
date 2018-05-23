@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-layout
+      my-4
       justify-center
     >
       <v-flex
@@ -11,6 +12,7 @@
       >
         <v-card
           class="elevation-3"
+          color="black"
         >
           <v-card-title
             class="elevation-2"
@@ -168,6 +170,8 @@
               >
                 <v-btn
                   block
+                  flat
+                  color="primary"
                   @click="reset"
                 >
                   Reset
@@ -180,6 +184,8 @@
               >
                 <v-btn
                   block
+                  flat
+                  color="primary"
                   @click="confirm"
                 >
                   Confirm

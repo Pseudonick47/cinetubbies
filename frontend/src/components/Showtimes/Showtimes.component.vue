@@ -1,5 +1,11 @@
 <template>
-  <v-layout row>
+  <v-layout
+    row
+    justify-space-between
+    px-3
+    my-5
+    style="height: auto;"
+  >
     <v-dialog
       v-model="dialog"
       persistent
@@ -128,7 +134,6 @@
     </v-dialog>
     <v-flex
       md4
-      offset-lg
     >
       <v-card>
         <v-card-title>
@@ -188,10 +193,9 @@
       </v-card>
     </v-flex>
     <v-flex
-      s12
+      xs12
       sm5
-      md7
-      offset-lg1>
+      md7>
       <v-card>
         <v-card-title>
           Showtimes

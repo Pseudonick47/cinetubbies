@@ -7,9 +7,7 @@ export default {
   fetchPage(num, page, payload) {
     const { theater, category } = payload;
 
-    if (theater && category) {
-      return Service.props.fetchByTheaterAndCategory(num, page, theater, category);
-    } else if (theater) {
+    if (theater) {
       return Service.props.fetchByTheater(num, page, theater);
     } else if (category) {
       return Service.props.fetchByCategory(num, page, category);
@@ -30,9 +28,7 @@ export default {
   fetchCount(payload) {
     const { theater, category } = payload;
 
-    if (theater && category) {
-      return Service.count.fetchByTheaterAndCategory(theater, category);
-    } else if (theater) {
+    if (theater) {
       return Service.count.fetchByTheater(theater);
     } else if (category) {
       return Service.count.fetchByCategory(category);
