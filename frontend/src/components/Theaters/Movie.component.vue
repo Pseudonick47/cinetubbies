@@ -174,9 +174,9 @@ export default {
     this.init();
   },
   methods: {
-    async init() {
-      await this.getMovie(this.movieId);
-      await this.getShowtimes(this.movieId);
+    init() {
+      this.getMovie(this.movieId);
+      this.getShowtimes(this.movieId);
       store.dispatch('fetchAuditoriums', this.theaterId);
     },
     openSeatsDialog(showtimeId) {
