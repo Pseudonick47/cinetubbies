@@ -106,7 +106,7 @@ class PublicAPI(ViewSet):
   @action(detail=True)
   def get_tickets_on_sale(self, request, pk=None):
     theater = get_object_or_404(Theater, id=pk)
-    tickets = theater.tickets_on_sale.all()
+    tickets = theater.tickets_on_sale.filter(deleted=0)
     return Response(TicketOnSaleSerializer(tickets, many=True).data)
 
 class RestrictedAPI(ViewSet):

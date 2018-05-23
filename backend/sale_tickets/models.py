@@ -10,6 +10,7 @@ class TicketOnSale(models.Model):
   showtime = models.ForeignKey(Showtime, on_delete=models.PROTECT, related_name='tickets_on_sale')
   seat = models.IntegerField(blank=False)
   discount = models.IntegerField(blank=False)
+  deleted = models.IntegerField(blank=False, default=0)
 
 
 class Booking(models.Model):

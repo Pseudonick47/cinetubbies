@@ -44,7 +44,6 @@ class TicketOnSaleViewSet(viewsets.ModelViewSet):
     serializer.save()
     return Response(data=serializer.data)
 
-
 class BookingViewSet(viewsets.ViewSet):
   """
   API endpoint for CRUD actions on bookings.
@@ -69,6 +68,14 @@ class BookingViewSet(viewsets.ViewSet):
       if not place.user is None:
         return Response({'message': 'Booking failed. Are all the seats empty?'}, status=400)
       place.user_id = request.user.id
+
+      if 'discount' in request.data:
+        place.discount = request.data['discount']
+        ticket = TicketOnSale.objects.filter(showtime_id=request.data['showtime'],seat=request.data['seat'])[0]
+        serializer = TicketOnSaleSerializer(ticket, data={ 'deleted': 1 }, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
       updated_bookings.append(place)
     # Booking.objects.bulk_update(updated_bookings)
     for s in updated_bookings:

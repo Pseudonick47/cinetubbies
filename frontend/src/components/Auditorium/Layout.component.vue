@@ -14,7 +14,7 @@
             :key="`5${i}${j}`"
             :class="[
               selectedSeats[i-1][j-1] ? 'seat-free' : 'seat-taken',
-              isLastSelected(i-1,j-1) ? 'seat-booked' : ''
+              isLastSelected(i-1,j-1) ? 'seat-booked' : '',
             ]"
             class="layout-seat"
             @click="seatClicked(i-1, j-1)"
