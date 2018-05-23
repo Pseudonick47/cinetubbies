@@ -52,6 +52,9 @@ class PublicSerializer(serializers.Serializer):
   image = ImageSerializer(
     read_only=True
   )
+  lat = serializers.DecimalField(required=False, max_digits=20, decimal_places=15)
+  lng = serializers.DecimalField(required=False, max_digits=20, decimal_places=15)
+
 
 class RestrictedSerializer(PublicSerializer):
   voters_count = None

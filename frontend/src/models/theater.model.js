@@ -12,6 +12,7 @@ export class Theater {
     this.kind = '';
     this.description = '';
     this.rating = null;
+    this.position = { lat: Number(data.lat), lng: Number(data.lng) };
     _.assignWith(this, data);
 
     if (this.image) {

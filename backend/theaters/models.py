@@ -22,6 +22,8 @@ class Theater(models.Model):
   )
   voters = models.ManyToManyField(User, through='Voting', related_name='voters')
   image = models.ForeignKey(to="media_upload.Image", on_delete=models.SET_NULL, related_name='+', null=True)
+  lat = models.DecimalField(blank=True, decimal_places=15, max_digits=20, null=True)
+  lng = models.DecimalField(blank=True, decimal_places=15, max_digits=20, null=True)
 
   def get_all_votings(self):
     all_votes = {}
