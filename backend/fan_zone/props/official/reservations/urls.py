@@ -2,8 +2,8 @@ from django.urls import path
 
 from cinetubbies.utils.routing import BaseManageView
 
-from fan_zone.reservations.views import MemberAPI
-from fan_zone.reservations.views import RestrictedAPI
+from .views import MemberAPI
+from .views import RestrictedAPI
 
 
 class ReservationsByUser(BaseManageView):

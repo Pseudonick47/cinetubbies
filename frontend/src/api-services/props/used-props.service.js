@@ -44,6 +44,14 @@ const props = {
 
   review(id, data) {
     return Axios.put(`${PROPS}${USED}${id}/review`, data);
+  },
+
+  delete(id) {
+    return Axios.delete(`${PROPS}${USED}${id}`);
+  },
+
+  put(id, data) {
+    return Axios.put(`${PROPS}${USED}${id}`, data);
   }
 };
 

@@ -10,6 +10,9 @@ const props = {
   fetchByCategory(num, page, category) {
     return Axios.get(`${PROPS}?num=${num}&page=${page}&category=${category}`);
   },
+  fetchByTitle(num, page, title) {
+    return Axios.get(`${PROPS}?num=${num}&page=${page}&title=${title}`);
+  },
   fetchOne(id) {
     return Axios.get(`${PROPS}${id}`);
   }
@@ -21,6 +24,9 @@ const count = {
   },
   fetchByCategory(category) {
     return Axios.get(`${PROPS}${COUNT}?category=${category}`);
+  },
+  fetchByTitle(title) {
+    return Axios.get(`${PROPS}${COUNT}?title=${title}`);
   }
 };
 

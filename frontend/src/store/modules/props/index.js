@@ -1,7 +1,6 @@
 import * as categories from './categories.store';
-import * as official from './official-props.store';
+import * as offers from './offers.store';
 import * as reservations from './reservations.store';
-import * as used from './used-props.store';
 
 import { Prop } from 'Models/prop.model';
 
@@ -36,14 +35,31 @@ const mutations = {
 
   setCount(state, count) {
     state.count = count;
+  },
+
+  insertProp(state, prop) {
+    state.props.push(new Prop(prop));
+    state.props = _.sortBy(state.props, (p) => _.lowerCase(p.title));
+  },
+
+  updateProp(state, prop) {
+    const p = _.find(state.props, [ 'id', prop.id ]);
+    if (p) {
+      p.update(prop);
+    }
+  },
+
+  deleteProp(state, id) {
+    console.log(state.props);
+    _.remove(state.props, (p) => p.id == id);
+    console.log(state.props);
   }
 };
 
 const modules = {
   categories,
-  official,
-  reservations,
-  used
+  offers,
+  reservations
 };
 
 export {

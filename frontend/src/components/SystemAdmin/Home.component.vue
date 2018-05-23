@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%; width: 100%">
     <v-container>
       <v-layout
         row
@@ -77,6 +77,12 @@
       v-else-if="dialog && kind === 'fan-zone-admins'"
       kind="fan-zone-admins"
       role="fan_zone_admin"
+      @close="dialog = false"
+    />
+    <admin-dialog
+      v-else-if="dialog && kind === 'system-admins'"
+      kind="system-admins"
+      role="admin"
       @close="dialog = false"
     />
   </div>

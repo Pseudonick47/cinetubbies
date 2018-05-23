@@ -23,7 +23,7 @@ export default {
     const num = 9;
 
     this.fetchPage(num, page, payload).then((response) => {
-      store.commit('props/official/setProps', response.data);
+      store.commit('props/setProps', response.data);
     });
   },
 
@@ -43,7 +43,7 @@ export default {
 
   requestCount(payload = {}) {
     this.fetchCount(payload).then((response) => {
-      store.commit('props/official/setCount', response.data);
+      store.commit('props/setCount', response.data);
     });
   },
 

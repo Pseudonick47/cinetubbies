@@ -116,7 +116,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('props/used/', {
+    ...mapGetters('props/', {
       props: 'all',
       count: 'count'
     }),

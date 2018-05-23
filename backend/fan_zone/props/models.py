@@ -109,7 +109,6 @@ class Prop(AbstractProp, OfficialProp, UsedProp):
         pass
 
       if self.kind == OFFICIAL_PROP[0]:
-        print(self.__dict__)
         if self.quantity < 0:
           raise ValueError('Quantity can\'t be less then 0.')
 

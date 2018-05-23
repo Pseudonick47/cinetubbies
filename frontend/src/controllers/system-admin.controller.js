@@ -24,8 +24,10 @@ export default {
       this.requestTheaters(num, page);
     } else if (kind === 'theater-admins') {
       this.requestAdmins({ num, page, role: 'cinema_admin' });
-    } else {
+    } else if (kind === 'fan-zone-admins') {
       this.requestAdmins({ num, page, role: 'fan_zone_admin' });
+    } else if (kind === 'system-admins') {
+      this.requestAdmins({ num, page, role: 'admin' });
     }
   },
 
@@ -38,8 +40,12 @@ export default {
       AdminsService.fetchCount('cinema_admin').then((response) => {
         store.commit('systemAdmin/setCount', response.data);
       });
-    } else {
+    } else if (kind === 'fan-zone-admins') {
       AdminsService.fetchCount('fan_zone_admin').then((response) => {
+        store.commit('systemAdmin/setCount', response.data);
+      });
+    } else if (kind === 'system-admins') {
+      AdminsService.fetchCount('admin').then((response) => {
         store.commit('systemAdmin/setCount', response.data);
       });
     }

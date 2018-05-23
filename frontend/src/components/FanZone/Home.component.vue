@@ -1,104 +1,88 @@
 <template>
-  <div>
+  <div style="width: 100%; height: 100%">
+    <v-navigation-drawer
+      v-model="drawer"
+      class="shop-drawer pl-2 pt-4"
+      app
+      right
+    >
+      <div class="px-3">
+        <v-text-field
+          v-model="searchTerm"
+          name="input-1-3"
+          label="Prop title"
+          single-line
+          prepend-icon="search"
+          mb-0
+        />
+        <v-btn
+          class="mb-3"
+          small
+          block
+          @click="searchProps"
+        >Search</v-btn>
+        <v-switch
+          v-model="showOfficialProps"
+          class="title"
+          label="Official props"
+          color="primary"
+        />
+        <v-switch
+          v-model="showUsedProps"
+          class="title"
+          label="Used props"
+          color="primary"
+        />
+      </div>
+      <div class="title pa-3">Categories</div>
+      <v-expansion-panel
+        class="elevation-0"
+        color="black"
+      >
+        <v-expansion-panel-content
+          hide-actions
+          ripple
+        >
+          <div
+            slot="header"
+            @click.stop="categorySelected(-1)"
+          >
+            All Categories
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <categories
+        :collection="rootCategories"
+        style="background-color: black"
+        @select="categorySelected"
+      />
+    </v-navigation-drawer>
     <v-container
       class="content-container"
       fluid
+      pt-3
     >
       <v-layout
         class="content-container"
         row
       >
-        <transition name="slide-fade">
-          <v-flex
-            v-if="drawer"
-            sm2
-          >
-            <v-navigation-drawer
-              v-model="drawer"
-              class="pl-2"
-              clipped
-            >
-              <h1 class="pa-3 mb-3">Fan Zone</h1>
-              <div class="pl-3">
-                <v-switch
-                  v-model="showOfficialProps"
-                  label="Official props"
-                />
-                <v-switch
-                  v-model="showUsedProps"
-                  label="Used props"
-                />
-              </div>
-              <h2 class="pa-3">Categories</h2>
-              <v-expansion-panel class="elevation-0">
-                <v-expansion-panel-content
-                  hide-actions
-                  ripple
-                >
-                  <div
-                    slot="header"
-                    @click.stop="categorySelected(-1)"
-                  >
-                    All Categories
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <categories
-                :collection="rootCategories"
-                @select="categorySelected"
-              />
-            </v-navigation-drawer>
-          </v-flex>
-        </transition>
         <v-flex
-          xs2
-          sm1
-          style="display: flex; align-items: center;"
-        >
-          <v-btn
-            fab
-            small
-            color="black"
-            style="transform: scale(0.8);"
-            @click="drawer = !drawer"
-          >
-            <v-icon>keyboard_arrow_left</v-icon>
-          </v-btn>
-        </v-flex>
+          hidden-sm-and-down
+          md1
+        />
         <v-flex style="display: flex; flex-direction: column;">
-          <div style="overflow: auto;">
+          <div>
             <v-container style="align-items: stretch;">
-              <v-layout
-                row
-                pa-2
-                justify-center
-                mb-5
-              >
-                <v-card class="props-toolbar">
-                  <v-layout
-                    row
-                    pa-2
-                    justify-space-between
-                  >
-                    <v-text-field
-                      prepend-icon="search"
-                      label="Search"
-                      solo-inverted
-                      class="mx-3"
-                      flat
-                    />
-                  </v-layout>
-                </v-card>
-              </v-layout>
               <v-layout class="props-row">
                 <v-flex
                   v-for="(prop, i) in props"
                   :key="i"
+                  class="prop-container"
                   xs12
                   sm6
                   md4
-                  lg4
-                  xl4
+                  lg3
+                  xl3
                   pa-3
                 >
                   <prop
@@ -123,10 +107,22 @@
             </v-container>
           </div>
         </v-flex>
+
         <v-flex
-          xs2
-          sm1
-        />
+          hidden-sm-and-down
+          md1
+          style="display: flex; align-items: center; justify-content: flex-end"
+        >
+          <v-btn
+            fab
+            small
+            color="black"
+            style="transform: scale(0.8);"
+            @click="drawer = !drawer"
+          >
+            <v-icon>keyboard_arrow_right</v-icon>
+          </v-btn>
+        </v-flex>
       </v-layout>
     </v-container>
     <prop-detail
@@ -157,12 +153,13 @@ export default {
   },
   data() {
     return {
-      drawer: true,
+      drawer: false,
       propToDisplay: null,
       entriesPerPage: 9,
       page: 1,
       showOfficialProps: true,
-      showUsedProps: false
+      showUsedProps: false,
+      searchTerm: null
     };
   },
   computed: {
@@ -200,14 +197,19 @@ export default {
         PropsController.requestCount({ category: id });
         PropsController.requestPage(this.page, { category: id });
       }
+    },
+    searchProps() {
+      const terms = { title: this.searchTerm };
+
+      PropsController.requestCount(terms);
+      PropsController.requestPage(this.page, terms);
+
+      this.searchTerm = null;
     }
   }
 };
 </script>
 <style>
-.props-toolbar {
-  width: 70%;
-}
 .props-container {
   display: -webkit-box;
   display: -moz-box;
@@ -230,9 +232,18 @@ export default {
   flex-flow: row wrap;
 
   -webkit-flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: stretch;
 
+}
+
+.prop-container {
+  display: flex;
+  justify-content: center;
+}
+
+.shop-drawer {
+  background-color: rgb(0,0,0) !important;
 }
 
 .categories-container {
@@ -261,5 +272,4 @@ export default {
   transform: translateX(10px);
   opacity: 0;
 }
-
 </style>

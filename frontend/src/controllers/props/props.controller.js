@@ -11,6 +11,10 @@ export default {
       Service.props.fetchByCategory(num, page, payload.category).then((response) => {
         store.commit('props/setProps', response.data);
       });
+    } else if (payload.title) {
+      Service.props.fetchByTitle(num, page, payload.title).then((response) => {
+        store.commit('props/setProps', response.data);
+      });
     } else {
       Service.props.fetch(num, page).then((response) => {
         store.commit('props/setProps', response.data);
@@ -21,6 +25,10 @@ export default {
   requestCount(payload = {}) {
     if (payload.category) {
       Service.count.fetchByCategory(payload.category).then((response) => {
+        store.commit('props/setCount', response.data);
+      });
+    } else if (payload.title) {
+      Service.count.fetchByTitle(payload.title).then((response) => {
         store.commit('props/setCount', response.data);
       });
     } else {

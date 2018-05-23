@@ -147,7 +147,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('props/official/', {
+    ...mapGetters('props/', {
       props: 'all',
       count: 'count'
     }),
@@ -192,7 +192,7 @@ export default {
     deleteProp() {
       this.showDeleteDialog = false;
       PropsController.deleteProp(this.propToDelete.id);
-      this.$store.commit('props/official/deleteProp', this.propToDelete.id);
+      this.$store.commit('props/deleteProp', this.propToDelete.id);
       this.propToDelete = null;
     }
   }

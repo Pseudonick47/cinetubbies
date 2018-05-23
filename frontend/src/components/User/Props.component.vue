@@ -1,5 +1,36 @@
 <template>
   <div>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      right
+    >
+      <h1 class="pa-3 prop-info-highlight">My Props</h1>
+      <v-btn
+        flat
+        block
+        @click="dialog=true"
+      >
+        New Prop
+      </v-btn>
+      <v-expansion-panel class="elevation-0">
+        <v-expansion-panel-content
+          hide-actions
+          ripple
+        >
+          <div
+            slot="header"
+            @click.stop="categorySelected(-1)"
+          >
+            Display All Props
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+      <categories
+        :collection="rootCategories"
+        @select="categorySelected"
+      />
+    </v-navigation-drawer>
     <v-container
       class="content-container"
       fluid
@@ -8,59 +39,10 @@
         class="content-container"
         row
       >
-        <transition name="slide-fade">
-          <v-flex
-            v-if="drawer"
-            sm2
-          >
-            <v-navigation-drawer
-              v-model="drawer"
-              style="padding: 0 !important"
-              clipped
-            >
-              <h1 class="pa-3 prop-info-highlight">My Props</h1>
-              <v-btn
-                flat
-                block
-                @click="dialog=true"
-              >
-                New Prop
-              </v-btn>
-              <v-expansion-panel class="elevation-0">
-                <v-expansion-panel-content
-                  hide-actions
-                  ripple
-                >
-                  <div
-                    slot="header"
-                    @click.stop="categorySelected(-1)"
-                  >
-                    Display All Props
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <categories
-                :collection="rootCategories"
-                @select="categorySelected"
-              />
-            </v-navigation-drawer>
-          </v-flex>
-        </transition>
         <v-flex
-          xs2
-          sm1
-          style="display: flex; align-items: center;"
-        >
-          <v-btn
-            fab
-            small
-            color="black"
-            style="transform: scale(0.8);"
-            @click="drawer = !drawer"
-          >
-            <v-icon>keyboard_arrow_left</v-icon>
-          </v-btn>
-        </v-flex>
+          hidden-sm-and-down
+          md1
+        />
         <v-flex>
           <v-container py-5>
             <v-layout
@@ -73,8 +55,9 @@
             >
               <prop-control
                 :prop="prop"
-                :actions="['edit', 'remove']"
+                :actions="['edit', 'delete']"
                 status
+                @clicked="propClicked"
               />
             </v-layout>
           </v-container>
@@ -93,14 +76,37 @@
           </v-container>
         </v-flex>
         <v-flex
-          xs2
-          sm1
-        />
+          hidden-sm-and-down
+          md1
+          style="display: flex; align-items: center; justify-content: flex-end"
+        >
+          <v-btn
+            fab
+            small
+            color="black"
+            style="transform: scale(0.8);"
+            @click="drawer = !drawer"
+          >
+            <v-icon>keyboard_arrow_right</v-icon>
+          </v-btn>
+        </v-flex>
       </v-layout>
     </v-container>
     <used-prop-dialog
       v-if="dialog"
-      @close="dialog=false"
+      @close="dialog = false"
+    />
+    <used-prop-dialog
+      v-if="showEditDialog"
+      :prop="propToEdit"
+      @close="propToEdit = null, showEditDialog = false"
+    />
+    <simple-dialog
+      v-if="showDeleteDialog"
+      title="Please confirm your decesion to delete this prop."
+      text="This action is irreversible. Prop will be removed from the store and all reservations will be canceled."
+      @cancel="showDeleteDialog = false; propToDelete = null"
+      @confirm="deleteProp"
     />
   </div>
 </template>
@@ -108,9 +114,9 @@
 import { mapGetters } from 'vuex';
 
 import PropControl from 'Components/FanZone/PropControl.component';
-
 import Categories from 'Components/FanZone/Categories.component';
 import UsedPropDialog from 'Components/User/UsedPropDialog.component';
+import SimpleDialog from 'Components/helpers/SimpleDialog.component';
 
 import CategoriesController from 'Controllers/props/categories.controller';
 import PropsController from 'Controllers/props/used-props.controller';
@@ -120,7 +126,8 @@ export default {
   components: {
     PropControl,
     UsedPropDialog,
-    Categories
+    Categories,
+    SimpleDialog
   },
   data() {
     return {
@@ -130,11 +137,15 @@ export default {
       pendingApproval: false,
       submited: true,
       entriesPerPage: 10,
-      page: 1
+      page: 1,
+      propToDelete: null,
+      showDeleteDialog: false,
+      propToEdit: null,
+      showEditDialog: false
     };
   },
   computed: {
-    ...mapGetters('props/used/', {
+    ...mapGetters('props/', {
       props: 'all',
       count: 'count'
     }),
@@ -172,6 +183,27 @@ export default {
 
       PropsController.requestCount(payload);
       PropsController.requestPage(this.page, payload);
+    },
+    propClicked(payload) {
+      const { prop, action } = payload;
+
+      if (action === 'delete') {
+        this.propToDelete = prop;
+        this.showDeleteDialog = true;
+      } else if (action === 'edit') {
+        this.propToEdit = prop;
+        this.showEditDialog = true;
+      }
+    },
+    deleteProp() {
+      const id = this.propToDelete.id;
+
+      this.propToDelete = null;
+      this.showDeleteDialog = false;
+
+      PropsController.deleteProp(id).then(() => {
+        this.$store.commit('props/deleteProp', id);
+      });
     }
   }
 };

@@ -84,7 +84,7 @@ import ReservationController from 'Controllers/props/reservations.controller';
 import { Prop } from 'Models/prop.model';
 
 export default {
-  name: 'ReservePropDialog',
+  name: 'BookProp',
   props: {
     prop: {
       type: Prop,

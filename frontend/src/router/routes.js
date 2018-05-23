@@ -7,6 +7,7 @@ import Movies from 'Components/CinemaAdmin/Movies.component';
 import Profile from 'Components/User/Profile.component';
 import UserProps from 'Components/User/Props.component';
 import UserPropReservations from 'Components/User/PropReservations.component';
+import UserPropOffers from 'Components/User/PropOffers.component';
 import UserSettings from 'Components/User/Settings.component';
 
 import TheaterSettings from 'Components/Theaters/Settings.component';
@@ -95,6 +96,14 @@ export const routes = [
     path: '/user/prop-reservations',
     name: 'user-prop-reservations',
     component: UserPropReservations,
+    meta: {
+      logged: true
+    }
+  },
+  {
+    path: '/user/prop-offers',
+    name: 'user-prop-offers',
+    component: UserPropOffers,
     meta: {
       logged: true
     }

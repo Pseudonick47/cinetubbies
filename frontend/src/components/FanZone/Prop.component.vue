@@ -1,10 +1,10 @@
 <template>
   <v-card
-    class="used-prop-card grow"
-    color="black"
+    class="prop grow"
   >
     <div
-      class="pb-4"
+      class="pb-3"
+      style="background-color: black"
     >
       <v-card-media
         src="https://dhs1n389ze6jv.cloudfront.net/img/product-thumb/1518384418b7e5afe78228c751029fa6e1b9063b87.png"
@@ -73,9 +73,16 @@ export default {
 </script>
 <style>
 
-.used-prop-card:hover {
-  box-shadow: 0px 0px 5px goldenrod;
-  background: radial-gradient(circle, black,#040404, #080808);
+.prop {
+  /* padding: 2px 0px; */
+  padding-bottom: 2px;
+  background: linear-gradient(90deg, rgba(218, 165, 32, 0.2), rgba(230, 175, 37, 0.8), rgba(218, 165, 32, 0.2));
+  max-width: 300px;
+}
+
+.prop:hover {
+  box-shadow: 0px 0px 5px rgba(218, 165, 32, 0.63);
+  /* background: radial-gradient(circle, black,#040404, #080808); */
 }
 .grow {
   transition: all .2s ease-in-out;
