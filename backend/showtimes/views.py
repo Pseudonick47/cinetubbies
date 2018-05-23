@@ -6,6 +6,8 @@ from rest_framework.decorators import action, permission_classes
 from rest_framework.response import Response
 from .permissions import IsThisTheaterAdminOrReadOnly
 from django.shortcuts import get_object_or_404
+from sale_tickets.models import Booking
+from theaters.models import Auditorium
 
 class ShowtimeViewSet(viewsets.ModelViewSet):
   """
@@ -19,7 +21,18 @@ class ShowtimeViewSet(viewsets.ModelViewSet):
     serializer = ShowtimeSerializer(data=request.data, partial=True)
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
-    serializer.save()
+    bookings = []
+    seat_num = 1
+    showtime = serializer.save()
+
+    auditorium = Auditorium.objects.get(id=request.data['auditorium'])
+    layout = auditorium.layout['layout']
+    for row in layout:
+      for seat in row:
+        bookings.append(Booking(showtime_id=showtime.id, seat=seat_num, user_id=None))
+        seat_num += 1
+    Booking.objects.bulk_create(bookings)
+
     return Response(serializer.data)
 
   def destroy(self, request, pk=None):

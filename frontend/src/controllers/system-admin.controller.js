@@ -81,8 +81,8 @@ export default {
     return TheatersService.updateRating(data, id);
   },
 
-  getTheater(data) {
-    return TheatersService.getTheater(data);
+  getTheater(adminId) {
+    return TheatersService.getTheater(adminId);
   },
 
   update(data, id) {

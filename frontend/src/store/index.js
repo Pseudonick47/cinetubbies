@@ -11,6 +11,7 @@ import {
   ticketsOnSale,
   showtimes,
   movies,
+  auditoriums,
   chart
 } from './modules';
 
@@ -27,6 +28,7 @@ const storeData = {
     ticketsOnSale,
     showtimes,
     movies,
+    auditoriums,
     chart
   }
 };

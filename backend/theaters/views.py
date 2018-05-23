@@ -22,12 +22,14 @@ from media_upload.models import Image
 from media_upload.models import THEATER_IMAGE
 
 from .models import Theater
+from .models import Auditorium
 from .models import THEATER_KIND
 from .models import Voting
 from sale_tickets.models import Booking
 from .serializers import PublicSerializer
 from .serializers import RestrictedSerializer
 from .serializers import AdministrationSerializer
+from .serializers import AuditoriumSerializer
 from .permissions import IsResponsibleForTheater
 from movies.serializers import MovieSerializer
 from showtimes.serializers import ShowtimeSerializer
@@ -65,7 +67,9 @@ class PublicAPI(ViewSet):
   def get_theater(self, request, pk=None):
     theater_admin = TheaterAdmin.objects.get(user_ptr_id=pk)
     theater = Theater.objects.get(id=theater_admin.theater_id)
-    return Response(data=PublicSerializer(theater).data)
+    data = PublicSerializer(theater).data
+    data['auditoriums'] = AuditoriumSerializer(theater.auditoriums.all(), many=True).data
+    return Response(data=data)
 
   @action(detail=True)
   def update_rating(self, request, pk=None):
@@ -98,11 +102,11 @@ class PublicAPI(ViewSet):
       for s in showtime_list:
         showtimes.append(s)
     return Response(ShowtimeSerializer(showtimes, many=True).data)
-  
+
   @action(detail=True)
   def get_tickets_on_sale(self, request, pk=None):
     theater = get_object_or_404(Theater, id=pk)
-    tickets = theater.tickets_on_sale.all()
+    tickets = theater.tickets_on_sale.filter(deleted=0)
     return Response(TicketOnSaleSerializer(tickets, many=True).data)
 
 class RestrictedAPI(ViewSet):
@@ -209,3 +213,40 @@ class AdministrationAPI(ViewSet):
     return Response(
       data={'message': 'Theater {0} successfully deleted.'.format(pk)}
     )
+
+class AuditoriumAPI(ViewSet):
+  permission_classes = [IsResponsibleForTheater]
+
+  def list(self, request, theater_id=None):
+    theater = get_object_or_404(Theater, id=theater_id)
+    auditoriums = theater.auditoriums.all()
+    return Response(AuditoriumSerializer(auditoriums, many=True).data)
+
+  def retrieve(self, request, theater_id=None, pk=None):
+    auditorium = get_object_or_404(Auditorium, id=pk)
+    return Response(AuditoriumSerializer(auditorium).data)
+
+  def create(self, request, theater_id=None):
+    theater = get_object_or_404(Theater, id=theater_id)
+    self.check_object_permissions(request, theater)
+    request.data['theater'] = theater.id
+    serializer = AuditoriumSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(data=serializer.data)
+
+  def update(self, request, theater_id=None, pk=None):
+    theater = get_object_or_404(Theater, id=theater_id)
+    self.check_object_permissions(request, theater)
+    auditorium = get_object_or_404(Auditorium, id=pk)
+    request.data['theater'] = theater.id
+    serializer = AuditoriumSerializer(auditorium, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    auditorium = serializer.save()
+    return Response(data=serializer.data)
+
+  def destroy(self, request, theater_id, pk):
+    theater = get_object_or_404(Theater, pk=theater_id)
+    self.check_object_permissions(request, theater)
+    Auditorium.objects.get(id=pk).delete()
+    return Response(data={'message': f'Auditorium {pk} successfully deleted.'})

@@ -10,12 +10,13 @@ class TicketOnSale(models.Model):
   showtime = models.ForeignKey(Showtime, on_delete=models.PROTECT, related_name='tickets_on_sale')
   seat = models.IntegerField(blank=False)
   discount = models.IntegerField(blank=False)
+  deleted = models.IntegerField(blank=False, default=0)
 
 
 class Booking(models.Model):
   id = models.AutoField(primary_key=True)
   showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, null=False, related_name='bookings')
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings', null=True)
   discount = models.IntegerField(default=0)
   # price = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=300)
   # this will be foreign key soon

@@ -15,30 +15,34 @@
                 xs12
                 sm6
                 md4>
-                <v-layout row>
-                  <v-text-field
-                    v-validate="'required'"
-                    v-model="showtime.auditorium"
-                    :error-messages="errors.collect('auditorium')"
-                    :counter="255"
-                    label="Auditorium"
-                    data-vv-name="auditorium"
-                    required
-                    box
-                  />
-                  <span>&emsp;</span>
-                  <v-text-field
-                    v-validate="'required'"
-                    v-model.number="showtime.price"
-                    :error-messages="errors.collect('price')"
-                    label="Price"
-                    data-vv-name="price"
-                    suffix="$"
-                    required
-                    box
-                    type="number"
-                  />
-                </v-layout>
+                <v-select
+                  v-validate="'required'"
+                  :items="auditoriums"
+                  :error-messages="errors.collect('auditorium')"
+                  v-model="showtime.auditorium"
+                  item-text="name"
+                  item-value="id"
+                  data-vv-name="auditorium"
+                  label="Select Auditorium"
+                  single-line
+                  requeired
+                />
+              </v-flex>
+              <v-flex
+                xs12
+                sm6
+                md4>
+                <v-text-field
+                  v-validate="'required'"
+                  v-model.number="showtime.price"
+                  :error-messages="errors.collect('price')"
+                  label="Price"
+                  data-vv-name="price"
+                  suffix="$"
+                  required
+                  box
+                  type="number"
+                />
               </v-flex>
               <v-layout row>
                 <v-flex>
@@ -206,7 +210,7 @@
             slot="items"
             slot-scope="props">
             <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
-            <td>{{ `${props.item.auditorium}` }} </td>
+            <td>{{ findObjectById(auditoriums, props.item.auditorium).name }} </td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.time }}</td>
             <td>{{ props.item.price }}</td>
@@ -265,6 +269,7 @@ import { mapGetters } from 'vuex';
 var moment = require('moment');
 
 export default {
+  name: 'Showtimes',
   data: () => ({
     search: '',
     movies: [],
@@ -278,6 +283,7 @@ export default {
     dialog: false,
     editedIndex: -1,
     filtered: false,
+    auditoriums: [],
     dateMenu: false,
     timeMenu: false
   }),
@@ -350,6 +356,13 @@ export default {
           }
           this.getMovies();
           this.getRepertoire();
+          TheaterController.getAuditoriums(this.theaterId)
+            .then((response) => {
+              this.auditoriums = TheaterController.mapAuditoriums(response.data);
+            })
+            .catch((response) => {
+              this.$alert.error('Error occurred. Please reload the page');
+            });
         })
         .catch((response) => {
           this.$alert.error('Error occurred.');
@@ -401,6 +414,12 @@ export default {
         }
       }
       return null;
+    },
+    findObjectById(array, id) {
+      let index = _.findIndex(array, o => {
+        return o.id === id;
+      });
+      return array[index];
     },
     getObjAttr(array, id, attr) {
       var obj = this.findObjectByKey(array, 'id', id);

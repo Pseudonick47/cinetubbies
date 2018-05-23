@@ -31,7 +31,7 @@ class RestrictedAPI(ViewSet):
     if not serializer.is_valid():
       return Response(serializer.errors, status=400)
     movie = serializer.save()
-    
+
     if not movie.image:
       image = Image.objects.create(
         data = DEFAULT_MOVIE_IMAGE,
