@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%; width: 100%">
     <v-dialog
       v-model="dialog"
       max-width="250px">
@@ -61,12 +61,18 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-layout row>
+    <v-layout
+      row
+      px-3
+      my-5
+      justify-space-between
+      style="height: auto;"
+    >
       <v-flex
-        s12
-        sm5
-        md5
-        offset-lg
+        xs12
+        sm6
+        md6
+        pr-1
       >
         Repertoire:
         <v-data-table
@@ -98,10 +104,10 @@
         </v-data-table>
       </v-flex>
       <v-flex
-        s12
-        sm5
+        xs12
+        sm6
         md6
-        offset-lg1
+        pl-1
       >
         Tickets on sale:
         <v-data-table

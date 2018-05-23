@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    style="height: 100%; width: 100%"
+    pa-5
+  >
     <v-parallax
       :src="theater.image ? theater.image.path : 'http://www.nshronika.rs/wp-content/uploads/2015/11/arena-sala5-01.jpg'"
       height="400"
@@ -8,16 +11,23 @@
       <v-layout
         column
         align-center
-        justify-center>
+        justify-center
+        style="height: auto"
+      >
         <h1 class="white--text title-text-shadow">{{ theater.name }}</h1>
         <h4 class="white--text title-text-shadow">{{ theater.rating }} ★</h4>
       </v-layout>
     </v-parallax>
     <v-layout
       row
-      class="my-3"
+      justify-space-between
+      class="my-3 px-3"
+      style="height: auto"
     >
-      <v-flex>
+      <v-flex
+        xs12
+        md5
+      >
         <v-list
           two-line
           subheader
@@ -46,8 +56,8 @@
         </v-list>
       </v-flex>
       <v-flex
-        xs-12
-        offset-lg1
+        xs12
+        md5
       >
         <v-card>
           <v-card-title>

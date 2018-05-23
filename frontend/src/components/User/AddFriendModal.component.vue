@@ -4,20 +4,24 @@
     max-width="600px"
     persistent
   >
-    <v-card class="elevation-12">
+    <v-card
+      class="elevation-12"
+      color="black"
+    >
       <v-toolbar
         dark
-        color="primary">
+        color="black">
         <v-toolbar-title>Find Friends</v-toolbar-title>
         <v-spacer/>
         <v-btn
-          color="accent"
+          color="primary"
+          flat
           @click="close"
         >Done
         </v-btn>
       </v-toolbar>
       <v-card-text>
-        <v-card>
+        <v-card color="black">
           <v-card-title>
             <v-text-field
               v-model="search"

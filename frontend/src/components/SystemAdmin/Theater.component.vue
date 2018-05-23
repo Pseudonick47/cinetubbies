@@ -1,5 +1,8 @@
 <template>
-  <v-card class="theater-card">
+  <v-card
+    class="theater-card"
+    color="black"
+  >
     <v-card-media
       src="http://arab-culture.info/wp-content/uploads/2018/02/1-68.jpg"
       height="200px"
@@ -15,7 +18,7 @@
             <span class="grey--text">{{ info.address }}</span>
           </div>
         </v-flex>
-        <v-flex
+        <!-- <v-flex
           xs2
           justify-end
         >
@@ -44,7 +47,7 @@
               </v-card-title>
             </v-card>
           </v-menu>
-        </v-flex>
+        </v-flex> -->
       </v-layout>
     </v-card-title>
     <v-card-text>
@@ -57,13 +60,14 @@
       >
         <v-btn
           flat
+          color="primary"
           @click="edit"
         >
           Edit
         </v-btn>
         <v-btn
           flat
-          color="purple"
+          color="primary"
           @click="remove"
         >
           Remove

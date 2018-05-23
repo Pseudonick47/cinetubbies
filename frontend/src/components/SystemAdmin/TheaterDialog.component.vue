@@ -4,7 +4,7 @@
     persistent
     max-width="500px"
   >
-    <v-card>
+    <v-card color="black">
       <v-card-title>
         <span class="headline">Register New Theater</span>
       </v-card-title>
@@ -38,10 +38,12 @@
             <v-radio
               label="Cinema"
               value="m"
+              color="primary"
             />
             <v-radio
               label="Theater"
               value="p"
+              color="primary"
             />
           </v-radio-group>
           <v-select
@@ -61,12 +63,12 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-          color="blue darken-1"
+          color="primary"
           flat
           @click.native="reset"
         >Close</v-btn>
         <v-btn
-          color="blue darken-1"
+          color="primary"
           flat
           @click.native="submit"
         >Confirm</v-btn>

@@ -1,13 +1,18 @@
 <template>
-  <v-layout row>
+  <v-layout
+    row
+    justify-space-between
+    pa-5
+  >
     <v-flex
-      s12
+      xs12
       sm5
       md5
     >
       <v-list
         two-line
         subheader
+        style="background-color: black"
       >
         <v-subheader>Cinemas</v-subheader>
         <v-list-tile>
@@ -55,6 +60,7 @@
       <v-list
         two-line
         subheader
+        style="background-color: black"
       >
         <v-subheader>Theaters</v-subheader>
         <v-list-tile>

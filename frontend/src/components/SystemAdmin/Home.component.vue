@@ -5,7 +5,10 @@
         row
         pa-2
       >
-        <v-card class="theaters-toolbar">
+        <v-card
+          class="theaters-toolbar"
+          color="black"
+        >
           <v-layout
             row
             pa-2
@@ -14,12 +17,13 @@
             <v-text-field
               prepend-icon="search"
               label="Search"
-              solo-inverted
+              color="primary"
               class="mx-3"
               flat
             />
             <v-btn
               color="primary"
+              flat
               @click.native.stop="dialog=true"
             >New</v-btn>
           </v-layout>

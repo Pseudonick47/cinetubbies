@@ -2,6 +2,7 @@
   <div class="prop-detail-container">
     <v-card class="prop-detail">
       <v-container
+        v-if="prop"
         pa-0
         fill-height
       >
@@ -37,7 +38,6 @@
                 class="prop-info-item"
                 row
                 wrap
-                fill-height
                 px-4
                 py-1
                 mb-0
@@ -45,36 +45,29 @@
                 <div class="subheading">
                   <p style="text-align: justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tempor felis at mollis blandit. Etiam quam dui, pharetra ac ligula ut, varius venenatis metus. Curabitur eget efficitur nisi. Proin commodo efficitur tortor vel vulputate. Nam ipsum dolor, pulvinar at vehicula sit amet, porttitor a nisi. Donec congue tristique justo ac fringilla.</p>
                 </div>
-                <div
-                  class="caption grey--text"
-                  style="width: 100%"
-                >
-                  <p class="text-xs-right">Expiration date: {{ prop.expirationDate }}</p>
-                </div>
               </v-layout>
               <v-layout
                 row
                 wrap
                 style="height: auto"
+                pb-4
+                pr-3
+                justify-end
               >
-                <v-card-actions>
-                  <v-layout
-                    row
-                    wrap
-                    justify-end
-                  >
-                    <v-btn
-                      v-if="showBookBtn"
-                      flat
-                      @click="showBookDialog = true"
-                    >Book</v-btn>
-                    <v-btn
-                      v-if="showOfferBtn"
-                      flat
-                      @click="showOfferDialog = true"
-                    >Offer</v-btn>
-                  </v-layout>
-                </v-card-actions>
+                <v-flex xs3>
+                  <v-btn
+                    v-if="showBookBtn"
+                    flat
+                    color="primary"
+                    @click="showBookDialog = true"
+                  >Book</v-btn>
+                  <v-btn
+                    v-if="showOfferBtn"
+                    flat
+                    color="primary"
+                    @click="showOfferDialog = true"
+                  >Offer</v-btn>
+                </v-flex>
               </v-layout>
             </v-container>
           </v-flex>

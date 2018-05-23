@@ -1,18 +1,24 @@
 <template>
   <v-layout
     align-center
-    justify-center>
+    justify-center
+    py-5>
     <v-flex
       xs12
       sm8
-      md4>
-      <v-card class="elevation-12">
-        <v-toolbar
+      md5>
+      <v-card color="black">
+        <!-- <v-toolbar
           dark
           color="primary">
           <v-toolbar-title>Register</v-toolbar-title>
-        </v-toolbar>
-
+        </v-toolbar> -->
+        <v-card-title primary-title>
+          <div
+            class="headline"
+            style="color: goldenrod"
+          >Register</div>
+        </v-card-title>
         <v-card-text>
           <v-form>
             <v-text-field
@@ -114,6 +120,7 @@
           <v-spacer/>
           <v-btn
             color="primary"
+            flat
             @click="submit"
           >
             Register

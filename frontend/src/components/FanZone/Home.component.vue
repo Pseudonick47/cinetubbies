@@ -83,8 +83,8 @@
                 <v-flex
                   v-for="(prop, i) in props"
                   :key="i"
-                  class="prop-container"
                   :class="{ xs10: screen.small, md4: screen.medium, xl3: screen.large }"
+                  class="prop-container"
                   pa-3
                 >
                   <prop
@@ -148,7 +148,12 @@ export default {
       page: 1,
       showOfficialProps: true,
       showUsedProps: false,
-      searchTerm: null
+      searchTerm: null,
+      screen: {
+        small: false,
+        medium: true,
+        large: false
+      }
     };
   },
   computed: {
@@ -170,31 +175,6 @@ export default {
       get() {
         return this.$store.getters['miscellaneous/drawer'];
       }
-    },
-    screen() {
-      const el = document.getElementById('shopBody');
-      const width = el.offsetWidth;
-      const height = el.offsetHeight
-
-      const size = width > height ? height : width;
-
-      console.log(width, height);
-
-      const screen = {
-        small: false,
-        medium: false,
-        large: false
-      };
-
-      if (size <= 960) {
-        screen.small = true;
-      } else if (size > 960 && size <= 1264) {
-        screen.medium = true;
-      } else {
-        screen.large = true;
-      }
-      console.log(screen);
-      return screen;
     }
   },
   watch: {
@@ -232,6 +212,25 @@ export default {
       PropsController.requestPage(this.page, terms);
 
       this.searchTerm = null;
+    },
+    updateScreen() {
+      const width = document.getElementById('shopBody').offsetWidth;
+
+      const screen = {
+        small: false,
+        medium: false,
+        large: false
+      };
+
+      if (width <= 600) {
+        screen.small = true;
+      } else if (width > 600 && width <= 1264) {
+        screen.medium = true;
+      } else {
+        screen.large = true;
+      }
+
+      this.screen = screen;
     }
   }
 };

@@ -1,130 +1,146 @@
 <template>
-  <v-layout row>
-    <v-flex
-      xs-12
-      sm5
+  <div
+    style="height: 100%; width: 100%">
+    <v-layout
+      row
+      justify-space-between
+      my-5
+      px-4
+      style="height: auto"
     >
-      <v-chip
-        color="white"
-        text-color="black">
-        <v-icon left>build</v-icon>
-        Theater settings
-      </v-chip>
-      <v-chip
-        color="white"
-        text-color="black">
-        <span v-if="theater.isCinema()">Type: cinema</span>
-        <span v-else>Type: theater</span>
-        <v-tooltip right>
-          <v-icon
-            slot="activator"
-            right
-          >info</v-icon>
-          <span>Types: cinema, theater</span>
-        </v-tooltip>
-      </v-chip>
-      <v-card>
-        <v-card-media
-          v-if="theater.image"
-          :src="theater.image.path"
-          height="200px"
-        />
-      </v-card>
-      <form>
-        <v-text-field
-          v-model="theater.name"
-          label="Name"
-        />
-        <v-text-field
-          v-model="theater.address"
-          label="Address"
-        />
-        <v-text-field
-          v-model="theater.description"
-          label="Description"
-        />
-        <v-layout row>
-          <span>Theater image:</span>
-          <v-divider/>
-          <input
-            type="file"
-            @change="imageSelected"
-        ></v-layout>
-        <v-btn @click="confirmSubmit = true">submit</v-btn>
-      </form>
-      <v-dialog
-        v-model="confirmSubmit"
-        persistent
-        max-width="300px"
-      >
-        <v-card>
-          <v-card-text>
-            Submit changes?
-          </v-card-text>
-          <v-card-actions>
-            <v-btn @click="submit">yes</v-btn>
-            <v-spacer/>
-            <v-btn @click="confirmSubmit = false">no</v-btn>
-          </v-card-actions>
-
-        </v-card>
-      </v-dialog>
-    </v-flex>
-    <v-layout column>
       <v-flex
-        xs-12
-        offset-lg1
+        xs12
+        sm12
+        md4
       >
-        Theater repertoire:
-        <v-data-table
-          :items="repertoire"
-          :headers="headers"
-          item-key="date"
-          class="elevation-1"
+        <v-chip
+          color="white"
+          text-color="black">
+          <v-icon left>build</v-icon>
+          Theater settings
+        </v-chip>
+        <v-chip
+          color="white"
+          text-color="black">
+          <span v-if="theater.isCinema()">Type: cinema</span>
+          <span v-else>Type: theater</span>
+          <v-tooltip right>
+            <v-icon
+              slot="activator"
+              right
+            >info</v-icon>
+            <span>Types: cinema, theater</span>
+          </v-tooltip>
+        </v-chip>
+        <v-card>
+          <v-card-media
+            v-if="theater.image"
+            :src="theater.image.path"
+            height="200px"
+          />
+        </v-card>
+        <form>
+          <v-text-field
+            v-model="theater.name"
+            label="Name"
+          />
+          <v-text-field
+            v-model="theater.address"
+            label="Address"
+          />
+          <v-text-field
+            v-model="theater.description"
+            label="Description"
+          />
+          <v-layout row>
+            <span>Theater image:</span>
+            <v-divider/>
+            <input
+              type="file"
+              @change="imageSelected"
+          ></v-layout>
+          <v-btn @click="confirmSubmit = true">submit</v-btn>
+        </form>
+        <v-dialog
+          v-model="confirmSubmit"
+          persistent
+          max-width="300px"
         >
-          <template
-            slot="items"
-            slot-scope="props">
-            <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
-            <td>{{ props.item.auditorium }} </td>
-            <td>{{ props.item.date }}</td>
-            <td>{{ props.item.time }}</td>
-            <td>{{ props.item.price }}</td>
-          </template>
-          <template slot="no-data">
-            Sorry, nothing to display here.
-          </template>
-        </v-data-table>
+          <v-card>
+            <v-card-text>
+              Submit changes?
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="submit">yes</v-btn>
+              <v-spacer/>
+              <v-btn @click="confirmSubmit = false">no</v-btn>
+            </v-card-actions>
+
+          </v-card>
+        </v-dialog>
       </v-flex>
       <v-flex
-        xs-12
-        offset-lg1
+        xs12
+        sm12
+        md7
       >
-        Tickets on sale:
-        <v-data-table
-          :items="tickets"
-          :headers="ticketsHeaders"
-          item-key="date"
-          class="elevation-1"
-        >
-          <template
-            slot="items"
-            slot-scope="props">
-            <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
-            <td>{{ props.item.seat }} </td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
-            <td>{{ props.item.discount }}</td>
-          </template>
-          <template slot="no-data">
-            Sorry, nothing to display here.
-          </template>
-        </v-data-table>
+        <v-layout column>
+          <v-flex
+            xs-12
+            offset-lg1
+          >
+            Theater repertoire:
+            <v-data-table
+              :items="repertoire"
+              :headers="headers"
+              item-key="date"
+              class="elevation-1"
+            >
+              <template
+                slot="items"
+                slot-scope="props">
+                <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
+                <td>{{ props.item.auditorium }} </td>
+                <td>{{ props.item.date }}</td>
+                <td>{{ props.item.time }}</td>
+                <td>{{ props.item.price }}</td>
+              </template>
+              <template slot="no-data">
+                Sorry, nothing to display here.
+              </template>
+            </v-data-table>
+          </v-flex>
+          <v-flex
+            xs-12
+            offset-lg1
+          >
+            Tickets on sale:
+            <v-data-table
+              :items="tickets"
+              :headers="ticketsHeaders"
+              item-key="date"
+              class="elevation-1"
+            >
+              <template
+                slot="items"
+                slot-scope="props">
+                <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
+                <td>{{ props.item.seat }} </td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
+                <td>{{ props.item.discount }}</td>
+              </template>
+              <template slot="no-data">
+                Sorry, nothing to display here.
+              </template>
+            </v-data-table>
+          </v-flex>
+        </v-layout>
       </v-flex>
     </v-layout>
-  </v-layout>
+  </div>
 </template>
 
 <script>
