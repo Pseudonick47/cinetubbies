@@ -58,6 +58,7 @@ export default {
     },
     sync() {
       this.center = this.reportedMapCenter;
+      this.$emit('marker-updated', this.reportedMapCenter);
     }
   }
 };
