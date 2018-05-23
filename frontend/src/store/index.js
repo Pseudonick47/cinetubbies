@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import {
   alert,
   auth,
+  chart,
   miscellaneous,
   movies,
   props,
@@ -20,6 +21,7 @@ const storeData = {
   modules: {
     alert,
     auth,
+    chart,
     miscellaneous,
     movies,
     props,

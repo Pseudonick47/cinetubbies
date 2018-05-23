@@ -69,6 +69,14 @@ class MemberAPI(ViewSet):
   def destroy(self, request, *args, **kwargs):
     reservation = get_object_or_404(Reservation, pk=kwargs.pop('pk'))
     self.check_object_permissions(request, reservation)
+    reservation.prop.quantity += reservation.quantity
+
+    try:
+      reservation.prop.save()
+    except ObjectLocked:
+      # TODO: rework
+      pass
+
     reservation.delete()
     return Response(
       data=PublicSerializer(reservation).data
