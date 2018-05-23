@@ -7,6 +7,7 @@ import * as repertoire from './repertoire.store';
 import * as ticketsOnSale from './tickets-on-sale.store';
 import * as showtimes from './showtime.store';
 import * as movies from './movie.store';
+import * as chart from './chart.store';
 
 export {
   alert,
@@ -17,5 +18,6 @@ export {
   repertoire,
   ticketsOnSale,
   showtimes,
-  movies
+  movies,
+  chart
 };

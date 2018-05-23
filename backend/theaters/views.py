@@ -151,6 +151,31 @@ class RestrictedAPI(ViewSet):
 
     return Response(result)
 
+  @action(detail=True)
+  def get_attendance(self, request, pk=None, period=None):
+    all_bookings = Booking.objects.all()
+    this_theater_bookings = list(all_bookings.filter(showtime__movie__theater__id=pk))
+    result = []
+    date = datetime.now()
+
+    if period == 'overall':
+      result.append(len(this_theater_bookings))
+    elif period == 'year':
+      this_year_bookings = [b for b in this_theater_bookings if b.showtime.date.year == date.year]
+      for i in range(1, 13):
+        result.append(len( [b for b in this_year_bookings if b.showtime.date.month == i]))
+    elif period == 'month':
+      this_year_month_bookings = [b for b in this_theater_bookings if (b.showtime.date.year == date.year and b.showtime.date.month == date.month)]
+      for i in range(1, 32):
+        result.append(len( [b for b in this_year_month_bookings if b.showtime.date.day == i]))      
+    else:
+      week = date.isocalendar()[1]
+      this_week_bookings = [b for b in this_theater_bookings if (b.showtime.date.year == date.year and b.showtime.date.isocalendar()[1] == week)]
+      for i in range(1, 8):
+        result.append(len([b for b in this_week_bookings if b.showtime.date.weekday() == i-1]))
+
+    return Response(result)
+
 class AdministrationAPI(ViewSet):
   permission_classes = [IsAuthenticated, IsSystemAdmin]
 

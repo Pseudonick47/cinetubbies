@@ -4,13 +4,68 @@
       <v-flex
         s12
         sm5
-        md9/>
+        md9>
+        <v-chip
+          label
+          outline
+          color="white"
+          center>
+          <v-icon>
+            people
+          </v-icon>
+          <span>&emsp;{{ theaterType }} attendance</span>
+        </v-chip>
+        <v-divider/>
+        <v-radio-group
+          v-model="chartPeriod"
+          column
+          @change="changeChartLabels()"
+        >
+          <v-radio
+            label="This week"
+            value="week"/>
+          <v-radio
+            label="This month"
+            value="month"/>
+          <v-radio
+            label="This year"
+            value="year"/>
+          <v-radio
+            label="Overall"
+            value="overall"/>
+        </v-radio-group>
+        <v-container v-show="chartPeriod==='week'">
+          <chart
+            :data="datacollection"
+            :height="160"
+          />
+        </v-container>
+        <v-container v-show="chartPeriod==='month'">
+          <chart
+            :data="datacollection"
+            :height="160"
+          />
+        </v-container>
+        <v-container v-show="chartPeriod==='year'">
+          <chart
+            :data="datacollection"
+            :height="160"
+          />
+        </v-container>
+        <v-container v-show="chartPeriod==='overall'">
+          <chart
+            :data="datacollection"
+            :height="160"
+          />
+        </v-container>
+      </v-flex>
+      <span>&emsp;&emsp;&emsp;&emsp;&emsp;</span>
       <v-flex
         s12
         sm5
-        md4>
+        md4
+      >
         <v-chip
-          v-if="theater.isCinema()"
           label
           outline
           color="white"
@@ -18,18 +73,7 @@
           <v-icon>
             attach_money
           </v-icon>
-          Cinema revenue
-        </v-chip>
-        <v-chip
-          v-else
-          label
-          outline
-          color="white"
-        >
-          <v-icon>
-            attach_money
-          </v-icon>
-          Theater revenue
+          {{ theaterType }} revenue
         </v-chip>
         <v-divider/>
         <v-radio-group
@@ -124,73 +168,78 @@
       </v-flex>
     </v-layout>
     <hr>
-    <v-layout row>
-      <v-flex
-        s12
-        sm5
-        md7>
-        <v-layout column>
-          <v-flex>
+    <v-footer
+      height="150"
+    >
+      <v-layout
+        row>
+        <v-flex
+          s12
+          sm5
+          md7>
+          <v-layout column>
+            <v-flex>
+              <v-icon
+                size="100px">
+                star
+              </v-icon>
+            </v-flex>
+            <v-flex>Average rating: {{ theater.rating }}</v-flex>
+          </v-layout>
+        </v-flex>
+        <v-flex
+          s12
+          sm5
+          md7>
+          <v-layout column>
+            <v-flex>
+              <v-icon size="100px">
+                people
+              </v-icon>
+            </v-flex>
+            <v-flex>Number of ratings: {{ theater.voters_count }}</v-flex>
+          </v-layout>
+        </v-flex>
+        <v-flex
+          s12
+          sm5
+          md7>
+          <v-layout column>
             <v-icon
-              size="150px">
-              star
+              slot="activator"
+              size="100px">
+              movie
             </v-icon>
-          </v-flex>
-          <v-flex>Average rating: {{ theater.rating }}</v-flex>
-        </v-layout>
-      </v-flex>
-      <v-flex
-        s12
-        sm5
-        md7>
-        <v-layout column>
-          <v-flex>
-            <v-icon size="150px">
-              people
-            </v-icon>
-          </v-flex>
-          <v-flex>Number of ratings: {{ theater.voters_count }}</v-flex>
-        </v-layout>
-      </v-flex>
-      <v-flex
-        s12
-        sm5
-        md7>
-        <v-layout column>
-          <v-icon
-            slot="activator"
-            size="150px">
-            movie
-          </v-icon>
-          <v-btn
-            round
-            @click="showMovieRatings = true">See movie ratings</v-btn>
-        </v-layout>
-        <v-dialog
-          v-model="showMovieRatings"
-          max-width="500px">
-          <v-list three-line>
-            <v-list-tile
-              v-for="item in movies"
-              :key="item.id"
-            >
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                <v-list-tile-sub-title>
-                  <v-icon>star</v-icon>
-                  Averate rating: {{ item.rating }}
-                </v-list-tile-sub-title>
-                <v-list-tile-sub-title>
-                  <v-icon>people</v-icon>
-                  Number of ratings: {{ item.voters_count }}
-                </v-list-tile-sub-title>
-                <v-list-tile-sub-title><hr></v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-dialog>
-      </v-flex>
-    </v-layout>
+            <v-btn
+              round
+              @click="showMovieRatings = true">See movie ratings</v-btn>
+          </v-layout>
+          <v-dialog
+            v-model="showMovieRatings"
+            max-width="500px">
+            <v-list three-line>
+              <v-list-tile
+                v-for="item in movies"
+                :key="item.id"
+              >
+                <v-list-tile-content>
+                  <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                  <v-list-tile-sub-title>
+                    <v-icon>star</v-icon>
+                    Averate rating: {{ item.rating }}
+                  </v-list-tile-sub-title>
+                  <v-list-tile-sub-title>
+                    <v-icon>people</v-icon>
+                    Number of ratings: {{ item.voters_count }}
+                  </v-list-tile-sub-title>
+                  <v-list-tile-sub-title><hr></v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-dialog>
+        </v-flex>
+      </v-layout>
+    </v-footer>
   </v-layout>
 </template>
 
@@ -199,11 +248,13 @@ import { mapGetters } from 'vuex';
 import { Theater } from 'Models/theater.model';
 import { Movie } from 'Models/movie.model';
 import TheaterController from 'Controllers/system-admin.controller';
+import Chart from 'Components/CinemaAdmin/Chart.component';
 
 const REVENUE_MESSAGE = 'Select the period for which you want to see the report and click OK.';
 
 export default {
   name: 'Reports',
+  components: { 'chart': Chart },
   data: () => ({
     theater: new Theater(),
     movies: [],
@@ -218,17 +269,58 @@ export default {
     dateMenu2: false,
     pickDate: false,
     pickMonth: false,
-    pickYear: false
+    pickYear: false,
+    chartPeriod: '',
+    datacollection: { labels: [],
+      datasets: [
+        {
+          label: 'Number of visitors',
+          backgroundColor: '#6BAFB0',
+          borderColor: '#2E8F91',
+          hoverBackgroundColor: '#8ED2D3',
+          borderWidth: 5,
+          data: []
+        }
+      ] }
   }),
   computed: {
     ...mapGetters([
-      'activeUser'
-    ])
+      'activeUser',
+      'labelsWeek',
+      'labelsMonth',
+      'labelsYear',
+      'labelsAll'
+    ]),
+    theaterType() {
+      if (this.theater.isCinema()) {
+        return 'Cinema';
+      } else {
+        return 'Theater';
+      }
+    }
   },
   mounted() {
     this.getTheater();
   },
   methods: {
+    changeChartLabels() {
+      if (this.chartPeriod === 'week') {
+        this.datacollection.labels = this.labelsWeek;
+      } else if (this.chartPeriod === 'month') {
+        this.datacollection.labels = this.labelsMonth;
+      } else if (this.chartPeriod === 'year') {
+        this.datacollection.labels = this.labelsYear;
+      } else {
+        this.datacollection.labels = this.labelsAll;
+      }
+      TheaterController.getAttendance(this.theater.id, this.chartPeriod)
+        .then((response) => {
+          this.datacollection.datasets[0].data = response.data;
+        })
+        .catch((response) => {
+          this.$alert.error('Error occurred.');
+        });
+    },
     getTheater() {
       TheaterController.getTheater(this.activeUser.id)
         .then((response) => {
