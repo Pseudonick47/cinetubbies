@@ -11,6 +11,9 @@ from showtimes.serializers import ShowtimeSerializer
 from theaters.serializers import PublicSerializer
 from theaters.serializers import AuditoriumSerializer
 
+from sale_tickets.models import Booking
+from theaters.models import Auditorium
+
 from fan_zone.categories.serializers import AdministrationSerializer as CategorySerializer
 from fan_zone.props.official.serializers import RestrictedSerializer as OPropSerializer
 from fan_zone.props.used.serializers import MemberSerializer as UPropSerializer
@@ -75,7 +78,17 @@ def seed():
     serializer = ShowtimeSerializer(data=showtime, partial=True)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
-    serializer.save()
+    saved = serializer.save()
+
+    bookings = []
+    seat_num = 1
+    auditorium = Auditorium.objects.get(id=showtime['auditorium'])
+    layout = auditorium.layout['layout']
+    for row in layout:
+      for seat in row:
+        bookings.append(Booking(showtime_id=saved.id, seat=seat_num, user_id=None))
+        seat_num += 1
+    Booking.objects.bulk_create(bookings)
 
   for category in categories:
     serializer = CategorySerializer(data=category, partial=True)
