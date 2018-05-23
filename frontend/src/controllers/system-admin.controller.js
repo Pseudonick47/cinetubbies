@@ -95,5 +95,9 @@ export default {
 
   getRevenue(id, data) {
     return TheatersService.getRevenue(id, data);
+  },
+
+  getAttendance(id, period) {
+    return TheatersService.getAttendance(id, period);
   }
 };

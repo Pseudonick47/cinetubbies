@@ -22,7 +22,9 @@ const getters = {
 
 const mutations = {
   setShowtimes(state, data) {
-    _.forEach(data, x => state.showtimes[x.id] = x);
+    _.forEach(data, x => {
+      state.showtimes[x.id] = x;
+    });
   },
   bookTicket(state, data) {
     _.forEach(data.seats, x => {

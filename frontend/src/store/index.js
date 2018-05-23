@@ -11,7 +11,8 @@ import {
   ticketsOnSale,
   showtimes,
   movies,
-  auditoriums
+  auditoriums,
+  chart
 } from './modules';
 
 Vue.use(Vuex);
@@ -27,7 +28,8 @@ const storeData = {
     ticketsOnSale,
     showtimes,
     movies,
-    auditoriums
+    auditoriums,
+    chart
   }
 };
 
