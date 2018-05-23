@@ -61,7 +61,7 @@
                   <v-form ref="form">
                     <v-text-field
                       v-validate="'required'"
-                      v-model="prop.title"
+                      v-model="data.title"
                       :error-messages="errors.collect('title')"
                       name="title"
                       label="Title"
@@ -71,7 +71,7 @@
                     <v-select
                       v-validate="'required'"
                       :items="categories"
-                      v-model="selectedCategory"
+                      v-model="data.category"
                       :error-messages="errors.collect('category')"
                       name="category"
                       label="Category"
@@ -85,7 +85,6 @@
                       :close-on-content-click="false"
                       v-model="menu"
                       :nudge-right="40"
-                      :return-value.sync="date"
                       lazy
                       transition="scale-transition"
                       offset-y
@@ -94,20 +93,20 @@
                     >
                       <v-text-field
                         slot="activator"
-                        v-model="prop.expirationDate"
+                        v-model="data.expirationDate"
                         label="Expiration date"
                         prepend-icon="event"
                         readonly
                       />
                       <v-date-picker
-                        v-model="prop.expirationDate"
+                        v-model="data.expirationDate"
                         color="teal"
                         no-title
                         scrollable
                       />
                     </v-menu>
                     <v-text-field
-                      v-model="prop.description"
+                      v-model="data.description"
                       name="description"
                       label="Description"
                       rows="3"
@@ -164,13 +163,21 @@ import MediaService from 'Api/media-upload.service';
 
 export default {
   name: 'UsedPropDialog',
+  props: {
+    prop: {
+      type: Prop,
+      required: false,
+      default: () => new Prop({ kind: 'U' })
+    }
+  },
   data() {
     return {
       show: true,
-      prop: new Prop({ kind: 'U' }),
+      data: this.prop.clone(),
       selectedCategory: null,
       selectedImage: null,
-      showImage: 'https://dhs1n389ze6jv.cloudfront.net/img/product-thumb/1518384418b7e5afe78228c751029fa6e1b9063b87.png'
+      menu: null,
+      showImage: this.prop.image.path
     };
   },
   computed: {
@@ -207,33 +214,65 @@ export default {
     },
     submit() {
       this.$validator.validateAll().then((result) => {
-        if (result) {
-          const fd = new FormData();
-          fd.append('kind', 'z');
-          fd.append('data', this.selectedImage, this.selectedImage.name);
-          MediaService.postImage(fd)
-            .then((response) => {
-              this.prop.categoryId = this.selectedCategory.id;
-              this.prop.imageId = response.data.id;
-              this.prop.ownerId = this.user.id;
-
-              PropsController.postProp(this.prop)
-                .then((response) => {
-                  this.$alert.success('Used prop successfully created.');
-                  this.$emit('reload');
-                  this.reset();
-                })
-                .catch((e) => {
-                  this.$alert.error('Something went wrong. Please try again!');
-                });
-            })
-            .catch((e) => {
-              this.$alert.error('Something went wrong. Please try again!');
-            });
-        } else {
+        if (!result) {
           this.$alert.error('Please fill all required fields.');
         }
+
+        if (this.selectedImage) {
+          this.postImage()
+            .then((response) => {
+              console.log(response.data);
+              this.saveProp(response.data.id);
+            })
+            .catch(() => {
+              this.$alert.error('Image upload failed. Please check your internet connection and try again!');
+            });
+        } else {
+          this.saveProp();
+        }
       });
+    },
+    postImage() {
+      const fd = new FormData();
+      fd.append('kind', 'z');
+      fd.append('data', this.selectedImage, this.selectedImage.name);
+      return MediaService.postImage(fd);
+    },
+    saveProp(imageId = null) {
+      this.data.categoryId = this.data.category.id;
+      this.data.ownerId = this.user.id;
+
+      if (imageId) {
+        this.data.imageId = imageId;
+      }
+
+      if (this.data.id) {
+        this.updateProp();
+      } else {
+        this.createProp();
+      }
+    },
+    createProp() {
+      PropsController.postProp(this.data)
+        .then((response) => {
+          this.$alert.success('Used prop successfully created.');
+          this.$store.commit('props/insertProp', response.data);
+          this.reset();
+        })
+        .catch((e) => {
+          this.$alert.error('Something went wrong. Please try again!');
+        });
+    },
+    updateProp() {
+      PropsController.updateProp(this.data.id, this.data)
+        .then((response) => {
+          this.$alert.success('Used prop successfully created.');
+          this.prop.update(response.data);
+          this.reset();
+        })
+        .catch((e) => {
+          this.$alert.error('Something went wrong. Please try again!');
+        });
     }
   }
 };

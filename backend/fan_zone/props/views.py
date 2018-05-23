@@ -39,12 +39,15 @@ class PublicAPI(ViewSet):
     return Response(data=queryset.count())
 
   def list(self, request, *args, **kwargs):
-    category_id = request.GET.get('category')
-
     queryset = Prop.objects.all()
 
+    category_id = request.GET.get('category')
     if category_id:
       queryset = queryset.filter(category_id=category_id)
+
+    title = request.GET.get('title')
+    if title:
+      queryset = queryset.filter(title__contains=title)
 
     num = request.GET.get('num') or 10
     paginator = Paginator(queryset.order_by('title'), num)

@@ -96,3 +96,19 @@ class MemberAPI(ViewSet):
     offer = get_object_or_404(Offer, pk=kwargs.pop('pk'))
     self.check_object_permissions(request, offer)
     return Response(data=PublicSerializer(offer).data)
+
+  def update(self, request, *args, **kwargs):
+    offer = get_object_or_404(Offer, pk=kwargs.pop('pk'))
+    self.check_object_permissions(request, offer)
+
+    amount = request.data.get('amount', None)
+    if not amount:
+      return Response(
+        data="Amount is required.",
+        status=status.HTTP_400_BAD_REQUEST
+      )
+
+    offer.amount = amount
+    offer.save()
+
+    return Response(data=PublicSerializer(offer).data)

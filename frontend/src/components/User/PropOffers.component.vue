@@ -56,6 +56,10 @@
                 >
                   <v-btn
                     flat
+                    @click="offerToEdit = offer; showEditDialog = true"
+                  >Edit</v-btn>
+                  <v-btn
+                    flat
                     @click="offerToDelete = offer; showDeleteDialog = true"
                   >Delete</v-btn>
                 </v-layout>
@@ -71,23 +75,35 @@
       @cancel="showDeleteDialog = false; offerToDelete = null"
       @confirm="deleteOffer"
     />
+    <offer-dialog
+      v-if="showEditDialog"
+      :offer="offerToEdit"
+      :prop="prop"
+      @cancel="showEditDialog = false"
+      @confirm="showEditDialog = false"
+    />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 
-import OffersController from 'Controllers/props/offers.controller';
+import OfferDialog from 'Components/FanZone/Dialogs/Offer.component';
 import SimpleDialog from 'Components/helpers/SimpleDialog.component';
+
+import OffersController from 'Controllers/props/offers.controller';
 
 export default {
   name: 'PropOffers',
   components: {
+    OfferDialog,
     SimpleDialog
   },
   data() {
     return {
       showDeleteDialog: false,
-      offerToDelete: null
+      showEditDialog: false,
+      offerToDelete: null,
+      offerToEdit: null
     };
   },
   computed: {

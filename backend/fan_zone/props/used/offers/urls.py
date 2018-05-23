@@ -15,7 +15,8 @@ class OffersByUser(BaseManageView):
 class OfferByUser(BaseManageView):
   VIEWS_BY_METHOD = {
     'GET': MemberAPI.as_view({'get': 'retrieve'}),
-    'DELETE': MemberAPI.as_view({'delete': 'destroy'})
+    'DELETE': MemberAPI.as_view({'delete': 'destroy'}),
+    'PUT': MemberAPI.as_view({'put': 'update'})
   }
 
 

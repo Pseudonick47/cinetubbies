@@ -6,7 +6,21 @@
       app
       right
     >
-      <div class="pl-3">
+      <div class="px-3">
+        <v-text-field
+          v-model="searchTerm"
+          name="input-1-3"
+          label="Prop title"
+          single-line
+          prepend-icon="search"
+          mb-0
+        />
+        <v-btn
+          class="mb-3"
+          small
+          block
+          @click="searchProps"
+        >Search</v-btn>
         <v-switch
           v-model="showOfficialProps"
           class="title"
@@ -144,7 +158,8 @@ export default {
       entriesPerPage: 9,
       page: 1,
       showOfficialProps: true,
-      showUsedProps: false
+      showUsedProps: false,
+      searchTerm: null
     };
   },
   computed: {
@@ -182,6 +197,14 @@ export default {
         PropsController.requestCount({ category: id });
         PropsController.requestPage(this.page, { category: id });
       }
+    },
+    searchProps() {
+      const terms = { title: this.searchTerm };
+
+      PropsController.requestCount(terms);
+      PropsController.requestPage(this.page, terms);
+
+      this.searchTerm = null;
     }
   }
 };

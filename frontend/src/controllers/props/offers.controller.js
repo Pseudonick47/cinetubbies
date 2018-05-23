@@ -17,7 +17,7 @@ export default {
     return Service.deleteOffer(userId, id);
   },
 
-  updateOffer(propId, offerId, data) {
-    return Service.putOffer(propId, offerId, data);
+  updateOffer(userId, offerId, data) {
+    return Service.putOffer(userId, offerId, data);
   }
 };

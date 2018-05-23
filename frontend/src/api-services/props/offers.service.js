@@ -14,8 +14,8 @@ export default {
     return Axios.post(`${PROPS}${USED}${id}/${OFFERS}`, data);
   },
 
-  putOffer(propId, offerId, data) {
-    return Axios.put(`${PROPS}${USED}${propId}/${OFFERS}${offerId}`, data);
+  putOffer(userId, offerId, data) {
+    return Axios.put(`${USERS}${userId}/${OFFERS}${offerId}`, data);
   },
 
   deleteOffer(userId, id) {

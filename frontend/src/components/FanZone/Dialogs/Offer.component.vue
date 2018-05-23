@@ -56,10 +56,16 @@ import { mapGetters } from 'vuex';
 import OffersController from 'Controllers/props/offers.controller';
 
 import { Prop } from 'Models/prop.model';
+import { PropOffer } from 'Models/prop-offer.model';
 
 export default {
   name: 'Offer',
   props: {
+    offer: {
+      type: PropOffer,
+      required: false,
+      default: () => new PropOffer()
+    },
     prop: {
       type: Prop,
       required: true
@@ -68,7 +74,7 @@ export default {
   data() {
     return {
       show: true,
-      amount: 0
+      amount: this.offer.amount
     };
   },
   computed: {
@@ -85,9 +91,23 @@ export default {
       this.$emit('cancel');
     },
     confirm() {
-      const data = { amount: this.amount };
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.offer.amount = this.amount;
 
-      OffersController.offer(this.prop.id, data)
+          if (this.offer.id) {
+            this.updateOffer();
+          } else {
+            this.createOffer();
+          }
+          this.cancel();
+        } else {
+          this.$alert.error('Please fill amount field with valid decimal number.');
+        }
+      });
+    },
+    createOffer() {
+      OffersController.offer(this.prop.id, this.prop.offer)
         .then((response) => {
           this.$alert.success('You have successfully made an offer!');
           this.$emit('confirm');
@@ -95,8 +115,16 @@ export default {
         .catch(() => {
           this.$alert.error('Something went wrong. Please try again!');
         });
-
-      this.cancel();
+    },
+    updateOffer() {
+      OffersController.updateOffer(this.user.id, this.offer.id, this.offer)
+        .then((response) => {
+          this.$alert.success('You have successfully updated your offer!');
+          this.$emit('confirm');
+        })
+        .catch(() => {
+          this.$alert.error('Something went wrong. Please try again!');
+        });
     }
   }
 };

@@ -94,7 +94,12 @@
     </v-container>
     <used-prop-dialog
       v-if="dialog"
-      @close="dialog=false"
+      @close="dialog = false"
+    />
+    <used-prop-dialog
+      v-if="showEditDialog"
+      :prop="propToEdit"
+      @close="propToEdit = null, showEditDialog = false"
     />
     <simple-dialog
       v-if="showDeleteDialog"
@@ -134,7 +139,9 @@ export default {
       entriesPerPage: 10,
       page: 1,
       propToDelete: null,
-      showDeleteDialog: false
+      showDeleteDialog: false,
+      propToEdit: null,
+      showEditDialog: false
     };
   },
   computed: {
@@ -183,6 +190,9 @@ export default {
       if (action === 'delete') {
         this.propToDelete = prop;
         this.showDeleteDialog = true;
+      } else if (action === 'edit') {
+        this.propToEdit = prop;
+        this.showEditDialog = true;
       }
     },
     deleteProp() {
