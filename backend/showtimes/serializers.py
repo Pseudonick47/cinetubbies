@@ -27,6 +27,7 @@ class ShowtimeSerializer(serializers.Serializer):
     allow_null=False
   )
   seats = serializers.ListField(
+    read_only=True
   )
 
   def create(self, validated_data):
