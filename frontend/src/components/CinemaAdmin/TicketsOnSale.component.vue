@@ -24,6 +24,7 @@
                   hint="Seat number cannot be 0 or negative"
                   data-vv-name="seat"
                   required
+                  box
                   type="number"/>
               </v-flex>
               <v-flex
@@ -38,8 +39,10 @@
                   :max="99"
                   label="Discount"
                   hint="Discount range: 1 - 99"
+                  suffix="%"
                   data-vv-name="discount"
                   required
+                  box
                   type="number"/>
               </v-flex>
             </v-layout>

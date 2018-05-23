@@ -67,6 +67,10 @@ get_revenue = RestrictedAPI.as_view({
   'post': 'get_revenue'
 })
 
+get_attendance = RestrictedAPI.as_view({
+  'get': 'get_attendance'
+})
+
 urlpatterns = [
   path(
     route='',
@@ -133,4 +137,9 @@ urlpatterns = [
     view=get_revenue,
     name='get-revenue'
   ),
+  path(
+    route='<int:pk>/attendance/<str:period>',
+    view=get_attendance,
+    name='get-attendance'
+  )
 ]

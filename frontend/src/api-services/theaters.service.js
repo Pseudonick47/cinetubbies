@@ -64,6 +64,10 @@ export default {
     return Axios.get(`${PREFIX}${theaterId}/auditoriums/${auditoriumId}`);
   },
 
+  getAttendance(id, period) {
+    return Axios.get(`${PREFIX}${id}/attendance/${period}`);
+  },
+
   createAuditorium(theaterId, data) {
     return Axios.post(`${PREFIX}${theaterId}/auditoriums`, data);
   },

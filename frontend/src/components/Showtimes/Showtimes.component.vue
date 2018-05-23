@@ -38,20 +38,75 @@
                   :error-messages="errors.collect('price')"
                   label="Price"
                   data-vv-name="price"
+                  suffix="$"
                   required
+                  box
+                  type="number"
                 />
               </v-flex>
               <v-layout row>
                 <v-flex>
-                  <v-date-picker
-                    v-model="showtime.date"
-                    :min="today"
-                  />
+                  <v-menu
+                    :close-on-content-click="false"
+                    v-model="dateMenu"
+                    :nudge-right="40"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    max-width="290px"
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      v-validate="'required'"
+                      slot="activator"
+                      v-model="showtime.date"
+                      :error-messages="errors.collect('date')"
+                      label="Date"
+                      hint="YYYY-MM-DD format"
+                      persistent-hint
+                      prepend-icon="event"
+                      readonly
+                      required
+                      data-vv-name="date"
+                    />
+                    <v-date-picker
+                      v-model="showtime.date"
+                      :min="today"
+                      no-title
+                      @input="dateMenu = false"/>
+                  </v-menu>
                 </v-flex>
+                <span>&emsp;</span>
                 <v-flex>
-                  <v-time-picker
-                    v-model="time"
-                  />
+                  <v-menu
+                    :close-on-content-click="false"
+                    v-model="timeMenu"
+                    :nudge-right="40"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    max-width="290px"
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      v-validate="'required'"
+                      slot="activator"
+                      v-model="time"
+                      :error-messages="errors.collect('time')"
+                      label="Time"
+                      hint="HH:mm format"
+                      persistent-hint
+                      prepend-icon="watch"
+                      readonly
+                      required
+                      data-vv-name="time"
+                    />
+                    <v-time-picker
+                      v-model="time"
+                      @input="timeMenu = false"/>
+                  </v-menu>
                 </v-flex>
               </v-layout>
             </v-layout>
@@ -228,7 +283,9 @@ export default {
     dialog: false,
     editedIndex: -1,
     filtered: false,
-    auditoriums: []
+    auditoriums: [],
+    dateMenu: false,
+    timeMenu: false
   }),
   computed: {
     ...mapGetters([
