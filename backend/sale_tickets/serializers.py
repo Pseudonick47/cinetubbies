@@ -12,6 +12,7 @@ class TicketOnSaleSerializer(serializers.Serializer):
   showtime = serializers.PrimaryKeyRelatedField(queryset=Showtime.objects.all(),allow_null=False)
   seat = serializers.IntegerField(required=True)
   discount = serializers.IntegerField(required=True)
+  deleted = serializers.IntegerField(required=True)
 
   def create(self, validated_data):
     ticket = TicketOnSale.objects.create(**validated_data)
@@ -31,7 +32,7 @@ class BookingSerializer(serializers.Serializer):
   user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=False)
   discount = serializers.IntegerField(required=False)
   price = serializers.IntegerField(required=False)
-  seat = serializers.IntegerField(required=False)
+  seat = serializers.IntegerField()
 
   def create(self, validated_data):
     booking = Booking.objects.create(**validated_data)

@@ -32,8 +32,8 @@ export default {
   },
 
   // returns theater whose admin is passed through parameter
-  getTheater(data) {
-    return Axios.get(`${PREFIX}admins/${data}/theater`);
+  getTheater(adminId) {
+    return Axios.get(`${PREFIX}admins/${adminId}/theater`);
   },
 
   update(data, id) {
@@ -56,8 +56,27 @@ export default {
     return Axios.post(`${PREFIX}${id}/revenue`, data);
   },
 
+  getAuditoriums(theaterId) {
+    return Axios.get(`${PREFIX}${theaterId}/auditoriums`);
+  },
+
+  retrieveAuditorium(theaterId, auditoriumId) {
+    return Axios.get(`${PREFIX}${theaterId}/auditoriums/${auditoriumId}`);
+  },
+
   getAttendance(id, period) {
     return Axios.get(`${PREFIX}${id}/attendance/${period}`);
-  }
+  },
 
+  createAuditorium(theaterId, data) {
+    return Axios.post(`${PREFIX}${theaterId}/auditoriums`, data);
+  },
+
+  updateAuditorium(theaterId, data) {
+    return Axios.put(`${PREFIX}${theaterId}/auditoriums/${data.id}`, data);
+  },
+
+  deleteAuditorium(theaterId, auditoriumId) {
+    return Axios.delete(`${PREFIX}${theaterId}/auditoriums/${auditoriumId}`);
+  }
 };

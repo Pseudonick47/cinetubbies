@@ -6,7 +6,7 @@ from cinetubbies.utils.routing import BaseManageView
 from .views import AdministrationAPI
 from .views import PublicAPI
 from .views import RestrictedAPI
-
+from .views import AuditoriumAPI
 
 class TheatersManageView(BaseManageView):
   VIEWS_BY_METHOD = {
@@ -53,6 +53,16 @@ get_tickets_on_sale = PublicAPI.as_view({
   'get': 'get_tickets_on_sale'
 })
 
+auditorium_list = AuditoriumAPI.as_view({
+  'get': 'list',
+  'post': 'create',
+})
+
+auditorium_detail = AuditoriumAPI.as_view({
+  'get': 'retrieve',
+  'delete': 'destroy',
+  'put': 'update'
+})
 get_revenue = RestrictedAPI.as_view({
   'post': 'get_revenue'
 })
@@ -111,6 +121,16 @@ urlpatterns = [
     route='<int:pk>/tickets-on-sale',
     view=get_tickets_on_sale,
     name='tickets-on-sale'
+  ),
+  path(
+    route='<int:theater_id>/auditoriums',
+    view=auditorium_list,
+    name='auditorium-details'
+  ),
+  path(
+    route='<int:theater_id>/auditoriums/<int:pk>',
+    view=auditorium_detail,
+    name='auditorium-details'
   ),
   path(
     route='<int:pk>/revenue',

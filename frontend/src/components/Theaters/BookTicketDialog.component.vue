@@ -17,29 +17,37 @@
         <span class="headline">Choose seat to finish booking</span>
       </v-card-title>
       <v-card-text>
-        <div class="seats-mockup"/>
+        <v-card-text>
+          <layout
+            :seats.sync="layout"
+            :last-selected.sync="selectedSeats"
+          />
 
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer/>
-        <v-btn
-          color="error darken-1"
-          flat
-          @click.native="cancel">Cancel</v-btn>
-        <v-btn
-          color="info darken-1"
-          @click.native="bookTicket">
-          book
-          <v-icon class="ml-2">send</v-icon>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer/>
+          <v-btn
+            color="error darken-1"
+            flat
+            @click.native="cancel">Cancel</v-btn>
+          <v-btn
+            color="info darken-1"
+            @click.native="bookTicket">
+            book
+            <v-icon class="ml-2">send</v-icon>
+          </v-btn>
+        </v-card-actions>
+    </v-card-text></v-card>
   </v-dialog>
 </template>
 <script>
-
+import Layout from 'Components/Auditorium/Layout.component';
+import { mapGetters } from 'vuex';
 export default {
   name: 'BookTicketDialog',
+  components: {
+    Layout
+  },
   props: {
     show: {
       type: Boolean,
@@ -52,10 +60,18 @@ export default {
   },
   data() {
     return {
-      selectedSeats: [ 1, 2, 44 ]
+      selectedSeats: []
     };
   },
   computed: {
+    layout() {
+      const showtime = this.showtime(this.showtimeId);
+      const auditorium = this.auditorium(showtime.auditorium);
+      const size = auditorium.layout[0].length;
+      let chunked = _.chunk(this.showtimeSeats(this.showtimeId), size);
+      return chunked;
+    },
+    ...mapGetters([ 'showtimeSeats', 'showtime', 'auditorium' ]),
     showThis: {
       get() {
         return this.show;
@@ -67,7 +83,7 @@ export default {
   },
   methods: {
     bookTicket() {
-      this.$emit('book-ticket', this.selectedSeats);
+      this.$emit('book-ticket', this.selectedSeats); // [ {x:1, y:4}]
     },
     cancel() {
       this.$emit('cancel');
@@ -80,6 +96,6 @@ export default {
   height: 200px;
   width: 400px;
   margin: auto;
-  background: rgb(123,123,123)
+  background: rgb(123, 123, 123);
 }
 </style>

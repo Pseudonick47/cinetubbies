@@ -7,6 +7,7 @@ from authentication.serializers import AdminSerializer
 from theaters.models import Theater
 from theaters.serializers import AdministrationSerializer
 from theaters.serializers import PublicSerializer
+from theaters.serializers import AuditoriumSerializer
 
 from movies.models import Movie
 from movies.serializers import MovieSerializer
@@ -73,12 +74,19 @@ class ShowtimeAPITests(APITestCase):
   }
 
   test_showtime = {
-      'auditorium': 'sala2',
-      'date': '2018-05-10',
-      'time': '15:00',
-      'price': 300,
-      'movie': 1
-    }
+    'auditorium': 1,
+    'date': '2018-05-10',
+    'time': '15:00',
+    'price': 300,
+    'movie': 1
+  }
+
+  auditorium = {
+    'name': 'Sala 1',
+    'theater': 1,
+    'layout': '{}'
+  }
+
 
   def setUp(self):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin)
@@ -112,6 +120,11 @@ class ShowtimeAPITests(APITestCase):
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater2)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AuditoriumSerializer(data=self.auditorium)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -163,7 +176,7 @@ class ShowtimeAPITests(APITestCase):
 
   def test_create(self):
     new_showtime = {
-      'auditorium': 'sala1',
+      'auditorium': 1,
       'date': '2018-05-07',
       'time': '15:30',
       'price': 300,
@@ -224,7 +237,7 @@ class ShowtimeAPITests(APITestCase):
 
   def test_update(self):
     update_showtime = {
-      'auditorium': 'sala2',
+      'auditorium': 1,
       'date': '2018-05-07',
       'time': '15:30',
       'price': 350,

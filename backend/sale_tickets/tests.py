@@ -10,6 +10,7 @@ from authentication.serializers import UserSerializer
 from theaters.models import Theater
 from theaters.serializers import AdministrationSerializer
 from theaters.serializers import PublicSerializer
+from theaters.serializers import AuditoriumSerializer
 
 from movies.models import Movie
 from movies.serializers import MovieSerializer
@@ -73,6 +74,12 @@ class TicketOnSaleAPITests(APITestCase):
     'admins': [2]
   }
 
+  auditorium = {
+    'name': 'Sala 1',
+    'theater': 1,
+    'layout': '{}'
+  }
+
   test_movie = {
     'title': 'title',
     'genre': 'genre',
@@ -80,7 +87,7 @@ class TicketOnSaleAPITests(APITestCase):
   }
 
   test_showtime = {
-      'auditorium': 'sala2',
+      'auditorium': 1,
       'date': '2018-05-10',
       'time': '15:00',
       'price': 300,
@@ -126,6 +133,11 @@ class TicketOnSaleAPITests(APITestCase):
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater2)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AuditoriumSerializer(data=self.auditorium)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -305,6 +317,11 @@ class BookingAPITests(APITestCase):
       raise Exception(serializer.errors)
     serializer.save()
 
+    serializer = AuditoriumSerializer(data=self.auditorium)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
     serializer = MovieSerializer(data=self.test_movie)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
@@ -352,11 +369,17 @@ class BookingAPITests(APITestCase):
   }
 
   test_showtime = {
-    'auditorium': 'Sala 2',
+    'auditorium': 1,
     'date': '2018-05-10',
     'time': '15:00',
     'price': 300,
     'movie': 1
+  }
+
+  auditorium = {
+    'name': 'Sala 1',
+    'theater': 1,
+    'layout': '{}'
   }
 
   test_theater = {

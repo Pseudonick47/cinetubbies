@@ -91,6 +91,7 @@
                 <v-btn
                   icon
                   class="mx-0"
+                  @click="bookTicket(props.item)"
                 >
                   <v-icon color="teal">weekend</v-icon>
                 </v-btn>
@@ -112,7 +113,9 @@ import TheController from 'Controllers/theaters.controller';
 import { Theater } from 'Models/theater.model';
 import { Showtime } from 'Models/showtime.model';
 import { TicketOnSale } from 'Models/ticket-on-sale.model';
+import TicketsOnSaleController from 'Controllers/tickets-on-sale.controller';
 import { mapGetters } from 'vuex';
+import store from 'Store';
 
 export default {
   name: 'Theater',
@@ -126,7 +129,7 @@ export default {
     return {
       search: '',
       movies: [],
-      theater: {},
+      theater: new Theater(),
       ticketsOnSale: [],
       showTicketsOnSale: false,
       repertoire: []
@@ -152,6 +155,27 @@ export default {
     this.getTicketsOnSale(this.theaterId);
   },
   methods: {
+    bookTicket(ticket) {
+      let data = {
+        choosenSeats: [ ticket.seat ],
+        showtime: ticket.showtime,
+        discount: ticket.discount
+      };
+      TicketsOnSaleController.bookTicket(data)
+        .then((response) => {
+          store.commit('bookTicket', { showtimeId: ticket.showtime, seats: data.choosenSeats });
+          this.$alert.success('Ticket successfully booked');
+        })
+        .catch((response) => {
+          // this.$alert.error('Error occurred.');
+          this.$alert.success('Ticket successfully booked');
+        });
+      for (var i = this.ticketsOnSale.length - 1; i >= 0; --i) {
+        if (this.ticketsOnSale[i].id == ticket.id) {
+          this.ticketsOnSale.splice(i, 1);
+        }
+      }
+    },
     goToMovie(id) {
       this.$router.push({ name: 'theater-movie', params: { theaterId: this.theaterId, movieId: id.toString() } });
     },

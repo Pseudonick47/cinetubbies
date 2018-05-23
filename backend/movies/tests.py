@@ -8,6 +8,7 @@ from authentication.serializers import AdminSerializer
 from theaters.models import Theater
 from theaters.serializers import AdministrationSerializer
 from theaters.serializers import PublicSerializer
+from theaters.serializers import AuditoriumSerializer
 
 from showtimes.models import Showtime
 from showtimes.serializers import ShowtimeSerializer
@@ -73,6 +74,13 @@ class MovieAPITests(APITestCase):
     'theater': 1
   }
 
+  auditorium = {
+    'name': 'Sala 1',
+    'theater': 1,
+    'layout': '{}'
+  }
+
+
   def setUp(self):
     serializer = TheaterAdminSerializer(data=self.test_theater_admin)
     if not serializer.is_valid():
@@ -105,6 +113,11 @@ class MovieAPITests(APITestCase):
     serializer.save()
 
     serializer = AdministrationSerializer(data=self.test_theater2)
+    if not serializer.is_valid():
+      raise Exception(serializer.errors)
+    serializer.save()
+
+    serializer = AuditoriumSerializer(data=self.auditorium)
     if not serializer.is_valid():
       raise Exception(serializer.errors)
     serializer.save()
@@ -281,7 +294,7 @@ class MovieAPITests(APITestCase):
 
     # showtimes exist
     showtime1 = {
-      'auditorium': 'sala1',
+      'auditorium': 1,
       'date': '2018-05-07',
       'time': '15:30',
       'price': 300,
@@ -289,7 +302,7 @@ class MovieAPITests(APITestCase):
     }
 
     showtime2 = {
-      'auditorium': 'sala2',
+      'auditorium': 1,
       'date': '2018-05-07',
       'time': '15:30',
       'price': 300,

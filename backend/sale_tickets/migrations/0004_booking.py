@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('discount', models.IntegerField(default=0)),
-                ('seat', models.IntegerField(default=33)),
+                ('seat', models.IntegerField()),
                 ('showtime', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='bookings', to='showtimes.Showtime')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookings', to=settings.AUTH_USER_MODEL)),
             ],

@@ -1,4 +1,5 @@
 import * as alert from './alert.store';
+import * as auditoriums from './auditorium.store';
 import * as auth from './auth.store';
 import * as chart from './chart.store';
 import * as miscellaneous from './miscellaneous.store';
@@ -12,6 +13,7 @@ import * as ticketsOnSale from './tickets-on-sale.store';
 
 export {
   alert,
+  auditoriums,
   auth,
   chart,
   miscellaneous,

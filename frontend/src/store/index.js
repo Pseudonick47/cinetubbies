@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import {
   alert,
+  auditoriums,
   auth,
   chart,
   miscellaneous,
@@ -20,6 +21,7 @@ Vue.use(Vuex);
 const storeData = {
   modules: {
     alert,
+    auditoriums,
     auth,
     chart,
     miscellaneous,
