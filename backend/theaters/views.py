@@ -158,7 +158,7 @@ class RestrictedAPI(ViewSet):
   @action(detail=True)
   def get_attendance(self, request, pk=None, period=None):
     all_bookings = Booking.objects.all()
-    this_theater_bookings = list(all_bookings.filter(showtime__movie__theater__id=pk))
+    this_theater_bookings = list(all_bookings.filter(showtime__movie__theater__id=pk).exclude(user_id__isnull=True))
     result = []
     date = datetime.now()
 
