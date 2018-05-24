@@ -22,6 +22,7 @@
     "vue-datetime-picker": "^0.2.1",
     "vue-router": "^3.0.1",
     "vue-star-rating": "^1.5.1",
+    "vue2-google-maps": "^0.9.7",
     "vuetify": "^1.0.8",
     "vuex": "^3.0.1"
   },

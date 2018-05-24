@@ -104,10 +104,14 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <g-map
+      :cinema="theater.position"
+    />
   </div>
 </template>
 
 <script>
+import GMap from 'Components/Map.component';
 import TheaterController from 'Controllers/system-admin.controller';
 import TheController from 'Controllers/theaters.controller';
 import { Theater } from 'Models/theater.model';
@@ -119,6 +123,9 @@ import store from 'Store';
 
 export default {
   name: 'Theater',
+  components: {
+    GMap
+  },
   props: {
     theaterId: {
       type: String,
