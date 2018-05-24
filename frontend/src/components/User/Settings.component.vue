@@ -36,23 +36,6 @@
               @change="imageSelected"
             >
           </v-layout>
-          <v-layout
-            row
-            mt-4
-          >
-            <v-flex
-              xs12
-              justify-center
-              style="display: flex"
-            >
-              <v-date-picker
-                v-model="user.birth_date"
-                year-icon="mdi-calendar-blank"
-                prev-icon="mdi-skip-previous"
-                next-icon="mdi-skip-next"
-              />
-            </v-flex>
-          </v-layout>
         </v-flex>
         <v-flex
           xs-12
@@ -140,11 +123,6 @@ export default {
         },
         {}
       );
-      if (data.birth_date) {
-        data.birth_date = moment(data.birth_date, 'YYYY-MM-DD').format(
-          'YYYY-MM-DDThh:mm'
-        );
-      }
       this.$validator.validateAll().then(result => {
         if (result) {
           if (this.selectedImage === null) {
