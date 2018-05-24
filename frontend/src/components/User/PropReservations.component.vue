@@ -9,6 +9,7 @@
         :key="reservation.id"
         row
         justify-center
+        mt-3
       >
         <v-flex
           xs10
@@ -82,12 +83,12 @@
                 xs2
                 align-center
               >
-                <v-btn
+                <!-- <v-btn
                   flat
                   block
                   color="primary"
                   @click="reservationToEdit = reservation; showEditDialog = true"
-                >Edit</v-btn>
+                >Edit</v-btn> -->
               </v-flex>
               <v-flex
                 xs2
@@ -111,18 +112,27 @@
       @cancel="showCancelDialog = false; reservationToCancel = null"
       @confirm="cancelReservation"
     />
+    <book-dialog
+      v-if="showEditDialog"
+      :reservation="reservationToEdit"
+      :prop="reservationToEdit.prop"
+      @cancel="showEditDialog = false"
+      @confirm="showEditDialog = false"
+    />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
 
+import BookDialog from 'Components/FanZone/Dialogs/BookProp.component';
 import ReservationsController from 'Controllers/props/reservations.controller';
 import SimpleDialog from 'Components/helpers/SimpleDialog.component';
 
 export default {
   name: 'PropReservations',
   components: {
-    SimpleDialog
+    SimpleDialog,
+    BookDialog
   },
   data() {
     return {
@@ -149,12 +159,15 @@ export default {
     },
     cancelReservation() {
       ReservationsController.cancelReservation(this.user.id, this.reservationToCancel.id)
-        .then(() => {
+        .then((response) => {
+          this.$store.commit('props/reservations/delete', response.data.id);
           this.$alert.success('Reservation is canceled!');
         })
         .catch(() => {
           this.$alert.error('Something went wrong. Please try again!');
         });
+
+      this.reservationToCancel = null;
     },
     summerize(prop) {
       if (prop.description.length > 32) {

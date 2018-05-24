@@ -26,7 +26,7 @@ class PublicSerializer(serializers.Serializer):
     min_value=1
   )
 
-class MemberSerializer(serializers.Serializer):
+class MemberSerializer(PublicSerializer):
   user_id =  serializers.PrimaryKeyRelatedField(
     queryset=User.objects.all(),
     write_only=True,

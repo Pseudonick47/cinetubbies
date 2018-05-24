@@ -9,6 +9,7 @@
         :key="offer.id"
         row
         justify-center
+        mt-3
       >
         <v-flex
           sm10
@@ -159,7 +160,8 @@ export default {
     },
     deleteOffer() {
       OffersController.deleteOffer(this.user.id, this.offerToDelete.id)
-        .then(() => {
+        .then((response) => {
+          this.$store.commit('props/offers/delete', response.data.id);
           this.$alert.success('Offer deleted!');
         })
         .catch(() => {

@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
@@ -48,6 +49,8 @@ class PublicAPI(ViewSet):
     title = request.GET.get('title')
     if title:
       queryset = queryset.filter(title__contains=title)
+
+    queryset = queryset.exclude(Q(kind='U'), Q(approved=False))
 
     num = request.GET.get('num') or 10
     paginator = Paginator(queryset.order_by('title'), num)

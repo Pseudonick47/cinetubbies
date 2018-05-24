@@ -15,6 +15,15 @@ const getters = {
 const mutations = {
   setReservations(state, reservations) {
     state.reservations = _.map(reservations, (r) => new PropReservation(r));
+  },
+
+  delete(state, id) {
+    const index = _.findIndex(state.reservations, (r) => r.id == id);
+    state.reservations.splice(index, 1);
+  },
+
+  insert(state, reservation) {
+    state.reservations.push(new PropReservation(reservation));
   }
 };
 

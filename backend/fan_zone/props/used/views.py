@@ -47,9 +47,10 @@ class PublicAPI(ViewSet):
     if not all:
       approved = request.GET.get('approved')
       if approved is not None:
-        queryset = queryset.filter(approved=distutils.util.strtobool(approved))
+        #TODO: fix this
+        queryset = queryset.filter(pending_approval=distutils.util.strtobool(approved))
       else:
-        queryset = queryset.filter(approved=True)
+        queryset = queryset.filter(pending_approval=True)
 
     return Response(data=queryset.count())
 
@@ -68,9 +69,9 @@ class PublicAPI(ViewSet):
     if not all:
       approved = request.GET.get('approved')
       if approved is not None:
-        queryset = queryset.filter(approved=distutils.util.strtobool(approved))
+        queryset = queryset.filter(pending_approval=distutils.util.strtobool(approved))
       else:
-        queryset = queryset.filter(approved=True)
+        queryset = queryset.filter(pending_approval=True)
 
     num = request.GET.get('num') or 10
     paginator = Paginator(queryset.order_by('title'), num)

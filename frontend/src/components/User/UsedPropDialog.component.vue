@@ -221,7 +221,6 @@ export default {
         if (this.selectedImage) {
           this.postImage()
             .then((response) => {
-              console.log(response.data);
               this.saveProp(response.data.id);
             })
             .catch(() => {

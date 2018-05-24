@@ -50,9 +50,8 @@ const mutations = {
   },
 
   deleteProp(state, id) {
-    console.log(state.props);
-    _.remove(state.props, (p) => p.id == id);
-    console.log(state.props);
+    const index = _.findIndex(state.props, (p) => p.id == id);
+    state.props.splice(index, 1);
   }
 };
 

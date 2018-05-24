@@ -15,6 +15,15 @@ const getters = {
 const mutations = {
   set(state, offers) {
     state.offers = _.map(offers, (o) => new PropOffer(o));
+  },
+
+  delete(state, id) {
+    const index = _.findIndex(state.offers, (p) => p.id == id);
+    state.offers.splice(index, 1);
+  },
+
+  insert(state, offer) {
+    state.offers.push(new PropOffer(offer));
   }
 };
 

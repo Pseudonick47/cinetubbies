@@ -8,52 +8,10 @@
         class="content-container"
         row
       >
-        <transition name="slide-fade">
-          <v-flex
-            v-if="drawer"
-            sm2
-          >
-            <v-navigation-drawer
-              v-model="drawer"
-              style="padding: 0 !important"
-              clipped
-            >
-              <h1 class="pa-3 prop-info-highlight">My Props</h1>
-              <v-expansion-panel class="elevation-0">
-                <v-expansion-panel-content
-                  hide-actions
-                  ripple
-                >
-                  <div
-                    slot="header"
-                    @click.stop="categorySelected(-1)"
-                  >
-                    Display All Props
-                  </div>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <categories
-                :collection="rootCategories"
-                @select="categorySelected"
-              />
-            </v-navigation-drawer>
-          </v-flex>
-        </transition>
         <v-flex
-          xs2
-          sm1
-          style="display: flex; align-items: center;"
-        >
-          <v-btn
-            fab
-            small
-            color="black"
-            style="transform: scale(0.8);"
-            @click="drawer = !drawer"
-          >
-            <v-icon>keyboard_arrow_left</v-icon>
-          </v-btn>
-        </v-flex>
+          hidden-sm-and-down
+          md1
+        />
         <v-flex>
           <v-container py-5>
             <v-layout
@@ -86,8 +44,8 @@
           </v-container>
         </v-flex>
         <v-flex
-          xs2
-          sm1
+          hidden-sm-and-down
+          md1
         />
       </v-layout>
     </v-container>
@@ -133,13 +91,13 @@ export default {
   },
   watch: {
     page() {
-      PropsController.requestPage(this.page, { approved: false });
+      PropsController.requestPage(this.page, { approved: true });
     }
   },
   beforeMount() {
     CategoriesController.requestCategories();
-    PropsController.requestCount({ approved: false });
-    PropsController.requestPage(this.page, { approved: false });
+    PropsController.requestCount({ approved: true });
+    PropsController.requestPage(this.page, { approved: true });
   },
   methods: {
     categorySelected(id) {
@@ -155,11 +113,11 @@ export default {
       PropsController.requestPage(this.page, payload);
     },
     changePropStatus(payload) {
-      const { id, action } = payload;
+      const { prop, action } = payload;
 
       const decision = action === 'approve';
 
-      PropsController.reviewProp(id, { approve: decision })
+      PropsController.reviewProp(prop.id, { approve: decision })
         .then((response) => {
           this.$alert.success('Prop successfully reviewed.');
 

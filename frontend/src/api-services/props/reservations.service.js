@@ -16,5 +16,9 @@ export default {
 
   deleteReservation(userId, id) {
     return Axios.delete(`${USERS}${userId}/${RESERVATIONS}${id}`);
+  },
+
+  putReservation(userId, id, data) {
+    return Axios.put(`${USERS}${userId}/${RESERVATIONS}${id}`, data);
   }
 };

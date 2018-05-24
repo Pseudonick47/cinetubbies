@@ -109,6 +109,7 @@ export default {
     createOffer() {
       OffersController.offer(this.prop.id, this.offer)
         .then((response) => {
+          this.$store.commit('props/offers/insert', response.data);
           this.$alert.success('You have successfully made an offer!');
           this.$emit('confirm');
         })

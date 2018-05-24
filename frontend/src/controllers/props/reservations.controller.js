@@ -15,5 +15,9 @@ export default {
 
   cancelReservation(userId, id) {
     return Service.deleteReservation(userId, id);
+  },
+
+  updateReservation(userId, reservationId, data) {
+    return Service.putReservation(userId, reservationId, data);
   }
 };

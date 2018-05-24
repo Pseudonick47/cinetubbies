@@ -82,19 +82,25 @@ import { mapGetters } from 'vuex';
 import ReservationController from 'Controllers/props/reservations.controller';
 
 import { Prop } from 'Models/prop.model';
+import { PropReservation } from 'Models/prop-reservation.model';
 
 export default {
   name: 'BookProp',
   props: {
+    reservation: {
+      type: PropReservation,
+      required: false,
+      default: () => new PropReservation()
+    },
     prop: {
-      type: Prop,
+      type: [ Prop, Object ],
       required: true
     }
   },
   data() {
     return {
       show: true,
-      num: 1,
+      num: this.reservation.quantity,
       incBtn: this.prop.quantity != 1,
       decBtn: false,
       repeat: false
@@ -151,23 +157,41 @@ export default {
       this.$emit('cancel');
     },
     confirm() {
-      const data = {
-        userId: this.user.id,
-        propId: this.prop.id,
-        quantity: this.num
-      };
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.reservation.quantity = this.num;
 
-      ReservationController.reservate(this.prop.id, data)
-        .then(() => {
-          this.prop.quantity -= this.num;
-          this.$alert.success('Your reservation was successful');
-          this.$emit('confirm', this.num);
+          if (this.reservation.id) {
+            this.update();
+          } else {
+            this.create();
+          }
+          this.cancel();
+        } else {
+          this.$alert.error('Please fill amount field with valid decimal number.');
+        }
+      });
+    },
+    create() {
+      ReservationController.reservate(this.prop.id, this.reservation)
+        .then((response) => {
+          this.$store.commit('props/reservations/insert', response.data);
+          this.$alert.success('Your reservation is successful!');
+          this.$emit('confirm');
         })
         .catch(() => {
           this.$alert.error('Something went wrong. Please try again!');
         });
-
-      this.cancel();
+    },
+    update() {
+      ReservationController.updateReservation(this.user.id, this.reservation.id, this.reservation)
+        .then((response) => {
+          this.$alert.success('You have successfully updated your reservation!');
+          this.$emit('confirm');
+        })
+        .catch(() => {
+          this.$alert.error('Something went wrong. Please try again!');
+        });
     }
   }
 };
