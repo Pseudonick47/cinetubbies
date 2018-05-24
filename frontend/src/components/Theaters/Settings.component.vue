@@ -10,9 +10,8 @@
       style="height: auto"
     >
       <v-flex
-        xs12
-        sm12
-        md4
+        xs-12
+        sm5
       >
         <v-chip
           color="white"
@@ -40,134 +39,173 @@
             height="200px"
           />
         </v-card>
+        <form>
+          <v-text-field
+            v-model="theater.name"
+            label="Name"
+          />
+          <v-text-field
+            v-model="theater.address"
+            label="Address"
+          />
+          <v-text-field
+            v-model="theater.description"
+            label="Description"
+          />
+          <v-layout row>
+            <span>Theater image:</span>
+            <v-divider/>
+            <input
+              type="file"
+              @change="imageSelected"
+          ></v-layout>
+          <v-btn @click="confirmSubmit = true">submit</v-btn>
+        </form>
+        <v-dialog
+          v-model="confirmSubmit"
+          persistent
+          max-width="300px"
+        >
+          <v-card>
+            <v-card-text>
+              Submit changes?
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="submit">yes</v-btn>
+              <v-spacer/>
+              <v-btn @click="confirmSubmit = false">no</v-btn>
+            </v-card-actions>
+
+          </v-card>
+        </v-dialog>
       </v-flex>
-    </v-layout>
-    <v-layout
-      column
-      style="height: auto"
-      mb-5
-      px-4
-    >
-      <v-flex
-        mt-2
-        xs-12
-        offset-lg1
+      <v-layout
+        column
+        style="height: auto"
+        mb-5
+        px-4
       >
-        <v-card>
-          <v-card-title>
-            Theater repertoire
-            <v-spacer/>
-          </v-card-title>
-          <v-data-table
-            :items="repertoire"
-            :headers="headers"
-            item-key="date"
-            class="elevation-1"
-          >
-            <template
-              slot="items"
-              slot-scope="props">
-              <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
-              <td>{{ findObjectById(auditoriums, props.item.auditorium).name }} </td>
-              <td>{{ props.item.date }}</td>
-              <td>{{ props.item.time }}</td>
-              <td>{{ props.item.price }}</td>
-            </template>
-            <template slot="no-data">
-              Sorry, nothing to display here.
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-flex>
-      <v-flex
-        mt-4
-        xs-12
-        offset-lg1
-      >
-        <v-card>
-          <v-card-title>
-            Tickets on sale
-            <v-spacer/>
-          </v-card-title>
-          <v-data-table
-            :items="tickets"
-            :headers="ticketsHeaders"
-            item-key="date"
-            class="elevation-1"
-          >
-            <template
-              slot="items"
-              slot-scope="props">
-              <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
-              <td>{{ findObjectById(auditoriums, getObjAttr(repertoire, props.item.showtime, 'auditorium')).name }} </td>
-              <td>{{ props.item.seat }} </td>
-              <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
-              <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
-              <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
-              <td>{{ props.item.discount }}</td>
-            </template>
-            <template slot="no-data">
-              Sorry, nothing to display here.
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-flex>
-      <v-flex
-        mt-4
-        xs-12
-        offset-lg1
-      >
-        <v-card>
-          <v-card-title>
-            Auditoriums
-            <v-spacer/>
-            <v-btn
-              icon
-              @click="openAddAuditoriumDialog"
+        <v-flex
+          mt-2
+          xs-12
+          offset-lg1
+        >
+          <v-card>
+            <v-card-title>
+              Theater repertoire
+              <v-spacer/>
+            </v-card-title>
+            <v-data-table
+              :items="repertoire"
+              :headers="headers"
+              item-key="date"
+              class="elevation-1"
             >
-              <v-icon color="accent">add_circle_outline</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-data-table
-            :items="auditoriums"
-            hide-headers
-            item-key="date"
-            class="elevation-1"
-          >
-            <template
-              slot="items"
-              slot-scope="props">
-              <td>
-                <v-layout row>
-                  <v-flex
-                    md10
-                    mt-3>
-                    <p>{{ props.item.name }}</p>
-                  </v-flex>
-                  <v-flex
-                    md2
-                    xs2
-                    lg2>
-                    <v-btn
-                      icon
-                      @click="editAuditorium(props.item.id)">
-                      <v-icon color="accent">edit</v-icon>
-                    </v-btn>
-                    <v-btn
-                      icon
-                      @click="deleteAuditorium(props.item.id)">
-                      <v-icon color="accent">delete</v-icon>
-                    </v-btn>
-                  </v-flex>
-                </v-layout>
-              </td>
-            </template>
-            <template slot="no-data">
-              Sorry, nothing to display here.
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-flex>
+              <template
+                slot="items"
+                slot-scope="props">
+                <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
+                <td>{{ findObjectById(auditoriums, props.item.auditorium).name }} </td>
+                <td>{{ props.item.date }}</td>
+                <td>{{ props.item.time }}</td>
+                <td>{{ props.item.price }}</td>
+              </template>
+              <template slot="no-data">
+                Sorry, nothing to display here.
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-flex>
+        <v-flex
+          mt-4
+          xs-12
+          offset-lg1
+        >
+          <v-card>
+            <v-card-title>
+              Tickets on sale
+              <v-spacer/>
+            </v-card-title>
+            <v-data-table
+              :items="tickets"
+              :headers="ticketsHeaders"
+              item-key="date"
+              class="elevation-1"
+            >
+              <template
+                slot="items"
+                slot-scope="props">
+                <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
+                <td>{{ findObjectById(auditoriums, getObjAttr(repertoire, props.item.showtime, 'auditorium')).name }} </td>
+                <td>{{ props.item.seat }} </td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
+                <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
+                <td>{{ props.item.discount }}</td>
+              </template>
+              <template slot="no-data">
+                Sorry, nothing to display here.
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-flex>
+        <v-flex
+          mt-4
+          xs-12
+          offset-lg1
+        >
+          <v-card>
+            <v-card-title>
+              Auditoriums
+              <v-spacer/>
+              <v-btn
+                icon
+                @click="openAddAuditoriumDialog"
+              >
+                <v-icon color="accent">add_circle_outline</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-data-table
+              :items="auditoriums"
+              hide-headers
+              item-key="date"
+              class="elevation-1"
+            >
+              <template
+                slot="items"
+                slot-scope="props">
+                <td>
+                  <v-layout row>
+                    <v-flex
+                      md10
+                      mt-3>
+                      <p>{{ props.item.name }}</p>
+                    </v-flex>
+                    <v-flex
+                      md2
+                      xs2
+                      lg2>
+                      <v-btn
+                        icon
+                        @click="editAuditorium(props.item.id)">
+                        <v-icon color="accent">edit</v-icon>
+                      </v-btn>
+                      <v-btn
+                        icon
+                        @click="deleteAuditorium(props.item.id)">
+                        <v-icon color="accent">delete</v-icon>
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </td>
+              </template>
+              <template slot="no-data">
+                Sorry, nothing to display here.
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-flex>
+      </v-layout>
     </v-layout>
     <auditorium-dialog
       v-if="showAddAuditoriumModal"
