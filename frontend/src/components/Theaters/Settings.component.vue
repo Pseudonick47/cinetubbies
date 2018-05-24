@@ -185,16 +185,18 @@
                       md2
                       xs2
                       lg2>
-                      <v-btn
-                        icon
-                        @click="editAuditorium(props.item.id)">
-                        <v-icon color="accent">edit</v-icon>
-                      </v-btn>
-                      <v-btn
-                        icon
-                        @click="deleteAuditorium(props.item.id)">
-                        <v-icon color="accent">delete</v-icon>
-                      </v-btn>
+                      <v-layout row>
+                        <v-btn
+                          icon
+                          @click="editAuditorium(props.item.id)">
+                          <v-icon color="accent">edit</v-icon>
+                        </v-btn>
+                        <v-btn
+                          icon
+                          @click="deleteAuditorium(props.item.id)">
+                          <v-icon color="accent">delete</v-icon>
+                        </v-btn>
+                      </v-layout>
                     </v-flex>
                   </v-layout>
                 </td>
