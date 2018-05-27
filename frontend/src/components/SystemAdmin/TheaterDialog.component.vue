@@ -30,6 +30,19 @@
             type="text"
             required
           />
+
+          <v-expansion-panel>
+            <v-expansion-panel-content>
+              <div slot="header">Set location</div>
+              <v-card>
+                <g-map
+                  :read-only="false"
+                  @marker-updated="setMarker"
+                />
+              </v-card>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+
           <v-radio-group
             v-validate="'required'"
             v-model="theater.kind"
@@ -77,17 +90,23 @@
   </v-dialog>
 </template>
 <script>
+import GMap from 'Components/Map.component';
 import SystemAdminController from 'Controllers/system-admin.controller';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'TheaterDialog',
+  components: {
+    GMap
+  },
   data() {
     return {
       show: true,
       theater: {
         name: '',
         address: '',
+        lat: 0,
+        lng: 0,
         kind: 'cinema',
         theateradmins: [],
         fanzoneadmins: []
@@ -101,6 +120,10 @@ export default {
     })
   },
   methods: {
+    setMarker(position) {
+      this.theater.lat = position.lat;
+      this.theater.lng = position.lng;
+    },
     close() {
       this.show = false;
       this.$emit('close');

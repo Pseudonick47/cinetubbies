@@ -95,8 +95,6 @@ import UsersController from 'Controllers/users.controller';
 import { mapGetters } from 'vuex';
 import MediaService from 'Api/media-upload.service';
 
-var moment = require('moment');
-
 export default {
   name: 'UserSettings',
 

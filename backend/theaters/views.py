@@ -42,8 +42,8 @@ class PublicAPI(ViewSet):
 
   def list(self, request):
     all = request.GET.get('all')
-    if all:
-      return Response(data=PublicSerializer(self.queryset, many=True).data)
+    # if all:
+    #   return Response(data=PublicSerializer(self.queryset, many=True).data)
 
     num = request.GET.get('num')
     paginator = Paginator(self.queryset.order_by('name'), num if num else 10)
@@ -171,7 +171,7 @@ class RestrictedAPI(ViewSet):
     elif period == 'month':
       this_year_month_bookings = [b for b in this_theater_bookings if (b.showtime.date.year == date.year and b.showtime.date.month == date.month)]
       for i in range(1, 32):
-        result.append(len( [b for b in this_year_month_bookings if b.showtime.date.day == i]))      
+        result.append(len( [b for b in this_year_month_bookings if b.showtime.date.day == i]))
     else:
       week = date.isocalendar()[1]
       this_week_bookings = [b for b in this_theater_bookings if (b.showtime.date.year == date.year and b.showtime.date.isocalendar()[1] == week)]

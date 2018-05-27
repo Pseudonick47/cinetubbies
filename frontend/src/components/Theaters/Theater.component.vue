@@ -104,9 +104,20 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <g-map
-      :cinema="theater.position"
-    />
+    <v-layout
+      justify-space-between
+      class="my-3 px-3"
+      style="height: auto"
+    >
+      <v-flex
+        md6
+        xs6>
+        <g-map
+          v-if="theater.position"
+          :cinema="theater.position"
+        />
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
