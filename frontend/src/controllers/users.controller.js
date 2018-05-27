@@ -9,8 +9,8 @@ export default {
     });
   },
 
-  getFriends(userId) {
-    return UsersApiService.getFriends(userId);
+  getProfile(userId) {
+    return UsersApiService.getProfile(userId);
   },
 
   getAllUsers() {

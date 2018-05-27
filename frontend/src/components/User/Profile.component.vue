@@ -3,9 +3,73 @@
     row
     wrap
     pa-4>
+    <v-flex xs7>
+      <v-card color="black">
+        <v-card-title>
+          <v-layout
+            row
+            wrap
+            align-center>
+            <div class="title">Bookings</div>
+            <!-- <v-spacer/>
+            <v-text-field
+              v-model="searchBookings"
+              append-icon="search"
+              label="Search"
+              single-line
+              hide-details
+              style="position: relative; top: -10px;"
+            /> -->
+          </v-layout>
+        </v-card-title>
+        <v-data-table
+          v-if="bookings.length"
+          :items="bookings"
+          hide-headers
+          hide-actions
+          item-key="date"
+          class="elevation-1"
+        >
+          <template
+            slot="items"
+            slot-scope="props">
+            <!-- <td>
+              <v-flex
+                xs4
+                sm2
+                md1>
+                <v-avatar
+                  slot="activator"
+                  size="36px"
+                >
+                  <img
+                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                    alt=""
+                  >
+                </v-avatar>
+              </v-flex>
+            </td> -->
+            <td>{{ `${props.item.id}` }}</td>
+            <td>{{ `seat: ${props.item.seat}` }}</td>
+            <td class="text-xs-right">{{ props.item.showtime.time }}</td>
+            <td class="text-xs-right">{{ props.item.showtime.price }}</td>
+            <td class="text-xs-right">{{ `${props.item.discount} %` }}</td>
+            <!-- <td class="justify-center layout px-0">
+              <v-btn
+                icon
+                class="mx-0"
+                @click="removeBooking(props.item.id)">
+                <v-icon color="pink">remove_circle_outline</v-icon>
+              </v-btn>
+            </td> -->
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-flex>
     <v-flex
-      xs5
-      offset-xs7>
+      xs4
+      offset-xs1
+    >
       <v-card color="black">
         <v-card-title>
           <v-layout
@@ -70,56 +134,58 @@
             </td>
           </template>
         </v-data-table>
-        <hr>
-        <hr>
-        <br>
-        <hr>
-        <hr>
-        <v-data-table
-          v-if="friendRequests.length"
-          :items="friendRequests"
-          hide-headers
-          hide-actions
-          item-key="date"
-          class="elevation-1"
-        >
-          <template
-            slot="items"
-            slot-scope="props">
-            <td>
-              <v-flex
-                xs4
-                sm2
-                md1>
-                <v-avatar
-                  slot="activator"
-                  size="36px"
-                >
-                  <img
-                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                    alt=""
+        <template v-if="friendRequests.length">
+          <hr>
+          <hr>
+          <br>
+          <hr>
+          <hr>
+          <v-data-table
+            :items="friendRequests"
+            hide-headers
+            hide-actions
+            item-key="date"
+            class="elevation-1"
+          >
+            <template
+              slot="items"
+              slot-scope="props">
+              <td>
+                <v-flex
+                  xs4
+                  sm2
+                  md1>
+                  <v-avatar
+                    slot="activator"
+                    size="36px"
                   >
-                </v-avatar>
-              </v-flex>
-            </td>
-            <td>{{ `${props.item.first_name} ${props.item.last_name}` }}</td>
-            <td class="text-xs-right">{{ props.item.city }}</td>
-            <td class="justify-center layout px-0">
-              <v-btn
-                icon
-                class="mx-0"
-                @click="addFriend(props.item.id)">
-                <v-icon color="teal">check</v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                class="mx-0"
-                @click="declineRequest(props.item.id)">
-                <v-icon color="pink">clear</v-icon>
-              </v-btn>
-            </td>
-          </template>
-      </v-data-table>      </v-card>
+                    <img
+                      src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                      alt=""
+                    >
+                  </v-avatar>
+                </v-flex>
+              </td>
+              <td>{{ `${props.item.first_name} ${props.item.last_name}` }}</td>
+              <td class="text-xs-right">{{ props.item.city }}</td>
+              <td class="justify-center layout px-0">
+                <v-btn
+                  icon
+                  class="mx-0"
+                  @click="addFriend(props.item.id)">
+                  <v-icon color="teal">check</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  class="mx-0"
+                  @click="declineRequest(props.item.id)">
+                  <v-icon color="pink">clear</v-icon>
+                </v-btn>
+              </td>
+            </template>
+          </v-data-table>
+        </template>
+      </v-card>
     </v-flex>
     <add-friend-modal
       v-if="showAddFriend"
@@ -141,6 +207,7 @@ export default {
   },
   data: () => ({
     showAddFriend: false,
+    bookings: [],
     search: '',
     users: [],
     pagination: {},
@@ -159,9 +226,10 @@ export default {
     }
   },
   created() {
-    UsersController.getFriends(this.activeUser.id).then((response) => {
+    UsersController.getProfile(this.activeUser.id).then((response) => {
       this.allFriends = response.data.friends;
       this.allFriendRequests = response.data.friend_requests;
+      this.bookings = response.data.bookings;
     });
   },
   methods: {

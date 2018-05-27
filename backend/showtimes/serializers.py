@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import Movie, Showtime
 from theaters.models import Auditorium
-from sale_tickets.serializers import BookingSerializer
 
 class ShowtimeSerializer(serializers.Serializer):
   id = serializers.IntegerField(

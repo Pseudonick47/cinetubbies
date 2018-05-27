@@ -14,6 +14,8 @@ from rest_framework_jwt.settings import api_settings
 
 from theaters.serializers import PublicSerializer as TheaterSerializer
 
+from sale_tickets.serializers import BookingFullSerializer
+
 from .models import FAN_ZONE_ADMIN
 from .models import Friendship
 from .models import TheaterAdmin
@@ -149,9 +151,15 @@ class FriendViewSet(viewsets.ViewSet):
   def retrieve(self, request, pk=None):
     queryset = User.objects.all()
     user = get_object_or_404(queryset, id=pk)
+
+    bookings = user.bookings.select_related('showtime')
+    # print(bookings[0].showtime)
+
+
     data = {
       'friends': FriendSerializer(user.friends(), many=True).data,
-      'friend_requests': FriendSerializer(user.friend_requests(), many=True).data
+      'friend_requests': FriendSerializer(user.friend_requests(), many=True).data,
+      'bookings': BookingFullSerializer(bookings, many=True).data,
     }
     return Response(data)
 

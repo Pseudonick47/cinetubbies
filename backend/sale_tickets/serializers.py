@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import TicketOnSale
 from .models import Booking
 from showtimes.models import Showtime
+from showtimes.serializers import ShowtimeSerializer
 from theaters.models import Theater
 from authentication.models import User
 
@@ -43,3 +44,6 @@ class BookingSerializer(serializers.Serializer):
     [setattr(booking, k, v) for k, v in validated_data.items()]
     booking.save()
     return ticket
+
+class BookingFullSerializer(BookingSerializer):
+  showtime = ShowtimeSerializer()

@@ -11,7 +11,7 @@ export default {
     return Axios.patch(`${PREFIX}${ENDPOINTS.PROFILE}${id}/`, data);
   },
 
-  getFriends(id) {
+  getProfile(id) {
     return Axios.get(`${PREFIX}${id}/${ENDPOINTS.FRIENDS}`);
   },
 
