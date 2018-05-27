@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
         # this might cause problems later
         ('theaters', '__latest__'),
         ('showtimes', '0002_showtime_movie'),
+        ('theaters', '0008_merge_20180527_0016'),
     ]
 
     operations = [

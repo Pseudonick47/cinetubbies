@@ -12,7 +12,10 @@ export class Theater {
     this.kind = '';
     this.description = '';
     this.rating = null;
-    this.position = { lat: Number(data.lat), lng: Number(data.lng) };
+    this.image = '';
+    this.position = data ?
+      { lat: Number(data.lat || 1), lng: Number(data.lng || 0) } :
+      { lat: 1, lng: 2 };
     _.assignWith(this, data);
 
     if (this.image) {
