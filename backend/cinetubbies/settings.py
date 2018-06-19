@@ -111,9 +111,9 @@ DATABASES = {
 }
 
 # for docker
-# DATABASES['default'].update({
-#   'HOST': 'db',
-# })
+DATABASES['default'].update({
+  'HOST': 'db',
+})
 
 # for unit tests
 import sys

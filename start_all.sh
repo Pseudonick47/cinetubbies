@@ -4,5 +4,9 @@
 # Start Backend stack (in detached mode)
 docker-compose up -d
 
-# Start Frontend
-bash -c 'cd frontend; yarn run dev'
+if [ "$1" != "production" ];
+then
+  # Start Frontend dev server
+  cd frontend
+  yarn run dev
+fi
