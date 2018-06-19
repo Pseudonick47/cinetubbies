@@ -14,15 +14,29 @@
     </v-btn> -->
     <v-card>
       <v-card-title>
-        <span class="headline">Choose seat to finish booking</span>
+        <span class="headline"> {{ isInvitingFriends ? 'Select friends to invite' : 'Choose seat to finish booking' }}</span>
       </v-card-title>
       <v-card-text>
         <v-card-text>
-          <layout
-            :seats.sync="layout"
-            :last-selected.sync="selectedSeats"
-          />
-
+          <template v-if="!isInvitingFriends">
+            <layout
+              :seats.sync="layout"
+              :last-selected.sync="selectedSeats"
+            />
+          </template>
+          <template v-else>
+            <v-select
+              v-model="selectedFriends"
+              :items="allFriends"
+              item-text="first_name"
+              item-value="id"
+              label="Select friends"
+              multiple
+              max-height="400"
+              hint="Pick friends you would like to invite"
+              persistent-hint
+            />
+          </template>
         </v-card-text>
         <v-card-actions>
           <v-spacer/>
@@ -31,10 +45,18 @@
             flat
             @click.native="cancel">Cancel</v-btn>
           <v-btn
+            v-if="!isInvitingFriends"
             color="info darken-1"
             @click.native="bookTicket">
             book
             <v-icon class="ml-2">send</v-icon>
+          </v-btn>
+          <v-btn
+            v-else
+            color="info darken-1"
+            @click.native="inviteFriends">
+            invite
+            <v-icon class="ml-2">email</v-icon>
           </v-btn>
         </v-card-actions>
     </v-card-text></v-card>
@@ -42,7 +64,9 @@
 </template>
 <script>
 import Layout from 'Components/Auditorium/Layout.component';
+import UsersController from 'Controllers/users.controller';
 import { mapGetters } from 'vuex';
+
 export default {
   name: 'BookTicketDialog',
   components: {
@@ -60,10 +84,16 @@ export default {
   },
   data() {
     return {
+      isInvitingFriends: false,
+      allFriends: [],
+      selectedFriends: [],
       selectedSeats: []
     };
   },
   computed: {
+    ...mapGetters([
+      'activeUser'
+    ]),
     layout() {
       const showtime = this.showtime(this.showtimeId);
       const auditorium = this.auditorium(showtime.auditorium);
@@ -81,12 +111,24 @@ export default {
       }
     }
   },
+  created() {
+    UsersController.getProfile(this.activeUser.id).then((response) => {
+      this.allFriends = response.data.friends;
+    });
+  },
   methods: {
     bookTicket() {
-      this.$emit('book-ticket', this.selectedSeats); // [ {x:1, y:4}]
+      let mayInviteFriends = !!(this.selectedSeats.length - 1);
+      // [ {x:1, y:4}]
+      this.$emit('book-ticket', this.selectedSeats, mayInviteFriends);
+      this.isInvitingFriends = !!this.selectedSeats.length;
     },
     cancel() {
       this.$emit('cancel');
+    },
+    inviteFriends() {
+      // [ { user: id, seat: id }... ]
+      this.$emit('invite-friends', this.selectedFriends, this.selectedSeats); // [ {x:1, y:4}]
     }
   }
 };

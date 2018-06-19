@@ -62,6 +62,19 @@ def send_mail_to_admin(user, single_use_token, token):
     message
   )
 
+def send_invitation_mail(user, id):
+  message = f"""
+    You have been invited to show. If you would like to accept click on the link:
+    http://localhost:8080/accept-invite/{id}
+
+  """
+  send_email(
+    'Invitation',
+    'tinkivinki@cinetubbies.com',
+    user.email,
+    message
+  )
+
 def generate_password(num_of_chars=12):
   return ''.join([random.choice(CHAR_SET) for _ in range(12)])
 

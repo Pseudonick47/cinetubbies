@@ -44,6 +44,20 @@ class TicketOnSaleViewSet(viewsets.ModelViewSet):
     serializer.save()
     return Response(data=serializer.data)
 
+class InviteViewSet(viewsets.ViewSet):
+  def invite(self, request, pk=None):
+    user_id = request.user.id
+    seats = request.data['seats']
+    all_bookings = Booking.objects.filter(user_id=user_id, showtime_id=pk)
+
+    for booking in all_bookings:
+      if str(booking.seat) in seats:
+        booking.user_id = seats[str(booking.seat)]['user']
+        booking.save()
+    return Response({'message': 'Successfully invited friends'})
+
+  def accept_invite(self, request, pk):
+    pass
 class BookingViewSet(viewsets.ViewSet):
   """
   API endpoint for CRUD actions on bookings.
