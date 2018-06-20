@@ -205,9 +205,7 @@ export default {
         .then((response) => {
           store.commit('bookTicket', { showtimeId: this.selectedShowtimeId, seats: data.choosenSeats });
           this.$alert.success('Ticket successfully booked');
-          if (!mayInviteFriends) {
-            this.showRatingDialog = true;
-          }
+          this.showRatingDialog = true;
         })
         .catch(() => {
           this.$alert.error('Error occurred.');
