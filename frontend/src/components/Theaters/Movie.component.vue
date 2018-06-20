@@ -122,7 +122,6 @@
 import * as _ from 'lodash';
 import BookTicketDialog from 'Components/Theaters/BookTicketDialog.component';
 import MovieController from 'Controllers/movies.controller';
-import TheatersController from 'Controllers/theaters.controller';
 import SysAdminController from 'Controllers/system-admin.controller';
 import TicketsOnSaleController from 'Controllers/tickets-on-sale.controller';
 import { Movie } from 'Models/movie.model';
