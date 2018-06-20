@@ -13,25 +13,22 @@
         xs-12
         sm5
       >
-        <v-chip
-          color="white"
-          text-color="black">
+        <div style="margin-left:180px">
           <v-icon left>build</v-icon>
-          Theater settings
-        </v-chip>
-        <v-chip
-          color="white"
-          text-color="black">
-          <span v-if="theater.isCinema()">Type: cinema</span>
-          <span v-else>Type: theater</span>
-          <v-tooltip right>
-            <v-icon
-              slot="activator"
-              right
-            >info</v-icon>
-            <span>Types: cinema, theater</span>
-          </v-tooltip>
-        </v-chip>
+          <span style="font-size:large">Theater settings</span>
+        </div>
+        <br>
+        <div>
+          <span style="color:grey; font-size:small">Type</span>
+        </div>
+        <span
+          v-if="theater.isCinema()"
+          style="font-size:medium">Cinema</span>
+        <span
+          v-else
+          style="font-size:medium">Theater</span>
+        <v-divider/>
+        <br>
         <v-card>
           <v-card-media
             v-if="theater.image"
@@ -52,14 +49,17 @@
             v-model="theater.description"
             label="Description"
           />
-          <v-layout row>
-            <span>Theater image:</span>
-            <v-divider/>
+          <span style="color:grey; font-size:small">Theater image</span>
+          <div style="font-size:small">
             <input
               type="file"
               @change="imageSelected"
-          ></v-layout>
-          <v-btn @click="confirmSubmit = true">submit</v-btn>
+            >
+          </div>
+          <div style="margin-left:220px">
+            <v-btn
+              @click="confirmSubmit = true">submit</v-btn>
+          </div>
         </form>
         <v-dialog
           v-model="confirmSubmit"
@@ -75,7 +75,6 @@
               <v-spacer/>
               <v-btn @click="confirmSubmit = false">no</v-btn>
             </v-card-actions>
-
           </v-card>
         </v-dialog>
       </v-flex>

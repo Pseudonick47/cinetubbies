@@ -84,6 +84,7 @@ class PublicAPI(ViewSet):
     )
     voters = len(Voting.objects.filter(theater_id=pk).all())
     data = {'rating':rating,'voters':voters}
+    print('aaaaaaaasdasdasdas'+str(data))
     return Response(data)
 
   @action(detail=True)
@@ -131,27 +132,31 @@ class RestrictedAPI(ViewSet):
     all_bookings = Booking.objects.all()
     this_theater_bookings = all_bookings.filter(showtime__movie__theater__id=pk)
     result = 0
-
+    
     if request.data['type'] == 'all':
       for b in this_theater_bookings:
-        result += b.price() - b.get_discount()
+        if b.get_user() is not None:
+          result += b.price() - b.get_discount()
     elif request.data['type'] == 'year':
       for b in this_theater_bookings:
-        if str(b.date().year) == request.data['year']:
-          result += b.price() - b.get_discount()
+        if b.get_user() is not None:
+          if str(b.date().year) == request.data['year']:
+            result += b.price() - b.get_discount()
     elif request.data['type'] == 'month':
       for b in this_theater_bookings:
-        if b.date().month < 10:
-          month = '0'+str(b.date().month)
-        else:
-          month = str(b.date().month)
+        if b.get_user() is not None:
+          if b.date().month < 10:
+            month = '0'+str(b.date().month)
+          else:
+            month = str(b.date().month)
 
-        if str(b.date().year) == str(request.data['month'].split('-')[0]) and month == str(request.data['month'].split('-')[1]):
-          result += b.price() - b.get_discount()
+          if str(b.date().year) == str(request.data['month'].split('-')[0]) and month == str(request.data['month'].split('-')[1]):
+            result += b.price() - b.get_discount()
     else:
       for b in this_theater_bookings:
-        if str(b.date()) >= request.data['date1'] and str(b.date()) <= request.data['date2']:
-          result += b.price() - b.get_discount()
+        if b.get_user() is not None:
+          if str(b.date()) >= request.data['date1'] and str(b.date()) <= request.data['date2']:
+            result += b.price() - b.get_discount()
 
     return Response(result)
 

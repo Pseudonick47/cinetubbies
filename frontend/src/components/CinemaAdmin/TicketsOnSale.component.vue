@@ -74,34 +74,39 @@
         md6
         pr-1
       >
-        Repertoire:
-        <v-data-table
-          :headers="showtimeHeaders"
-          :items="repertoire"
-          class="elevation-1"
-        >
-          <template
-            slot="items"
-            slot-scope="props">
-            <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
-            <td> {{ props.item.auditorium }}</td>
-            <td> {{ props.item.date }}</td>
-            <td> {{ props.item.time }}</td>
-            <td> {{ props.item.price }}</td>
-            <v-tooltip right>
-              <v-btn
-                slot="activator"
-                icon
-                @click="create(props.item)">
-                <v-icon>add</v-icon>
-              </v-btn>
-              <span>new ticket</span>
-            </v-tooltip>
-          </template>
-          <template slot="no-data">
-            Nothing to show
-          </template>
-        </v-data-table>
+        <v-card>
+          <v-card-title>
+            Repertoire:
+            <v-spacer/>
+          </v-card-title>
+          <v-data-table
+            :headers="showtimeHeaders"
+            :items="repertoire"
+            class="elevation-1"
+          >
+            <template
+              slot="items"
+              slot-scope="props">
+              <td>{{ getObjAttr(movies, props.item.movie, 'title') }}</td>
+              <td> {{ props.item.auditorium }}</td>
+              <td> {{ props.item.date }}</td>
+              <td> {{ props.item.time }}</td>
+              <td> {{ props.item.price }}</td>
+              <v-tooltip right>
+                <v-btn
+                  slot="activator"
+                  icon
+                  @click="create(props.item)">
+                  <v-icon>add</v-icon>
+                </v-btn>
+                <span>new ticket</span>
+              </v-tooltip>
+            </template>
+            <template slot="no-data">
+              Nothing to show
+            </template>
+          </v-data-table>
+        </v-card>
       </v-flex>
       <v-flex
         xs12
@@ -109,58 +114,63 @@
         md6
         pl-1
       >
-        Tickets on sale:
-        <v-data-table
-          :items="tickets"
-          :headers="ticketsHeaders"
-          item-key="date"
-          class="elevation-1"
-        >
-          <template
-            slot="items"
-            slot-scope="props">
-            <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
-            <td>{{ props.item.seat }} </td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
-            <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
-            <td>{{ props.item.discount }}</td>
-            <td class="justify-center layout px-0">
-              <v-btn
-                slot="activator"
-                icon
-                @click="editButton(props.item)">
-                <v-icon>edit</v-icon>
-              </v-btn>
-              <v-btn
-                slot="activator"
-                icon
-                @click="deleteButton(props.item.id)">
-                <v-icon>delete</v-icon>
-              </v-btn>
-            </td>
-            <v-dialog
-              v-model="confirmDelete"
-              persistent
-              max-width="300px"
-            >
-              <v-card>
-                <v-card-text>
-                  Delete this ticket?
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn @click="remove">yes</v-btn>
-                  <v-spacer/>
-                  <v-btn @click="confirmDelete = false">no</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </template>
-          <template slot="no-data">
-            Sorry, nothing to display here.
-          </template>
-        </v-data-table>
+        <v-card>
+          <v-card-title>
+            Tickets on sale:
+            <v-spacer/>
+          </v-card-title>
+          <v-data-table
+            :items="tickets"
+            :headers="ticketsHeaders"
+            item-key="date"
+            class="elevation-1"
+          >
+            <template
+              slot="items"
+              slot-scope="props">
+              <td>{{ getObjAttr(movies, getObjAttr(repertoire, props.item.showtime, 'movie'), 'title') }}</td>
+              <td>{{ getObjAttr(repertoire, props.item.showtime, 'auditorium') }} </td>
+              <td>{{ props.item.seat }} </td>
+              <td>{{ getObjAttr(repertoire, props.item.showtime, 'date') }}</td>
+              <td>{{ getObjAttr(repertoire, props.item.showtime,'time') }}</td>
+              <td>{{ getObjAttr(repertoire, props.item.showtime,'price') }}</td>
+              <td>{{ props.item.discount }}</td>
+              <td class="justify-center layout px-0">
+                <v-btn
+                  slot="activator"
+                  icon
+                  @click="editButton(props.item)">
+                  <v-icon>edit</v-icon>
+                </v-btn>
+                <v-btn
+                  slot="activator"
+                  icon
+                  @click="deleteButton(props.item.id)">
+                  <v-icon>delete</v-icon>
+                </v-btn>
+              </td>
+              <v-dialog
+                v-model="confirmDelete"
+                persistent
+                max-width="300px"
+              >
+                <v-card>
+                  <v-card-text>
+                    Delete this ticket?
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn @click="remove">yes</v-btn>
+                    <v-spacer/>
+                    <v-btn @click="confirmDelete = false">no</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
+            <template slot="no-data">
+              Sorry, nothing to display here.
+            </template>
+          </v-data-table>
+        </v-card>
       </v-flex>
     </v-layout>
   </div>

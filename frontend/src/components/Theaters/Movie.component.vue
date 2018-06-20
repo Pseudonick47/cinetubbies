@@ -122,6 +122,7 @@ import * as _ from 'lodash';
 import BookTicketDialog from 'Components/Theaters/BookTicketDialog.component';
 import MovieController from 'Controllers/movies.controller';
 import TheatersController from 'Controllers/theaters.controller';
+import SysAdminController from 'Controllers/system-admin.controller';
 import TicketsOnSaleController from 'Controllers/tickets-on-sale.controller';
 import { Movie } from 'Models/movie.model';
 import StarRating from 'vue-star-rating';
@@ -232,7 +233,7 @@ export default {
     },
     setTheaterRating(rating) {
       const data = { 'rating': rating };
-      TheatersController.updateRating(data, this.theaterId)
+      SysAdminController.updateRating(data, this.theaterId)
         .then((response) => {
           this.$alert.success('Thank you!');
         })

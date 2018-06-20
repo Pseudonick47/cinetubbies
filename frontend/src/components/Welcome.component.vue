@@ -27,6 +27,7 @@
             <v-list-tile-title>{{ cinema.name }}</v-list-tile-title>
             <v-list-tile-sub-title>{{ cinema.description }}</v-list-tile-sub-title>
             <v-list-tile-sub-title><i>Location: {{ cinema.address }}</i></v-list-tile-sub-title>
+            <v-list-tile-sub-title><i>Description: {{ cinema.description }}</i></v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-icon>{{ showStarIcon(cinema) }}</v-icon>
@@ -63,6 +64,7 @@
             <v-list-tile-title>{{ theater.name }}</v-list-tile-title>
             <v-list-tile-sub-title>{{ theater.description }}</v-list-tile-sub-title>
             <v-list-tile-sub-title><i>Location: {{ theater.address }}</i></v-list-tile-sub-title>
+            <v-list-tile-sub-title><i>Description: {{ theater.description }}</i></v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-icon>{{ showStarIcon(theater) }}</v-icon>
