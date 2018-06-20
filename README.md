@@ -5,9 +5,11 @@
 
 ### Docker
 > django + mariadb
+
+> start_all script will run django app, mariadb, and vue app (frontend dependencies must be installed manually)
 ``` bash
 # in the project root
-docker-compose up
+./start_all.sh
 ```
 
 ### Frontend - Vue.js
