@@ -113,6 +113,7 @@
       :showtime-id="selectedShowtimeId"
       @cancel="closeBookingDialog"
       @book-ticket="bookTicket"
+      @invite-friends="inviteFriends"
     />
   </div>
 </template>
@@ -196,7 +197,7 @@ export default {
         return tmpLayout[seatXY.x][seatXY.y].seat;
       });
     },
-    bookTicket(choosenSeats) {
+    bookTicket(choosenSeats, mayInviteFriends = false) {
       let data = {
         choosenSeats: this.mapXYToSeatIds(choosenSeats),
         showtime: this.selectedShowtimeId
@@ -206,6 +207,24 @@ export default {
           store.commit('bookTicket', { showtimeId: this.selectedShowtimeId, seats: data.choosenSeats });
           this.$alert.success('Ticket successfully booked');
           this.showRatingDialog = true;
+        })
+        .catch(() => {
+          this.$alert.error('Error occurred.');
+        });
+      if (!mayInviteFriends) {
+        this.showBookDialog = false;
+      }
+    },
+    inviteFriends(friends, choosenSeats) {
+      let seats = this.mapXYToSeatIds(choosenSeats);
+      let data = { seats: {} };
+      let index = 0;
+      _.forEach(friends, friend => {
+        data.seats[seats[index++]] = { user: friend };
+      });
+      TicketsOnSaleController.inviteFriends(this.selectedShowtimeId, data)
+        .then((response) => {
+          this.$alert.success('Friends successfully invited');
         })
         .catch(() => {
           this.$alert.error('Error occurred.');

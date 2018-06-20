@@ -15,5 +15,8 @@ export default {
   },
   bookTicket(data) {
     return TicketsOnSaleApiService.bookTicket(data);
+  },
+  inviteFriends(showtimeId, data) {
+    return TicketsOnSaleApiService.inviteFriends(showtimeId, data);
   }
 };

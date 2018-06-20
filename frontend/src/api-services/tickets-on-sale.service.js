@@ -2,7 +2,8 @@ import Axios from 'axios';
 
 const ENDPOINTS = {
   TICKETS: 'sale/',
-  BOOK_TICKET: 'booking/'
+  BOOK_TICKET: 'booking/',
+  INVITE: 'invite/'
 };
 
 export default {
@@ -20,5 +21,8 @@ export default {
   },
   bookTicket(data) {
     return Axios.post(`${ENDPOINTS.TICKETS}${ENDPOINTS.BOOK_TICKET}`, data);
+  },
+  inviteFriends(showtimeId, data) {
+    return Axios.post(`${ENDPOINTS.TICKETS}${ENDPOINTS.INVITE}${showtimeId}/`, data);
   }
 };
