@@ -33,3 +33,6 @@ class Booking(models.Model):
 
   def getTheater(self):
     return self.showtime.movie.theater
+
+  def get_user(self):
+    return self.user
