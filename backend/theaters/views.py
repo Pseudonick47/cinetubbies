@@ -46,7 +46,7 @@ class PublicAPI(ViewSet):
     #   return Response(data=PublicSerializer(self.queryset, many=True).data)
 
     num = request.GET.get('num')
-    paginator = Paginator(self.queryset.order_by('name'), num if num else 10)
+    paginator = Paginator(Theater.objects.all().order_by('name'), num if num else 10)
     page = request.GET.get('page')
     theaters = paginator.get_page(page if page else 1)
     return Response(data=PublicSerializer(theaters, many=True).data)
@@ -61,7 +61,7 @@ class PublicAPI(ViewSet):
 
   @action(detail=False)
   def get_theaters(self, request):
-    return Response(data=PublicSerializer(self.queryset, many=True).data)
+    return Response(data=PublicSerializer(Theater.objects.all(), many=True).data)
 
   @action(detail=False)
   def get_theater(self, request, pk=None):
