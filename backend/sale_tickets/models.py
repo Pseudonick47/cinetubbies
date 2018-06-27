@@ -3,6 +3,11 @@ from django.db import models
 from authentication.models import User
 from showtimes.models import Showtime
 from theaters.models import Theater
+from django.db import DatabaseError
+from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
+
+from cinetubbies.utils.models import ObjectLocked
 
 class TicketOnSale(models.Model):
   id = models.AutoField(primary_key=True)
@@ -18,9 +23,10 @@ class Booking(models.Model):
   showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, null=False, related_name='bookings')
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings', null=True)
   discount = models.IntegerField(default=0)
-  # price = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=300)
-  # this will be foreign key soon
-  seat = models.IntegerField(default=33)
+  seat = models.IntegerField(default=0)
+  version = models.IntegerField(
+    default=1
+  )
 
   def price(self):
     return self.showtime.price
@@ -36,3 +42,18 @@ class Booking(models.Model):
 
   def get_user(self):
     return self.user
+
+  @transaction.atomic
+  def save(self, *args, **kwargs):
+      queryset = Booking.objects.select_for_update()
+      #lock object
+      try:
+        queryset.filter(id=self.id, version=self.version).get()
+      except DatabaseError:
+        raise ObjectLocked
+      except ObjectDoesNotExist:
+        pass
+
+      self.version += 1
+      super().save(*args, **kwargs)
+
